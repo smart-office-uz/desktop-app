@@ -19,11 +19,10 @@ use notify_rust::{Hint, Notification};
 use tauri::{
     menu::{Menu, MenuItem},
     tray::TrayIconBuilder,
-    App, AppHandle, Manager,
 };
 
 #[tauri::command]
-fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () {
+fn notify(message: &str, redirect: Option<String>) -> () {
     // linux
     #[cfg(target_os = "linux")]
     Notification::new()
@@ -70,22 +69,10 @@ fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () 
         .show()
         .expect("unable to toast");
 
-    // macos
-    #[cfg(target_os = "macos")]
-    let bundle = mac_notification_sys::get_bundle_identifier_or_default("firefox");
-
-    #[cfg(target_os = "macos")]
-    mac_notification_sys::set_application(&bundle).unwrap();
-
-    #[cfg(target_os = "macos")]
-    let result = mac_notification_sys::send_notification(
-        "NOW",
-        None,
-        "Without subtitle",
-        // Some(Notification::new().sound("Blow")),
-        None
-    )
-    .unwrap();
+    #[cfg(target_os = "macos")] 
+    let result = mac_notification_sys::Notification::new().title("Smart Office").subtitle("Sizda yangi xabar bor!").send().unwrap_or_else(|err| {
+        println!("Error when trying to send a nofification via mac_notification_sys::Notification::new(): {:?}", err);
+    });
 
     #[cfg(target_os = "macos")]
     match result {
@@ -93,7 +80,6 @@ fn notify(app_handle: AppHandle, message: &str, redirect: Option<String>) -> () 
             println!("Clicked on the notification itself");
             match redirect.clone() {
                 Some(url) => {
-                    println!("redirecting to... {url}");
                     if open::that(url).is_ok() {
                         println!("Look at your browser !");
                     };
