@@ -70,9 +70,7 @@ fn notify(message: &str, redirect: Option<String>) -> () {
         .expect("unable to toast");
 
     #[cfg(target_os = "macos")] 
-    let result = mac_notification_sys::Notification::new().title("Smart Office").subtitle("Sizda yangi xabar bor!").send().unwrap_or_else(|err| {
-        println!("Error when trying to send a nofification via mac_notification_sys::Notification::new(): {:?}", err);
-    });
+    let result = mac_notification_sys::Notification::new().title("Smart Office").subtitle("Sizda yangi xabar bor!").send().unwrap();
 
     #[cfg(target_os = "macos")]
     match result {
