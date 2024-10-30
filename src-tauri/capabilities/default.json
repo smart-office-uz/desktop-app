@@ -13,6 +13,7 @@
     "core:app:default",
     "log:default",
     "os:default",
-    "shell:default"
+    "shell:default",
+    "store:default"
   ]
 }

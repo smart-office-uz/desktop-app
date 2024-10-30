@@ -1,6 +1,6 @@
 pub mod notification {
     use serde::{Deserialize, Serialize};
-    use std::error::Error;
+    use std::{collections::HashMap, error::Error};
 
     #[derive(Serialize, Deserialize, Debug)]
     struct Notification {
@@ -49,8 +49,12 @@ pub mod notification {
 
         match response.error_for_status() {
             Ok(response) => {
-                let response_to_json = response.json::<GetLatestResultDto>().await?;
-                Ok(serde_json::to_string(&response_to_json)?)
+                // println!("{:?}", response);
+                // let response_to_json = response.json::<HashMap<String, String>>().await?;
+
+                // println!("{:?}", response_to_json);
+                // Ok(serde_json::to_string(&response_to_json)?)
+                Ok(response.text().await?)
             }
             Err(error) => {
                 println!(

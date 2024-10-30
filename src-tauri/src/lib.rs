@@ -3,11 +3,14 @@ extern crate open;
 // windows
 #[cfg(target_os = "windows")]
 extern crate winrt_notification;
+use std::sync::Mutex;
+
 #[cfg(target_os = "windows")]
 use tauri_winrt_notification::{Duration, Sound, Toast};
 
 // local
 mod auth;
+mod env_vars;
 mod notification;
 use auth::auth::sign_in;
 
@@ -17,10 +20,70 @@ use mac_notification_sys;
 
 use notify_rust::{Hint, Notification};
 use tauri::{
+    image::Image,
     menu::{Menu, MenuItem},
-    tray::TrayIconBuilder,
+    tray::{TrayIconBuilder, TrayIconId},
+    AppHandle, Manager,
 };
 
+// #[derive(Default)]
+struct AppState {
+    current_tray_id: Option<TrayIconId>,
+}
+
+impl Default for AppState {
+    fn default() -> Self {
+        Self {
+            current_tray_id: None,
+        }
+    }
+}
+
+#[tauri::command]
+fn update_tray_icon(app: AppHandle, rgba: Vec<u8>, width: u32, height: u32) -> Result<(), String> {
+    app.manage(Mutex::new(AppState::default()));
+
+    let state = app.state::<Mutex<AppState>>();
+
+    // Lock the mutex to get mutable access:
+    let state = state.lock().unwrap();
+
+    match state.current_tray_id.clone() {
+        Some(id) => {
+            let tray = app.tray_by_id(&id).unwrap();
+            let icon = Image::new(&rgba, width, height);
+            match tray.set_icon(Some(icon)) {
+                Ok(_) => {
+                    println!("Successfully updated the tray icon!");
+                }
+                Err(err) => {
+                    println!("Couldn't update the tray icon: {:?}", err);
+                }
+            }
+        }
+        _ => {
+            println!("No existing tray found!");
+        }
+    }
+    Ok(())
+}
+
+#[tauri::command]
+fn get_centrifuge_config() -> Result<String, String> {
+    match env_vars::env_vars::load() {
+        Ok(_) => match serde_json::to_string(&env_vars::env_vars::get_centrifuge_config()) {
+            Ok(config) => Ok(config),
+            Err(_) => Err("Failed to parse config".into()),
+        },
+        Err(_) => Err("Failed to load environment variables!".into()),
+    }
+}
+#[tauri::command]
+fn redirect(url: String) -> () {
+    if open::that(url).is_ok() {
+        println!("Look at your browser !");
+    }
+}
 #[tauri::command]
 fn notify(message: &str, redirect: Option<String>) -> () {
     // linux
@@ -69,8 +132,12 @@ fn notify(message: &str, redirect: Option<String>) -> () {
         .show()
         .expect("unable to toast");
 
-    #[cfg(target_os = "macos")] 
-    let result = mac_notification_sys::Notification::new().title("Smart Office").subtitle("Sizda yangi xabar bor!").send().unwrap();
+    #[cfg(target_os = "macos")]
+    let result = mac_notification_sys::Notification::new()
+        .title("Smart Office")
+        .subtitle(message)
+        .send()
+        .unwrap();
 
     #[cfg(target_os = "macos")]
     match result {
@@ -135,12 +202,20 @@ pub fn run() {
             // at least 1 menu item is required
             let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&quit_i])?;
-            TrayIconBuilder::new()
+            let tray = TrayIconBuilder::new()
                 .icon(app.default_window_icon().unwrap().clone())
                 .menu(&menu)
                 .menu_on_left_click(true)
                 .build(app)?;
+            app.manage(Mutex::new(AppState::default()));
 
+            let state = app.state::<Mutex<AppState>>();
+
+            // Lock the mutex to get mutable access:
+            let mut state = state.lock().unwrap();
+
+            // modify the state
+            state.current_tray_id = Some(tray.id().to_owned());
             Ok(())
         })
         .plugin(tauri_plugin_shell::init())
@@ -148,7 +223,10 @@ pub fn run() {
             authenticate,
             notify,
             get_latest_notifications,
-            get_latest_notifications_count
+            get_latest_notifications_count,
+            get_centrifuge_config,
+            redirect,
+            update_tray_icon
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

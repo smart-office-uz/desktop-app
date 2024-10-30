@@ -1,7 +1,5 @@
-import React from "react";
 import ReactDOM from "react-dom/client";
 import Providers from "./app/providers";
-
 
 // components
 import { Toaster } from "./app/components/sonner";
@@ -10,8 +8,10 @@ import { Toaster } from "./app/components/sonner";
 import "./styles/globals.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
-  <React.StrictMode>
+  // <React.StrictMode>
+  <>
     <Providers />
     <Toaster />
-  </React.StrictMode>,
+  </>,
+  // </React.StrictMode>,
 );

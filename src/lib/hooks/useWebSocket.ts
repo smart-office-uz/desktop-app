@@ -1,62 +1,54 @@
-import NotificationService from '@/core/services/notification.service';
-import {
-    isPermissionGranted,
-    onAction,
-    requestPermission,
-    sendNotification
-} from '@tauri-apps/plugin-notification';
 import { Centrifuge } from "centrifuge";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+
+// tauri
+import { invoke } from "@tauri-apps/api/core";
+
+// services
+import NotificationService from "@/core/services/notification.service";
+import { updateTrayIcon } from "../utils/update-tray-icon";
+
+// types
 
 export const useWebSocket = (deps: {
-    getUserStaffId: () => Promise<string>,
-    refetchNotifications?: () => void;
+  getUserStaffId: () => Promise<string>;
 }) => {
-    const [data] = useState<any>(null);
+  const connect = async () => {
+    const centrifugeConfig = JSON.parse(
+      (await invoke("get_centrifuge_config")) as string,
+    ) as {
+      path: string;
+      token: string;
+    };
+    // establish a connection
+    const centrifuge = new Centrifuge(centrifugeConfig.path, {
+      token: centrifugeConfig.token,
+    });
 
-    const connect = async () => {
-        // establish a connection
-        const centrifuge = new Centrifuge(import.meta.env.CENTRIFUGE_PATH as string, {
-            token: import.meta.env.CENTRIFUGE_TOKEN
-        });
+    const notificationSubscriptionStaffId = await deps.getUserStaffId();
+    const notificationSubscriptionPath = `smart-office-notification_${notificationSubscriptionStaffId}`;
+    const notificationSubscription = centrifuge.newSubscription(
+      notificationSubscriptionPath,
+    );
 
-        const notificationSubscriptionStaffId = await deps.getUserStaffId();
-        const notificationSubscriptionPath = `smart-office-notification_${notificationSubscriptionStaffId}`
-        const notificationSubscription = centrifuge.newSubscription(notificationSubscriptionPath);
+    notificationSubscription.on("publication", async () => {
+      const notificationService = new NotificationService();
+      const notifications =
+        await notificationService.getLatestNotificationsCount();
 
-        notificationSubscription.on("publication", async () => {
-            const notificationService = new NotificationService();
-            const notificationsCount = await notificationService.getLatestNotificationsCount();
-            const notifications = await notificationService.getLatest();
-            let permissionGranted = await isPermissionGranted();
-            console.log(notificationsCount) 
-            // If not we need to request it
-            if (!permissionGranted) {
-                const permission = await requestPermission();
-                permissionGranted = permission === 'granted';
-            }
-            notifications?.forEach(notification => {
-                if (permissionGranted) {
+      if (notifications === 0) return;
 
-                    sendNotification({ title: notification.title, body: notification.link, actionTypeId: "new-notification" });
-                    onAction((notification) => {
-                        console.log(notification)
-                    })
-                }
-            })
-            deps.refetchNotifications?.();
-        });
+      notificationService.display(`Sizda ${notifications} ta yangi xabar bor!`);
+      updateTrayIcon(notifications);
+    });
 
-        notificationSubscription.subscribe();
-        centrifuge.connect();
-    }
+    notificationSubscription.subscribe();
+    centrifuge.connect();
+  };
 
-    useEffect(() => {
-        connect();
-    }, [])
+  useEffect(() => {
+    connect();
+  }, []);
 
-    return {
-        data
-    }
-
-}
+  return {};
+};

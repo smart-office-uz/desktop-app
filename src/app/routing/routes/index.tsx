@@ -1,10 +1,26 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
+// icons
+import { RefreshCw } from "lucide-react";
+
 // services
-import { Button } from "@/app/components/button";
 import NotificationService from "@/core/services/notification.service";
 import UserService from "@/core/services/user.service";
-import { useWebSocket } from "@/lib/hooks/useWebSocket";
+
+// hooks
+import { useQuery } from "@tanstack/react-query";
+
+// widgets
+import { Notifications } from "@/app/widgets/notifications";
+
+// components
+import { Button } from "@/app/components/button";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/app/components/card";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async ({ location }) => {
@@ -15,29 +31,51 @@ export const Route = createFileRoute("/")({
         to: "/sign-in",
         search: {
           redirect: {
-            href: location.href
-          }
-        }
-      })
+            href: location.href,
+          },
+        },
+      });
     }
   },
   component: Index,
 });
 
 function Index() {
-  const userService = new UserService();
-  const notificationService = new NotificationService();
-  useWebSocket({
-    getUserStaffId: userService.getUserStaffId
+  const {
+    data: notifications,
+    refetch,
+    isFetching,
+    isLoading,
+  } = useQuery({
+    queryKey: ["notifications"],
+    queryFn: async () => {
+      const notificationService = new NotificationService();
+      const notifications = await notificationService.getLatest();
+      return notifications;
+    },
   });
+
+  const handleRefresh = () => {
+    refetch();
+  };
+
   return (
-    <div className="p-2">
-      <h3>Welcome to Smart Office Desktop app!</h3>
-      <Button onClick={() => {
-        notificationService.display("Hello!", "https://smart-office.uz")
-      }}>
-        Send a notification
-      </Button>
+    <div className="flex flex-col items-center justify-center min-h-[90vh]">
+      <Card className="w-full max-w-lg mx-auto">
+        <CardHeader className="flex flex-row items-center justify-between">
+          <CardTitle className="text-3xl">Notifications</CardTitle>
+          <Button variant="outline" size="icon" onClick={handleRefresh}>
+            <RefreshCw className="h-4 w-4" />
+            <span className="sr-only">Refresh notifications</span>
+          </Button>
+        </CardHeader>
+        <CardContent>
+          <Notifications
+            isLoading={isLoading || isFetching}
+            notifications={notifications ?? []}
+          />
+        </CardContent>
+      </Card>
     </div>
   );
 }
