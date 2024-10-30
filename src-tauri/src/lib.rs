@@ -25,8 +25,8 @@ use notify_rust::{Hint, Notification};
 use tauri::{
     image::Image,
     menu::{Menu, MenuItem},
-    tray::{TrayIconBuilder, TrayIconId},
-    AppHandle, Manager,
+    tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent, TrayIconId},
+    AppHandle, Manager, PhysicalPosition,
 };
 
 // #[derive(Default)]
@@ -224,12 +224,52 @@ pub fn run() {
         .plugin(tauri_plugin_websocket::init())
         .setup(|app| {
             // at least 1 menu item is required
-            let quit_i = MenuItem::with_id(app, "quit", "Quit", true, None::<&str>)?;
+            let quit_i = MenuItem::with_id(app, "open", "Open", true, None::<&str>)?;
             let menu = Menu::with_items(app, &[&quit_i])?;
             let tray = TrayIconBuilder::new()
                 .icon(app.default_window_icon().unwrap().clone())
                 .menu(&menu)
                 .menu_on_left_click(true)
+                .on_tray_icon_event(|tray, event| {
+                    let tray_id = tray.id();
+                    let tray_rect = tray.rect();
+                    match event {
+                        TrayIconEvent::Click {
+                            button: MouseButton::Left,
+                            button_state: MouseButtonState::Up,
+                            id: tray_id,
+                            rect: tray_rect,
+                            position: PhysicalPosition { x: 1.0, y: 1.0 }, // id: tray.id(),
+                        } => {
+                            println!("left click pressed and released");
+                            // in this example, let's show and focus the main window when the tray is clicked
+                            let app = tray.app_handle();
+                            if let Some(window) = app.get_webview_window("main") {
+                                let _ = window.show();
+                                let _ = window.set_focus();
+                                window
+                                    .request_user_attention(Some(
+                                        tauri::UserAttentionType::Informational,
+                                    ))
+                                    .expect("Error when trying to request user's attention");
+                            }
+                        }
+                        _ => {
+                            println!("unhandled event {event:?}");
+                        }
+                    }
+                })
+                .on_menu_event(|app, event| match event.id.as_ref() {
+                    "open" => {
+                        if let Some(window) = app.get_webview_window("main") {
+                            let _ = window.show();
+                            let _ = window.set_focus();
+                        }
+                    }
+                    _ => {
+                        println!("menu item {:?} not handled", event.id);
+                    }
+                })
                 .build(app)?;
             app.manage(Mutex::new(AppState::default()));
 
