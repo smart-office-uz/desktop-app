@@ -8,5 +8,10 @@ This template should help get you started developing with Tauri, React and Types
 
 ## Tasks
 
-- User staff id must be fetched via smart-office api
-- Refresh tokens must be handled
+- [] Focus on the app when user clicks on the tray icon
+- [] User staff id must be fetched via smart-office api
+- [] Refresh tokens must be handled
+- [] Clean up unnecessary crates
+- [] Add auth checks to all invoke() handlers
+- [] Save user session in tauri store
+- [] Add uzbek language support

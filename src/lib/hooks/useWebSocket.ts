@@ -38,8 +38,14 @@ export const useWebSocket = (deps: {
 
       if (notifications === 0) return;
 
-      notificationService.display(`Sizda ${notifications} ta yangi xabar bor!`);
-      updateTrayIcon(notifications);
+      await updateTrayIcon(notifications);
+
+      // this is a workaround for handling the blocking of the main thread by notify-rust
+      setTimeout(() => {
+        notificationService.display(
+          `Sizda ${notifications} ta yangi xabar bor!`,
+        );
+      }, 3000);
     });
 
     notificationSubscription.subscribe();

@@ -12,7 +12,10 @@ use tauri_winrt_notification::{Duration, Sound, Toast};
 mod auth;
 mod env_vars;
 mod notification;
+mod user;
+
 use auth::auth::sign_in;
+use user::user::*;
 
 // macos
 #[cfg(target_os = "macos")]
@@ -197,6 +200,15 @@ async fn authenticate(username: &str, password: &str) -> Result<String, String> 
     }
 }
 
+#[tauri::command]
+async fn get_user_staff_id(token: &str) -> Result<String, String> {
+    let response = get_staff_id(token).await;
+    match response {
+        Ok(response) => Ok(response),
+        Err(err) => Err(err.to_string()),
+    }
+}
+
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
     tauri::Builder::default()
@@ -239,7 +251,8 @@ pub fn run() {
             get_centrifuge_config,
             redirect,
             update_tray_icon,
-            read_notification
+            read_notification,
+            get_user_staff_id
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

@@ -3,7 +3,7 @@ import { invoke } from "@tauri-apps/api/core";
 export async function updateTrayIcon(count: number) {
   try {
     const { rgba, height, width } = await createBadgeIcon(count);
-    invoke("update_tray_icon", {
+    await invoke("update_tray_icon", {
       rgba,
       width,
       height,
