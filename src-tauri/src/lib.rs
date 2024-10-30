@@ -177,6 +177,18 @@ async fn get_latest_notifications_count(token: &str) -> Result<String, String> {
 }
 
 #[tauri::command]
+async fn read_notification(token: &str, id: &str, index: u16) -> Result<(), String> {
+    let response = notification::notification::read_notification(token, id, index).await;
+    match response {
+        Ok(_) => Ok(()),
+        Err(error) => {
+            println!("error: {:?}", error);
+            Err(error.to_string())
+        }
+    }
+}
+
+#[tauri::command]
 async fn authenticate(username: &str, password: &str) -> Result<String, String> {
     let response = sign_in(username.to_string(), password.to_string()).await;
     match response {
@@ -226,7 +238,8 @@ pub fn run() {
             get_latest_notifications_count,
             get_centrifuge_config,
             redirect,
-            update_tray_icon
+            update_tray_icon,
+            read_notification
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

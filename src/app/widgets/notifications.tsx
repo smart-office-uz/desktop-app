@@ -1,7 +1,8 @@
 // icons
 import { Loader2 } from "lucide-react";
 
-// components
+// services
+import SessionService from "@/core/services/session.service";
 
 // entities
 import { Notification } from "@/core/entities/notification.entity";
@@ -13,9 +14,15 @@ export const Notifications = (props: {
   notifications: Notification[];
   isLoading: boolean;
 }) => {
+  const sessionService = new SessionService();
   const { notifications } = props;
 
-  const redirect = (link: string) => {
+  const redirect = (link: string, id: string, index: number) => {
+    invoke("read_notification", {
+      id,
+      index,
+      token: sessionService.getAccessToken(),
+    });
     invoke("redirect", {
       url: link,
     });
@@ -30,11 +37,11 @@ export const Notifications = (props: {
 
   return (
     <ul className="space-y-4 max-h-[500px] overflow-y-auto cursor-pointer">
-      {notifications.map((notification) => (
+      {notifications.map((notification, index) => (
         <li
           key={notification.id}
           className="flex items-center justify-between space-x-4  bg-foreground text-background rounded-md p-4"
-          onClick={() => redirect(notification.link)}
+          onClick={() => redirect(notification.link, notification.id, index)}
         >
           {/* <Avatar>
                 <AvatarImage src={notification.avatar} alt="Avatar" />

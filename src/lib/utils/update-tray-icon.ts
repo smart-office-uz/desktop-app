@@ -21,7 +21,9 @@ async function createBadgeIcon(count: number) {
   canvas.width = iconSize;
   canvas.height = iconSize;
 
-  const baseImage = await loadImage("/smart-office-logo.png");
+  const baseImage = (await loadImage(
+    "/smart-office-logo.png",
+  )) as CanvasImageSource;
   context.drawImage(baseImage, 0, 0, iconSize, iconSize);
 
   const badgeRadius = 12;
