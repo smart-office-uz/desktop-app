@@ -41,6 +41,9 @@
         "silent": true,
         "type": "embedBootstrapper"
       }
-    }
+    },
+    "category": "Productivity",
+    "homepage": "https://github.com/khaitbek/smart-office-desktop-app",
+    "publisher": "Realsoft LLC"
   }
 }
