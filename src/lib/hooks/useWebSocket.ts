@@ -6,9 +6,9 @@ import { invoke } from "@tauri-apps/api/core";
 
 // services
 import NotificationService from "@/core/services/notification.service";
-import { updateTrayIcon } from "../utils/update-tray-icon";
 
-// types
+// utils
+import { updateTrayIcon } from "../utils/update-tray-icon";
 
 export const useWebSocket = (deps: {
   getUserStaffId: () => Promise<string>;
@@ -44,6 +44,7 @@ export const useWebSocket = (deps: {
       setTimeout(() => {
         notificationService.display(
           `Sizda ${notifications} ta yangi xabar bor!`,
+          "https://smart-office.uz/tables/history_notification",
         );
       }, 3000);
     });

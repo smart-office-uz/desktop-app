@@ -9,6 +9,7 @@ This template should help get you started developing with Tauri, React and Types
 ## Tasks
 
 - [x] Focus on the app when user clicks on the tray icon
+- [ ] Focus on the app when user clicks on the notification
 - [x] User staff id must be fetched via smart-office api
 - [ ] Add autostart plugin
 - [ ] Refresh tokens must be handled
