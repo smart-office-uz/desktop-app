@@ -1,8 +1,15 @@
-import { Header } from "@/app/widgets/header";
-import UserService from "@/core/services/user.service";
-import { useWebSocket } from "@/lib/hooks/useWebSocket";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { TanStackRouterDevtools } from "@tanstack/router-devtools";
+
+// widgets
+import { Header } from "@/app/widgets/header";
+
+// services
+import UserService from "@/core/services/user.service";
+
+// hooks
+import { useLogoutEvent } from "@/lib/hooks/useLogoutEvent";
+import { useWebSocket } from "@/lib/hooks/useWebSocket";
 
 export const Route = createRootRoute({
   component: () => {
@@ -10,6 +17,7 @@ export const Route = createRootRoute({
     useWebSocket({
       getUserStaffId: userService.getUserStaffId,
     });
+    useLogoutEvent();
     return (
       <>
         <Header />

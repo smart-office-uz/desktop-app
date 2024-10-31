@@ -9,8 +9,9 @@ This template should help get you started developing with Tauri, React and Types
 ## Tasks
 
 - [x] Focus on the app when user clicks on the tray icon
-- [ ] Focus on the app when user clicks on the notification
+- [x] Redirect user to notifications table of smart office when user clicks on the notification
 - [x] User staff id must be fetched via smart-office api
+- [ ] Send a message from rust to js to log out the user from the app when any request fails with 401 status code (temporary solution)
 - [ ] Add autostart plugin
 - [ ] Refresh tokens must be handled
 - [ ] Clean up unnecessary crates

@@ -2,6 +2,8 @@ pub mod notification {
     use serde::{Deserialize, Serialize};
     use std::error::Error;
 
+    use crate::event;
+
     #[derive(Serialize, Deserialize, Debug)]
     struct GetCountResultDto {
         status: u16,
@@ -18,7 +20,7 @@ pub mod notification {
         notify_count: u16,
     }
 
-    pub async fn get_latest(token: &str) -> Result<String, Box<dyn Error>> {
+    pub async fn get_latest(token: &str, app: tauri::AppHandle) -> Result<String, Box<dyn Error>> {
         let client = reqwest::Client::new();
 
         let response = client
@@ -34,7 +36,13 @@ pub mod notification {
                     "Error occured when checked the error_for_status() inside the get_latest function: {:?}",
                     error
                 );
-                Err("Something went wrong!".into())
+                match error.status().expect("No status found!").as_u16() {
+                    401 => {
+                        event::event::logout_user(app);
+                        Err("Access token is expired!".into())
+                    }
+                    _ => Err("Something went wrong!".into()),
+                }
             }
         }
     }
