@@ -26,6 +26,7 @@ export const Notifications = (props: {
     invoke("redirect", {
       url: link,
     });
+    // TODO: manually remove the notification from the list
   };
 
   if (props.isLoading)

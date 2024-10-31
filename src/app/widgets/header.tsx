@@ -39,13 +39,13 @@ export const Header = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuLabel>My Account</DropdownMenuLabel>
+              <DropdownMenuLabel>Mening akkauntim</DropdownMenuLabel>
               <DropdownMenuSeparator />
               {/* <DropdownMenuItem>Profile</DropdownMenuItem>
               <DropdownMenuItem>Settings</DropdownMenuItem> */}
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={handleLogout}>
-                Log out
+                Tizimdan chiqish
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>

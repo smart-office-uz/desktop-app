@@ -63,10 +63,10 @@ function Index() {
     <div className="flex flex-col items-center justify-center min-h-[90vh]">
       <Card className="w-full max-w-lg mx-auto">
         <CardHeader className="flex flex-row items-center justify-between">
-          <CardTitle className="text-3xl">Notifications</CardTitle>
+          <CardTitle className="text-3xl">Xabarlar</CardTitle>
           <Button variant="outline" size="icon" onClick={handleRefresh}>
             <RefreshCw className="h-4 w-4" />
-            <span className="sr-only">Refresh notifications</span>
+            <span className="sr-only">Ma'lumotlarni yangilash</span>
           </Button>
         </CardHeader>
         <CardContent>
