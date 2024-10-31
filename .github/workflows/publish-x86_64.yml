@@ -55,10 +55,11 @@ jobs:
           echo $CENTRIFUGE_TOKEN
 
       - name: Create .env file
+        shell: bash
         run: |
           touch .env
-          echo "CENTRIFUGE_TOKEN=${{ secrets.CENTRIFUGE_TOKEN }}" >> .env
-          echo "CENTRIFUGE_PATH=${{ secrets.CENTRIFUGE_PATH }}" >> .env
+          echo "CENTRIFUGE_TOKEN=${{ secrets.CENTRIFUGE_TOKEN }}" > .env
+          echo "CENTRIFUGE_PATH=${{ secrets.CENTRIFUGE_PATH }}" > .env
 
       - name: Install pnpm
         run: npm install -g pnpm
