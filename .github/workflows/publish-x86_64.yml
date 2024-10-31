@@ -56,6 +56,7 @@ jobs:
 
       - name: Create .env file
         run: |
+          touch .env
           echo "CENTRIFUGE_TOKEN=${{ secrets.CENTRIFUGE_TOKEN }}" >> .env
           echo "CENTRIFUGE_PATH=${{ secrets.CENTRIFUGE_PATH }}" >> .env
 
