@@ -21,8 +21,8 @@ export const useWebSocket = (deps: {
       token: string;
     };
     // establish a connection
-    const centrifuge = new Centrifuge(centrifugeConfig.path, {
-      token: centrifugeConfig.token,
+    const centrifuge = new Centrifuge(import.meta.env.CENTRIFUGE_PATH, {
+      token: import.meta.env.CENTRIFUGE_TOKEN,
     });
 
     const notificationSubscriptionStaffId = await deps.getUserStaffId();
