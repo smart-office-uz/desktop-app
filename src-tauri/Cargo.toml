@@ -42,6 +42,7 @@ tauri-plugin-os = "2"
 open = "5.3.0"
 dotenvy = "0.15.7"
 tauri-plugin-store = "2"
+dotenvy_macro = "0.15.7"
 
 [target.'cfg(target_os = "windows")'.dependencies]
 winrt-notification = "0.5.1"
