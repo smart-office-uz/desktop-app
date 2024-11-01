@@ -1,9 +1,6 @@
 import { Centrifuge } from "centrifuge";
 import { useEffect } from "react";
 
-// tauri
-import { invoke } from "@tauri-apps/api/core";
-
 // services
 import NotificationService from "@/core/services/notification.service";
 
