@@ -1,3 +1,5 @@
+import { useQueryClient } from "@tanstack/react-query";
+
 // icons
 import { Loader2 } from "lucide-react";
 
@@ -15,6 +17,7 @@ export const Notifications = (props: {
   isLoading: boolean;
 }) => {
   const sessionService = new SessionService();
+  const queryClient = useQueryClient();
   const { notifications } = props;
 
   const redirect = (link: string, id: string, index: number) => {
@@ -26,7 +29,12 @@ export const Notifications = (props: {
     invoke("redirect", {
       url: link,
     });
-    // TODO: manually remove the notification from the list
+
+    // invalidate the query cache for notifications
+    // WARNING: this doesn't remove the existing data, it just marks it as stale so it can be refetched
+    queryClient.invalidateQueries({
+      queryKey: ["notifications"],
+    });
   };
 
   if (props.isLoading)
