@@ -1,5 +1,4 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
-import { TanStackRouterDevtools } from "@tanstack/router-devtools";
 
 // widgets
 import { Header } from "@/app/widgets/header";
@@ -22,7 +21,6 @@ export const Route = createRootRoute({
       <>
         <Header />
         <Outlet />
-        <TanStackRouterDevtools />
       </>
     );
   },
