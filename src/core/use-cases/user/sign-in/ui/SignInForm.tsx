@@ -42,9 +42,11 @@ export const SignInForm = () => {
       });
       toast.success("Tizimga kirish muvaffaqqiyatli amalga oshirildi!");
       // TODO: display a native notification
-      navigate({
-        to: "/",
-      });
+      // navigate({
+      //   to: "/",
+      // });
+      // this is a temporary solution to make sure the notification service is reinitialized after the user is signed in
+      window.location.href = "/";
     },
     onError: (response) => {
       toast.error(response.message);

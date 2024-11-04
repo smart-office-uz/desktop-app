@@ -81,12 +81,14 @@ fn get_centrifuge_config() -> Result<String, String> {
         Err(_) => Err("Failed to load environment variables!".into()),
     }
 }
+
 #[tauri::command]
 fn redirect(url: String) -> () {
     if open::that(url).is_ok() {
         println!("Look at your browser !");
     }
 }
+
 #[tauri::command]
 fn notify(message: &str, redirect: Option<String>) -> () {
     // linux

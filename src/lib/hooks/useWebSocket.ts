@@ -1,8 +1,6 @@
 import { Centrifuge } from "centrifuge";
 import { useEffect } from "react";
 
-// tauri
-
 // services
 import NotificationService from "@/core/services/notification.service";
 
@@ -15,16 +13,8 @@ export const useWebSocket = (deps: {
 }) => {
   const { accessToken } = useSessionStore();
   const connect = async () => {
-    // const sessionService = new SessionService();
     if (accessToken === undefined || accessToken === "" || accessToken === null)
       return;
-    // const centrifugeConfig = JSON.parse(
-    //   (await invoke("get_centrifuge_config")) as string,
-    // ) as {
-    //   path: string;
-    //   token: string;
-    // };
-    // establish a connection
     const centrifuge = new Centrifuge(import.meta.env.CENTRIFUGE_PATH, {
       token: import.meta.env.CENTRIFUGE_TOKEN,
     });
