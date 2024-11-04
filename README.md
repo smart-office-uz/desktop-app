@@ -57,7 +57,9 @@ You can choose from one of the following formats for installation:
 - [ ] Save user session in tauri store
 - [x] Remove tanstack router devtools
 - [x] Remove tanstack query devtools
-- [ ] Make window size smaller
+- [x] Make window size smaller
 - [ ] Redesign
-- [ ] Add installation instructions
+- [x] Add installation instructions
 - [ ] Add precommit hook for type-checking
+- [x] Fix system tray icon updating twice
+- [x] Fix notification showing up twice

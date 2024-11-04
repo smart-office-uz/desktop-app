@@ -60,7 +60,7 @@ function Index() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-[90vh]">
+    <div className="flex flex-col items-center justify-center min-h-[90vh] px-6">
       <Card className="w-full max-w-lg mx-auto">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-3xl">Xabarlar</CardTitle>

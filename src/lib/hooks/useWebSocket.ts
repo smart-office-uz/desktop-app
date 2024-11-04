@@ -52,9 +52,9 @@ export const useWebSocket = (deps: {
     connect();
   }, []);
 
-  useEffect(() => {
-    connect();
-  }, [accessToken]);
+  // useEffect(() => {
+  //   connect();
+  // }, [accessToken]);
 
   return {};
 };

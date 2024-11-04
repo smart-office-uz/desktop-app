@@ -14,14 +14,11 @@
       {
         "title": "Smart Office",
         "width": 500,
-        "height": 500
+        "height": 700
       }
     ],
     "security": {
       "csp": null
-    },
-    "trayIcon": {
-      "iconPath": "icons/smart-office-logo.png"
     }
   },
   "bundle": {
