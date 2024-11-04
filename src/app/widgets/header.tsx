@@ -8,6 +8,7 @@ import {
   DropdownMenuTrigger,
 } from "@/app/components/dropdown-menu";
 import SessionService from "@/core/services/session.service";
+import { updateAppIcon } from "@/lib/utils/update-tray-icon";
 import { useNavigate } from "@tanstack/react-router";
 import { User } from "lucide-react";
 import { ModeToggle } from "./mode-toggle";
@@ -15,12 +16,14 @@ import { ModeToggle } from "./mode-toggle";
 export const Header = () => {
   const navigate = useNavigate();
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
     const sessionService = new SessionService();
     sessionService.clear();
     navigate({
       to: "/sign-in",
     });
+
+    await updateAppIcon();
   };
 
   return (

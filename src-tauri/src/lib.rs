@@ -26,7 +26,7 @@ use tauri::{
     image::Image,
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent, TrayIconId},
-    AppHandle, Manager, PhysicalPosition,
+    AppHandle, Manager, PhysicalPosition, Window,
 };
 
 // #[derive(Default)]
@@ -63,6 +63,20 @@ fn update_tray_icon(app: AppHandle, rgba: Vec<u8>, width: u32, height: u32) -> R
                     println!("Couldn't update the tray icon: {:?}", err);
                 }
             }
+
+            let icon = Image::new(&rgba, width, height);
+            match app
+                .get_webview_window("main")
+                .expect("Couldn't get the webview window with the name main!")
+                .set_icon(icon)
+            {
+                Ok(_) => {
+                    println!("Successfully updated the webview icon");
+                }
+                Err(err) => {
+                    println!("Couldn't update the app icon: {:?}", err);
+                }
+            }
         }
         _ => {
             println!("No existing tray found!");
@@ -84,8 +98,19 @@ fn get_centrifuge_config() -> Result<String, String> {
 
 #[tauri::command]
 fn redirect(url: String) -> () {
-    if open::that(url).is_ok() {
-        println!("Look at your browser !");
+    // url might look like this -> https://smart-office.uz/blablabla
+    // or like this -> pages/somepage, forms/someform, tables/sometable and etc.
+    // so we need to check what kind of url we are getting
+    // if we get a url that starts with https://smart-office.uz, then life is good we can just redirect the user
+    // but if it doesn't, we need to append https://smart-office.uz ourselves
+    if url.starts_with("https://smart-office.uz") {
+        if open::that(url).is_ok() {
+            println!("Look at your browser !");
+        }
+    } else {
+        if open::that(format!("https://smart-office.uz/{url}")).is_ok() {
+            println!("Look at your browser !");
+        }
     }
 }
 

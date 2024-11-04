@@ -6,7 +6,7 @@ import NotificationService from "@/core/services/notification.service";
 
 // utils
 import { useSessionStore } from "@/store/session";
-import { updateTrayIcon } from "../utils/update-tray-icon";
+import { updateAppIcon } from "../utils/update-tray-icon";
 
 export const useWebSocket = (deps: {
   getUserStaffId: () => Promise<string>;
@@ -26,14 +26,13 @@ export const useWebSocket = (deps: {
     );
 
     notificationSubscription.on("publication", async () => {
-      console.log("notification received");
       const notificationService = new NotificationService();
       const notifications =
         await notificationService.getLatestNotificationsCount();
 
       if (notifications === 0) return;
 
-      await updateTrayIcon(notifications);
+      await updateAppIcon(notifications);
 
       // this is a workaround for handling the blocking of the main thread by notify-rust
       setTimeout(() => {

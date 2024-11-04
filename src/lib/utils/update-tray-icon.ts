@@ -1,8 +1,10 @@
 import { invoke } from "@tauri-apps/api/core";
 
-export async function updateTrayIcon(count: number) {
+export async function updateAppIcon(count?: number) {
   try {
-    const { rgba, height, width } = await createBadgeIcon(count);
+    const { rgba, height, width } = count
+      ? await createAppIcon(count)
+      : await createAppIcon();
     await invoke("update_tray_icon", {
       rgba,
       width,
@@ -13,7 +15,7 @@ export async function updateTrayIcon(count: number) {
   }
 }
 
-async function createBadgeIcon(count: number) {
+export async function createAppIcon(count?: number) {
   const canvas = document.createElement("canvas");
   const context = canvas.getContext("2d")!;
 
@@ -30,16 +32,18 @@ async function createBadgeIcon(count: number) {
   const badgeX = iconSize - badgeRadius - 5;
   const badgeY = badgeRadius + 5;
 
-  context.beginPath();
-  context.arc(badgeX, badgeY, badgeRadius, 0, Math.PI * 2);
-  context.fillStyle = "red";
-  context.fill();
+  if (count) {
+    context.beginPath();
+    context.arc(badgeX, badgeY, badgeRadius, 0, Math.PI * 2);
+    context.fillStyle = "red";
+    context.fill();
 
-  context.fillStyle = "white";
-  context.font = "14px Arial";
-  context.textAlign = "center";
-  context.textBaseline = "middle";
-  context.fillText(String(count), badgeX, badgeY);
+    context.fillStyle = "white";
+    context.font = "14px Arial";
+    context.textAlign = "center";
+    context.textBaseline = "middle";
+    context.fillText(String(count), badgeX, badgeY);
+  }
 
   const imageData = context.getImageData(0, 0, iconSize, iconSize);
 

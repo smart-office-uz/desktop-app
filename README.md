@@ -63,3 +63,6 @@ You can choose from one of the following formats for installation:
 - [ ] Add precommit hook for type-checking
 - [x] Fix system tray icon updating twice
 - [x] Fix notification showing up twice
+- [x] Add default tray icon when user logs out
+- [x] Update app menu icon alongside the tray icon
+- [x] Fix notification links that do not contain http:// or https://

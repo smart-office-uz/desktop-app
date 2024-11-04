@@ -8,17 +8,21 @@ import { listen } from "@tauri-apps/api/event";
 import NotificationService from "@/core/services/notification.service";
 import SessionService from "@/core/services/session.service";
 
+// helpers
+import { updateAppIcon } from "@/lib/utils/update-tray-icon";
+
 export const useLogoutEvent = () => {
   const navigate = useNavigate();
   const sessionService = new SessionService();
   const notificationService = new NotificationService();
 
   useEffect(() => {
-    listen("logout_user", () => {
+    listen("logout_user", async () => {
       sessionService.clear();
       navigate({
         to: "/sign-in",
       });
+      await updateAppIcon();
       setTimeout(() => {
         notificationService.display(
           "Tokeningiz eskirdi, iltimos qaytadan tizimga kiring!",
