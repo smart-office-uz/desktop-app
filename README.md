@@ -68,7 +68,7 @@ You can choose from one of the following formats for installation:
 - [x] Fix notification links that do not contain http:// or https://
 - [ ] (Maybe) Telegram bot to automatically send new release notifications
 - [ ] Icon should be changed
-- [ ] Tray icon notification number should have a bigger font size
-- [ ] Add a logo to the login page
-- [ ] Change window size based on pages
-- [ ] Add notification link to each individual notification
+- [x] Tray icon notification number should have a bigger font size
+- [ ] (Maybe) Add a logo to the login page
+- [x] Change window size based on pages
+- [x] Add notification link to each individual notification

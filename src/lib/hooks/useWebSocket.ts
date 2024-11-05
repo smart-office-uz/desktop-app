@@ -25,7 +25,11 @@ export const useWebSocket = (deps: {
       notificationSubscriptionPath,
     );
 
-    notificationSubscription.on("publication", async () => {
+    notificationSubscription.on("publication", async (ctx) => {
+      const notificationData = ctx.data as {
+        text: string;
+        redirect?: string;
+      };
       const notificationService = new NotificationService();
       const notifications =
         await notificationService.getLatestNotificationsCount();
@@ -34,13 +38,17 @@ export const useWebSocket = (deps: {
 
       await updateAppIcon(notifications);
 
+      const redirectUrl = notificationData?.redirect
+        ? notificationData.redirect
+        : "https://smart-office.uz/tables/history_notification";
+
       // this is a workaround for handling the blocking of the main thread by notify-rust
       setTimeout(() => {
         notificationService.display(
           `Sizda ${notifications} ta yangi xabar bor!`,
-          "https://smart-office.uz/tables/history_notification",
+          redirectUrl,
         );
-      }, 3000);
+      }, 2000);
     });
 
     notificationSubscription.subscribe();

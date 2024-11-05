@@ -39,7 +39,7 @@ export async function createAppIcon(count?: number) {
     context.fill();
 
     context.fillStyle = "white";
-    context.font = "14px Arial";
+    context.font = "20px Arial";
     context.textAlign = "center";
     context.textBaseline = "middle";
     context.fillText(String(count), badgeX, badgeY);
