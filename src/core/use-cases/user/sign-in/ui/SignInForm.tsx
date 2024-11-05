@@ -1,4 +1,5 @@
-import { useRouter } from "@tanstack/react-router";
+// import { useRouter } from "@tanstack/react-router";
+import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
 // components
@@ -31,7 +32,7 @@ import { useForm } from "../lib/useForm";
 import SessionService from "@/core/services/session.service";
 
 export const SignInForm = () => {
-  const { navigate } = useRouter();
+  // const { navigate } = useRouter();
   const { signIn, isPending } = useSignInHandler({
     onSuccess: (response) => {
       const sessionService = new SessionService();
@@ -39,10 +40,13 @@ export const SignInForm = () => {
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
       });
-      toast.success("Successfully signed in!");
-      navigate({
-        to: "/"
-      })
+      toast.success("Tizimga kirish muvaffaqqiyatli amalga oshirildi!");
+      // TODO: display a native notification
+      // navigate({
+      //   to: "/",
+      // });
+      // this is a temporary solution to make sure the notification service is reinitialized after the user is signed in
+      window.location.href = "/";
     },
     onError: (response) => {
       toast.error(response.message);
@@ -54,13 +58,11 @@ export const SignInForm = () => {
 
   return (
     <Form {...form}>
-      <form onSubmit={handleSubmit}>
-        <Card className="w-full max-w-sm">
-          <CardHeader>
-            <CardTitle className="text-2xl">Login</CardTitle>
-            <CardDescription>
-              Enter your email below to login to your account.
-            </CardDescription>
+      <form className="w-full max-w-sm" onSubmit={handleSubmit}>
+        <Card>
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl">Tizimga kirish</CardTitle>
+            <CardDescription>Login va parolni kiriting</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
             <FormField
@@ -68,9 +70,9 @@ export const SignInForm = () => {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Login</FormLabel>
                   <FormControl>
-                    <Input placeholder="john" {...field} />
+                    <Input placeholder="alisher" {...field} required />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -82,9 +84,9 @@ export const SignInForm = () => {
               name="password"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
+                  <FormLabel>Parol</FormLabel>
                   <FormControl>
-                    <Input type="password" {...field} />
+                    <Input type="password" {...field} required />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -93,7 +95,8 @@ export const SignInForm = () => {
           </CardContent>
           <CardFooter>
             <Button disabled={isPending} className="w-full" type="submit">
-              {isPending ? "Signing in..." : "Sign in"}
+              Tizimga kirish
+              {isPending && <Loader2 className="h-4 w-4 ml-2 animate-spin" />}
             </Button>
           </CardFooter>
         </Card>

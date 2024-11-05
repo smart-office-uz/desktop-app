@@ -1,9 +1,10 @@
 [package]
-name = "smart-office-todo-app"
-version = "0.1.0"
+name = "smart-office"
+version = "0.1.1"
 description = "Desktop app for smart-office.uz"
-authors = ["you"]
+authors = ["Hayitbek Yusupov"]
 edition = "2021"
+rust-version = "1.80"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
@@ -19,23 +20,36 @@ incremental = true # Compile your binary in smaller steps.
 
 [profile.release]
 codegen-units = 1 # Allows LLVM to perform better optimization.
-opt-level = "s" # Prioritizes small binary size. Use `3` if you prefer speed.
-panic = "abort" # Higher performance by disabling panic handlers.
+opt-level = "s"   # Prioritizes small binary size. Use `3` if you prefer speed.
+panic = "abort"   # Higher performance by disabling panic handlers.
+debug = "full"
 
 
 [build-dependencies]
 tauri-build = { version = "2.0.0", features = [] }
 
 [dependencies]
-tauri = { version = "2.0.0", features = ["tray-icon"] }
-tauri-plugin-shell = "2.0.0"
+tauri = { version = "2.0.4", features = ["tray-icon", "devtools", "image-png"] }
+tauri-plugin-shell = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 reqwest = "0.12.8"
-# openssl = { version = "0.10", features = ["vendored"] }
+tauri-plugin-websocket = "2"
+tauri-plugin-notification = "2.0.1"
+tauri-plugin-log = "2"
+notify-rust = "4.11.3"
+tauri-plugin-os = "2"
+open = "5.3.0"
+dotenvy = "0.15.7"
+tauri-plugin-store = "2"
+dotenvy_macro = "0.15.7"
 
-[target.armv7-unknown-linux-gnueabihf]
-linker = "arm-linux-gnueabihf-gcc"
+[target.'cfg(target_os = "windows")'.dependencies]
+winrt-notification = "0.5.1"
+tauri-winrt-notification = "0.5.0"
 
-[target.aarch64-unknown-linux-gnu]
-linker = "aarch64-linux-gnu-gcc"
+[target.'cfg(target_os = "macos")'.dependencies]
+mac-notification-sys = "0.6.2"
+
+[target.'cfg(not(any(target_os = "android", target_os = "ios")))'.dependencies]
+tauri-plugin-autostart = "2"

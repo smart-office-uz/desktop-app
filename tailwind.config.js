@@ -1,3 +1,5 @@
+import twAnimatePlugin from "tailwindcss-animate";
+
 /** @type {import('tailwindcss').Config} */
 export default {
   darkMode: ["class"],
@@ -51,7 +53,10 @@ export default {
           5: "hsl(var(--chart-5))",
         },
       },
+      fontFamily: {
+        sans: ["var(--font-sans)"],
+      },
     },
   },
-  plugins: [require("tailwindcss-animate")],
+  plugins: [twAnimatePlugin],
 };

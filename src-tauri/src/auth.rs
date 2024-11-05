@@ -43,9 +43,6 @@ pub mod auth {
         match response.error_for_status() {
             Ok(res) => {
                 let response_to_json = res.json::<SignInDto>().await?;
-
-                println!("Response -> {:?}", response_to_json);
-
                 let out = SignInResult {
                     access_token: response_to_json.data.access_token,
                     refresh_token: response_to_json.data.refresh_token,
@@ -58,7 +55,7 @@ pub mod auth {
                     "Error occured when checked the error_for_status(): {:?}",
                     err
                 );
-                Err("Username or password is incorrect".into())
+                Err("Login yoki parol noto'g'ri!".into())
             }
         }
     }

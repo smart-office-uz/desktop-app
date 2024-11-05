@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0.0",
   "productName": "smart-office",
-  "version": "0.1.0",
-  "identifier": "smart-office",
+  "version": "0.1.1",
+  "identifier": "com.smart-office",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -13,15 +13,12 @@
     "windows": [
       {
         "title": "Smart Office",
-        "width": 800,
-        "height": 600
+        "width": 500,
+        "height": 700
       }
     ],
     "security": {
       "csp": null
-    },
-    "trayIcon": {
-      "iconPath": "icons/smart-office-logo.png"
     }
   },
   "bundle": {
@@ -35,6 +32,15 @@
       "icons/128x128.png",
       "icons/128x128@2x.png",
       "icons/icon.icns"
-    ]
+    ],
+    "windows": {
+      "webviewInstallMode": {
+        "silent": true,
+        "type": "embedBootstrapper"
+      }
+    },
+    "category": "Productivity",
+    "homepage": "https://github.com/khaitbek/smart-office-desktop-app",
+    "publisher": "Realsoft LLC"
   }
 }
