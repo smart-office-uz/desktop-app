@@ -350,6 +350,23 @@ pub fn run() {
                 // Disable autostart
                 let _ = autostart_manager.disable();
             }
+
+            #[cfg(desktop)]
+            {
+                // catch window exit event
+                // to run the app in the background
+                let app_handle = app.app_handle().to_owned();
+                let window = app_handle.get_webview_window("main").unwrap();
+                window.on_window_event(move |event| match event {
+                    tauri::WindowEvent::CloseRequested { api, .. } => {
+                        api.prevent_close();
+                        println!("User tried to close the app, so we hide the app :)");
+                        let main_window = app_handle.get_webview_window("main").unwrap();
+                        main_window.hide().unwrap();
+                    }
+                    _ => {}
+                });
+            }
             Ok(())
         })
         .plugin(tauri_plugin_shell::init())

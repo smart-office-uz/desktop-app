@@ -72,3 +72,4 @@ You can choose from one of the following formats for installation:
 - [ ] (Maybe) Add a logo to the login page
 - [x] Change window size based on pages
 - [x] Add notification link to each individual notification
+- [ ] Hide the window when user tries to exit
