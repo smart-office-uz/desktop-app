@@ -1,4 +1,8 @@
-import { createFileRoute, redirect } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  redirect,
+  useLayoutEffect,
+} from "@tanstack/react-router";
 
 // icons
 import { RefreshCw } from "lucide-react";
@@ -21,6 +25,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/app/components/card";
+import WindowService from "@/core/services/window.service";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async ({ location }) => {
@@ -54,13 +59,21 @@ function Index() {
       return notifications;
     },
   });
+  const windowService = new WindowService();
 
   const handleRefresh = () => {
     refetch();
   };
 
+  useLayoutEffect(() => {
+    windowService.change_window_size({
+      width: 600,
+      height: 600,
+    });
+  }, []);
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-[90vh] px-6">
+    <div className="flex flex-col items-center justify-center min-h-[90vh] p-6">
       <Card className="w-full max-w-lg mx-auto">
         <CardHeader className="flex flex-row items-center justify-between">
           <CardTitle className="text-3xl">Xabarlar</CardTitle>

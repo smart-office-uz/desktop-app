@@ -55,7 +55,7 @@ pub mod auth {
                     "Error occured when checked the error_for_status(): {:?}",
                     err
                 );
-                Err("Username or password is incorrect".into())
+                Err("Login yoki parol noto'g'ri!".into())
             }
         }
     }

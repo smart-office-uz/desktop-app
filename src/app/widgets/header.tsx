@@ -1,57 +1,18 @@
-import { Button } from "@/app/components/button";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/app/components/dropdown-menu";
-import SessionService from "@/core/services/session.service";
-import { updateAppIcon } from "@/lib/utils/update-tray-icon";
-import { useNavigate } from "@tanstack/react-router";
-import { User } from "lucide-react";
+// widgets
+import { AppLogo } from "./app-logo";
 import { ModeToggle } from "./mode-toggle";
+import { UserMenu } from "./user-menu";
 
 export const Header = () => {
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    const sessionService = new SessionService();
-    sessionService.clear();
-    navigate({
-      to: "/sign-in",
-    });
-
-    await updateAppIcon();
-  };
-
   return (
     <header className="bg-background border-b">
       <div className="container mx-auto px-4 py-3 flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <img src="/smart-office-logo.png" alt="Logo" className="h-8" />
+          <AppLogo />
         </div>
         <div className="flex items-center space-x-4">
           <ModeToggle />
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <User className="h-5 w-5" />
-                <span className="sr-only">Open user menu</span>
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              <DropdownMenuLabel>Mening akkauntim</DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              {/* <DropdownMenuItem>Profile</DropdownMenuItem>
-              <DropdownMenuItem>Settings</DropdownMenuItem> */}
-              <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={handleLogout}>
-                Tizimdan chiqish
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          <UserMenu />
         </div>
       </div>
     </header>

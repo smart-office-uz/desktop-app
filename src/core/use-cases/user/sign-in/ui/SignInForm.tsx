@@ -1,4 +1,4 @@
-import { useRouter } from "@tanstack/react-router";
+// import { useRouter } from "@tanstack/react-router";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 
@@ -32,7 +32,7 @@ import { useForm } from "../lib/useForm";
 import SessionService from "@/core/services/session.service";
 
 export const SignInForm = () => {
-  const { navigate } = useRouter();
+  // const { navigate } = useRouter();
   const { signIn, isPending } = useSignInHandler({
     onSuccess: (response) => {
       const sessionService = new SessionService();
@@ -60,9 +60,9 @@ export const SignInForm = () => {
     <Form {...form}>
       <form className="w-full max-w-sm" onSubmit={handleSubmit}>
         <Card>
-          <CardHeader>
-            <CardTitle className="text-2xl">Login</CardTitle>
-            <CardDescription>Username va parolni kiriting</CardDescription>
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl">Tizimga kirish</CardTitle>
+            <CardDescription>Login va parolni kiriting</CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
             <FormField
@@ -70,7 +70,7 @@ export const SignInForm = () => {
               name="username"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Username</FormLabel>
+                  <FormLabel>Login</FormLabel>
                   <FormControl>
                     <Input placeholder="alisher" {...field} required />
                   </FormControl>
@@ -96,7 +96,7 @@ export const SignInForm = () => {
           <CardFooter>
             <Button disabled={isPending} className="w-full" type="submit">
               Tizimga kirish
-              {isPending && <Loader2 className="h-4 w-4 animate-spin" />}
+              {isPending && <Loader2 className="h-4 w-4 ml-2 animate-spin" />}
             </Button>
           </CardFooter>
         </Card>

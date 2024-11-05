@@ -45,7 +45,7 @@ export const Notifications = (props: {
     );
 
   return (
-    <ul className="space-y-4 max-h-[500px] overflow-y-auto cursor-pointer">
+    <ul className="space-y-4 max-h-[350px] overflow-y-auto cursor-pointer">
       {notifications.map((notification, index) => (
         <li
           key={notification.id}

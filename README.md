@@ -53,12 +53,12 @@ You can choose from one of the following formats for installation:
 - [x] Add uzbek language support
 - [ ] Refresh tokens must be handled
 - [ ] Clean up unnecessary crates
-- [ ] Add auth checks to all invoke() handlers
-- [ ] Save user session in tauri store
+- [ ] (Maybe) Add auth checks to all invoke() handlers
+- [ ] (Maybe) Save user session in tauri store
 - [x] Remove tanstack router devtools
 - [x] Remove tanstack query devtools
 - [x] Make window size smaller
-- [ ] Redesign
+- [ ] (Maybe) Redesign
 - [x] Add installation instructions
 - [ ] Add precommit hook for type-checking
 - [x] Fix system tray icon updating twice
@@ -66,3 +66,9 @@ You can choose from one of the following formats for installation:
 - [x] Add default tray icon when user logs out
 - [x] Update app menu icon alongside the tray icon
 - [x] Fix notification links that do not contain http:// or https://
+- [ ] (Maybe) Telegram bot to automatically send new release notifications
+- [ ] Icon should be changed
+- [ ] Tray icon notification number should have a bigger font size
+- [ ] Add a logo to the login page
+- [ ] Change window size based on pages
+- [ ] Add notification link to each individual notification

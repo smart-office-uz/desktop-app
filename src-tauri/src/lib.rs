@@ -43,6 +43,24 @@ impl Default for AppState {
 }
 
 #[tauri::command]
+fn change_window_size(app: AppHandle, width: u16, height: u16) -> Result<(), String> {
+    if let Some(main_window) = app.get_webview_window("main") {
+        main_window
+            .set_size(tauri::PhysicalSize { height, width })
+            .expect("Failed to change window size!");
+    };
+    Ok(())
+}
+
+#[tauri::command]
+fn center_window(app: AppHandle) -> Result<(), String> {
+    if let Some(main_window) = app.get_webview_window("main") {
+        main_window.center().expect("Failed to center window!");
+    };
+    Ok(())
+}
+
+#[tauri::command]
 fn update_tray_icon(app: AppHandle, rgba: Vec<u8>, width: u32, height: u32) -> Result<(), String> {
     app.manage(Mutex::new(AppState::default()));
 
@@ -344,7 +362,9 @@ pub fn run() {
             redirect,
             update_tray_icon,
             read_notification,
-            get_user_staff_id
+            get_user_staff_id,
+            change_window_size,
+            center_window
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
