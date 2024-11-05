@@ -26,7 +26,7 @@ use tauri::{
     image::Image,
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent, TrayIconId},
-    AppHandle, Manager, PhysicalPosition, Window,
+    AppHandle, Manager, PhysicalPosition,
 };
 
 // #[derive(Default)]

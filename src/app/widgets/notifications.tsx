@@ -9,6 +9,12 @@ import SessionService from "@/core/services/session.service";
 // entities
 import { Notification } from "@/core/entities/notification.entity";
 
+// components
+import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/avatar";
+
+// widgets
+import { AppLogo } from "@/app/widgets/app-logo";
+
 // tauri
 import { invoke } from "@tauri-apps/api/core";
 
@@ -20,7 +26,15 @@ export const Notifications = (props: {
   const queryClient = useQueryClient();
   const { notifications } = props;
 
-  const redirect = (link: string, id: string, index: number) => {
+  const redirect = ({
+    link,
+    id,
+    index,
+  }: {
+    link: string;
+    id: string;
+    index: number;
+  }) => {
     invoke("read_notification", {
       id,
       index,
@@ -37,6 +51,15 @@ export const Notifications = (props: {
     });
   };
 
+  const handleRedirectOnEnter = (
+    e: React.KeyboardEvent<HTMLLIElement>,
+    redirectProps: Parameters<typeof redirect>[0],
+  ) => {
+    if (e.key === "Enter") {
+      redirect(redirectProps);
+    }
+  };
+
   if (props.isLoading)
     return (
       <div className="flex items-center justify-center">
@@ -49,17 +72,43 @@ export const Notifications = (props: {
       {notifications.map((notification, index) => (
         <li
           key={notification.id}
-          className="flex items-center justify-between space-x-4  bg-foreground text-background rounded-md p-4"
-          onClick={() => redirect(notification.link, notification.id, index)}
+          className="flex items-center gap-6 bg-foreground text-background rounded-md p-2 hover:bg-blue-500 hover:text-white focus:bg-blue-500 focus:text-white transition-colors"
+          onClick={() =>
+            redirect({
+              id: notification.id,
+              link: notification.link,
+              index,
+            })
+          }
+          tabIndex={0}
+          onKeyUp={(evt) =>
+            handleRedirectOnEnter(evt, {
+              link: notification.link,
+              id: notification.id,
+              index,
+            })
+          }
         >
-          {/* <Avatar>
-                <AvatarImage src={notification.avatar} alt="Avatar" />
-                <AvatarFallback>{notification.title[0]}</AvatarFallback>
-              </Avatar> */}
-          <div className="text-lg hover:underline font-medium">
-            {notification.title}
+          {notification.avatarLink && (
+            <Avatar aria-hidden="true">
+              <AvatarImage
+                width={64}
+                height={64}
+                className="object-contain rounded-full"
+                src={notification.avatarLink}
+                alt={notification.title}
+              />
+              <AvatarFallback className="bg-transparent">
+                <AppLogo className="h-8 w-8" />
+              </AvatarFallback>
+            </Avatar>
+          )}
+          <div>
+            <h3 className="text-lg hover:underline font-bold">
+              {notification.title}
+            </h3>
+            <p className="font-medium">{notification.date}</p>
           </div>
-          <div className="font-medium">{notification.date}</div>
         </li>
       ))}
     </ul>
