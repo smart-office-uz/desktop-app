@@ -26,29 +26,32 @@ export const useWebSocket = (deps: {
     );
 
     notificationSubscription.on("publication", async (ctx) => {
-      const notificationData = ctx.data as {
-        text: string;
-        redirect?: string;
-      };
-      const notificationService = new NotificationService();
-      const notifications =
-        await notificationService.getLatestNotificationsCount();
+      try {
+        const notificationData = ctx.data as {
+          text: string;
+          redirect?: string;
+        };
+        const notificationService = new NotificationService();
+        const notifications =
+          await notificationService.getLatestNotificationsCount();
+        if (notifications === 0) return;
 
-      if (notifications === 0) return;
+        await updateAppIcon(notifications);
 
-      await updateAppIcon(notifications);
+        const redirectUrl = notificationData?.redirect
+          ? notificationData.redirect
+          : "https://smart-office.uz/tables/history_notification";
 
-      const redirectUrl = notificationData?.redirect
-        ? notificationData.redirect
-        : "https://smart-office.uz/tables/history_notification";
-
-      // this is a workaround for handling the blocking of the main thread by notify-rust
-      setTimeout(() => {
-        notificationService.display(
-          `Sizda ${notifications} ta yangi xabar bor!`,
-          redirectUrl,
-        );
-      }, 2000);
+        // this is a workaround for handling the blocking of the main thread by notify-rust
+        setTimeout(() => {
+          notificationService.display(
+            `Sizda ${notifications} ta yangi xabar bor!`,
+            redirectUrl,
+          );
+        }, 2000);
+      } catch (err) {
+        console.log("error", err);
+      }
     });
 
     notificationSubscription.subscribe();

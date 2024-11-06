@@ -72,7 +72,7 @@ export const SignInForm = () => {
                 <FormItem>
                   <FormLabel>Login</FormLabel>
                   <FormControl>
-                    <Input placeholder="alisher" {...field} required />
+                    <Input {...field} required />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

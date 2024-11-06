@@ -13,7 +13,6 @@ import { Notification } from "@/core/entities/notification.entity";
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/avatar";
 
 // widgets
-import { AppLogo } from "@/app/widgets/app-logo";
 
 // tauri
 import { invoke } from "@tauri-apps/api/core";
@@ -94,12 +93,13 @@ export const Notifications = (props: {
               <AvatarImage
                 width={64}
                 height={64}
-                className="object-contain rounded-full"
+                className="object-cover rounded-full"
                 src={notification.avatarLink}
                 alt={notification.title}
               />
               <AvatarFallback className="bg-transparent">
-                <AppLogo className="h-8 w-8" />
+                {/* <AppLogo className="h-4 w-4" /> */}
+                <img src="/smart-office-logo.png" alt="Logo" />
               </AvatarFallback>
             </Avatar>
           )}
