@@ -6,6 +6,7 @@ on:
     branches:
       - release
       - notification-service
+      - main
 
 jobs:
   publish-tauri:
