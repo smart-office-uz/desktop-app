@@ -1,7 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
 
-// entities
-
 // services
 import UserService from "@/core/services/user.service";
 
@@ -45,7 +43,7 @@ export const useSignInHandler = (
     },
     onError: (err) => {
       props.onError?.({
-        message: err.message
+        message: err.message,
       });
     },
   });

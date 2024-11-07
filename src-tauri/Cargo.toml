@@ -1,6 +1,6 @@
 [package]
 name = "smart-office"
-version = "0.1.2"
+version = "0.1.3"
 description = "Desktop app for smart-office.uz"
 authors = ["Hayitbek Yusupov"]
 edition = "2021"
@@ -29,20 +29,15 @@ debug = "full"
 tauri-build = { version = "2.0.0", features = [] }
 
 [dependencies]
-tauri = { version = "2.0.4", features = ["tray-icon", "devtools", "image-png"] }
+tauri = { version = "2.0.4", features = ["tray-icon", "image-png"] }
 tauri-plugin-shell = "2"
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"
 reqwest = "0.12.8"
-tauri-plugin-websocket = "2"
-tauri-plugin-notification = "2.0.1"
 tauri-plugin-log = "2"
 notify-rust = "4.11.3"
 tauri-plugin-os = "2"
 open = "5.3.0"
-dotenvy = "0.15.7"
-tauri-plugin-store = "2"
-dotenvy_macro = "0.15.7"
 
 [target.'cfg(target_os = "windows")'.dependencies]
 winrt-notification = "0.5.1"

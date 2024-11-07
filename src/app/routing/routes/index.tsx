@@ -10,6 +10,7 @@ import { RefreshCw } from "lucide-react";
 // services
 import NotificationService from "@/core/services/notification.service";
 import UserService from "@/core/services/user.service";
+import WindowService from "@/core/services/window.service";
 
 // hooks
 import { useQuery } from "@tanstack/react-query";
@@ -25,7 +26,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/app/components/card";
-import WindowService from "@/core/services/window.service";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async ({ location }) => {

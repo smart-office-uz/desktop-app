@@ -12,7 +12,6 @@ export default class NotificationService {
   }
 
   display(message: string, redirect?: string) {
-    console.log("displaying notification", message, redirect);
     if (!redirect) {
       invoke("notify", {
         message,

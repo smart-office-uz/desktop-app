@@ -1,4 +1,6 @@
 import ReactDOM from "react-dom/client";
+
+// providers
 import Providers from "./app/providers";
 
 // components

@@ -1,8 +1,6 @@
 // store
 import { useSessionStore } from "@/store/session";
 
-// entities
-
 export default class SessionService {
   #storage = useSessionStore;
 

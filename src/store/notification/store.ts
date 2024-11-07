@@ -1,8 +1,10 @@
 import { persist } from "zustand/middleware";
 import { createWithEqualityFn as create } from "zustand/traditional";
 
-// types
+// entities
 import type { Notification } from "@/core/entities/notification.entity";
+
+// types
 import type { NotificationStoreDef } from "./store.def";
 
 const useNotificationStore = create<NotificationStoreDef>()(

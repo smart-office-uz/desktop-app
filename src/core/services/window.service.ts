@@ -1,3 +1,4 @@
+// tauri
 import { invoke } from "@tauri-apps/api/core";
 
 class WindowService {

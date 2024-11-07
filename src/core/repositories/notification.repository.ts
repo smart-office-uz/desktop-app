@@ -1,13 +1,20 @@
+// store
 import { useSessionStore } from "@/store/session";
+
+// tauri
 import { invoke } from "@tauri-apps/api/core";
+
+// entities
 import type { Notification } from "../entities/notification.entity";
 
 export default class NotificationRepository {
   async getLatest(): Promise<Notification[]> {
     const { accessToken } = useSessionStore.getState();
+
     const response = (await invoke("get_latest_notifications", {
       token: accessToken,
     })) as string;
+
     const notifications = JSON.parse(response) as {
       data: {
         notify: {

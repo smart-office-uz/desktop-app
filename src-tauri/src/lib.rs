@@ -10,7 +10,6 @@ use tauri_winrt_notification::{Duration, Sound, Toast};
 
 // local
 mod auth;
-mod env_vars;
 mod event;
 mod notification;
 mod user;
@@ -101,17 +100,6 @@ fn update_tray_icon(app: AppHandle, rgba: Vec<u8>, width: u32, height: u32) -> R
         }
     }
     Ok(())
-}
-
-#[tauri::command]
-fn get_centrifuge_config() -> Result<String, String> {
-    match env_vars::env_vars::load() {
-        Ok(_) => match serde_json::to_string(&env_vars::env_vars::get_centrifuge_config()) {
-            Ok(config) => Ok(config),
-            Err(_) => Err("Failed to parse config".into()),
-        },
-        Err(_) => Err("Failed to load environment variables!".into()),
-    }
 }
 
 #[tauri::command]
@@ -265,8 +253,6 @@ pub fn run() {
                 ))
                 .build(),
         )
-        .plugin(tauri_plugin_notification::init())
-        .plugin(tauri_plugin_websocket::init())
         .setup(|app| {
             // at least 1 menu item is required
             let quit_i = MenuItem::with_id(app, "open", "Open", true, None::<&str>)?;
@@ -375,7 +361,6 @@ pub fn run() {
             notify,
             get_latest_notifications,
             get_latest_notifications_count,
-            get_centrifuge_config,
             redirect,
             update_tray_icon,
             read_notification,

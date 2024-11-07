@@ -4,14 +4,17 @@ import { useEffect } from "react";
 // services
 import NotificationService from "@/core/services/notification.service";
 
-// utils
+// store
 import { useSessionStore } from "@/store/session";
+
+// utils
 import { updateAppIcon } from "../utils/update-tray-icon";
 
 export const useWebSocket = (deps: {
   getUserStaffId: () => Promise<string>;
 }) => {
   const { accessToken } = useSessionStore();
+
   const connect = async () => {
     if (accessToken === undefined || accessToken === "" || accessToken === null)
       return;
@@ -49,9 +52,7 @@ export const useWebSocket = (deps: {
             redirectUrl,
           );
         }, 2000);
-      } catch (err) {
-        console.log("error", err);
-      }
+      } catch (err) {}
     });
 
     notificationSubscription.subscribe();

@@ -12,8 +12,6 @@ import { Notification } from "@/core/entities/notification.entity";
 // components
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/avatar";
 
-// widgets
-
 // tauri
 import { invoke } from "@tauri-apps/api/core";
 

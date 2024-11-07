@@ -95,10 +95,12 @@ If you encounter any issues during the installation process, please feel free to
 - [x] Add default tray icon when user logs out
 - [x] Update app menu icon alongside the tray icon
 - [x] Fix notification links that do not contain http:// or https://
-- [ ] (Maybe) Telegram bot to automatically send new release notifications
+- [x] (Maybe) Telegram bot to automatically send new release notifications
 - [ ] Icon should be changed
 - [x] Tray icon notification number should have a bigger font size
 - [ ] (Maybe) Add a logo to the login page
 - [x] Change window size based on pages
 - [x] Add notification link to each individual notification
 - [x] Hide the window when user tries to exit
+- [ ] Fix notification blocking main thread
+- [ ] Create a tauri service on the frontend to call Rust commands

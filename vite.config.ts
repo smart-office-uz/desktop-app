@@ -1,8 +1,12 @@
+import { defineConfig, loadEnv } from "vite";
+
+// plugins
 import { TanStackRouterVite } from "@tanstack/router-plugin/vite";
 import react from "@vitejs/plugin-react";
 import path from "path";
-import { defineConfig, loadEnv } from "vite";
 import svgr from "vite-plugin-svgr";
+
+// environment variables
 const host = process.env.TAURI_DEV_HOST;
 const token = process.env.CENTRIGUFO_TOKEN;
 const envGlobal = process.env;
@@ -12,7 +16,7 @@ export default defineConfig(async ({ mode }) => {
   const env = loadEnv(mode, path.resolve(__dirname), "");
   const CENTRIFUGE_TOKEN = env.CENTRIFUGE_TOKEN;
   const CENTRIFUGE_PATH = env.CENTRIFUGE_PATH;
-  const STAFF_ID = env.STAFF_ID;
+
   return {
     plugins: [react(), TanStackRouterVite(), svgr()],
     resolve: {
@@ -44,7 +48,6 @@ export default defineConfig(async ({ mode }) => {
     define: {
       "import.meta.env.CENTRIFUGE_TOKEN": JSON.stringify(CENTRIFUGE_TOKEN),
       "import.meta.env.CENTRIFUGE_PATH": JSON.stringify(CENTRIFUGE_PATH),
-      "import.meta.env.STAFF_ID": JSON.stringify(STAFF_ID),
     },
   };
 });
