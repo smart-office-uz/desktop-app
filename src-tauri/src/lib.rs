@@ -121,7 +121,7 @@ fn redirect(url: String) -> () {
 }
 
 #[tauri::command]
-fn notify(message: &str, redirect: Option<String>) -> () {
+async fn notify(message: &str, redirect: Option<String>) -> Result<(), String> {
     // linux
     #[cfg(target_os = "linux")]
     Notification::new()
@@ -130,7 +130,8 @@ fn notify(message: &str, redirect: Option<String>) -> () {
         .appname("Smart Office")
         .hint(Hint::Category("email".to_owned()))
         .timeout(0) // this however is
-        .show()
+        .show_async()
+        .await
         .unwrap()
         .wait_for_action(|action| match action {
             "default" => match redirect.clone() {
@@ -190,6 +191,8 @@ fn notify(message: &str, redirect: Option<String>) -> () {
         }
         _ => {}
     }
+
+    Ok(())
 }
 
 #[tauri::command]
