@@ -4,8 +4,12 @@ import { createFileRoute, useLayoutEffect } from "@tanstack/react-router";
 import WindowService from "@/core/services/window.service";
 
 // use-cases
-import { AppLogo } from "@/app/widgets/app-logo";
 import { SignInForm } from "@/core/use-cases/user/sign-in/ui/SignInForm";
+
+// widgets
+import { AppLogo } from "@/app/widgets/app-logo";
+import { AppVersion } from "@/app/widgets/app-version";
+import { Copyright } from "@/app/widgets/copyright";
 
 export const Route = createFileRoute("/sign-in")({
   component: SignIn,
@@ -24,10 +28,14 @@ function SignIn() {
 
   return (
     <section className="min-h-screen grid grid-cols-2">
-      <div className="px-6 py-8 bg-white">
+      <div className="px-6 py-8 bg-background">
         <AppLogo width={159} />
-        <div className="flex flex-col items-center justify-center h-full">
+        <div className="flex flex-col items-center justify-center h-full max-h-[95%]">
           <SignInForm />
+        </div>
+        <div className="flex gap-6 items-center">
+          <Copyright />
+          <AppVersion />
         </div>
       </div>
       <div className="bg-auth-secondary flex items-center justify-center p-6">
