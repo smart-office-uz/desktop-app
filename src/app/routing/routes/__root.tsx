@@ -1,8 +1,5 @@
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 
-// widgets
-import { Header } from "@/app/widgets/header";
-
 // services
 import UserService from "@/core/services/user.service";
 
@@ -17,11 +14,6 @@ export const Route = createRootRoute({
       getUserStaffId: userService.getUserStaffId,
     });
     useLogoutEvent();
-    return (
-      <>
-        <Header />
-        <Outlet />
-      </>
-    );
+    return <Outlet />;
   },
 });

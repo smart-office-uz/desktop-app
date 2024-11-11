@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/app/components/card";
+import { Checkbox } from "@/app/components/checkbox";
 import {
   Form,
   FormControl,
@@ -21,7 +22,7 @@ import {
   FormMessage,
 } from "@/app/components/form";
 import { Input } from "@/app/components/input";
-
+import { PasswordInput } from "@/app/components/password-input";
 // api
 import { useSignInHandler } from "../api/useSignInHandler";
 
@@ -49,7 +50,9 @@ export const SignInForm = () => {
       window.location.href = "/";
     },
     onError: (response) => {
-      toast.error(response.message);
+      toast.error(response.message, {
+        className: "bg-destructive text-white",
+      });
     },
   });
   const { form, handleSubmit } = useForm({
@@ -59,10 +62,14 @@ export const SignInForm = () => {
   return (
     <Form {...form}>
       <form className="w-full max-w-sm" onSubmit={handleSubmit}>
-        <Card>
-          <CardHeader className="text-center">
-            <CardTitle className="text-2xl">Tizimga kirish</CardTitle>
-            <CardDescription>Login va parolni kiriting</CardDescription>
+        <Card className="border-0 shadow-none">
+          <CardHeader className="">
+            <CardTitle className="text-4xl font-semibold">
+              Tizimga kirish
+            </CardTitle>
+            <CardDescription className="font-medium text-darkGray dark:text-foreground">
+              Tizimga kirish uchun shaxsiy login va parolni kiriting
+            </CardDescription>
           </CardHeader>
           <CardContent className="grid gap-4">
             <FormField
@@ -72,7 +79,7 @@ export const SignInForm = () => {
                 <FormItem>
                   <FormLabel>Login</FormLabel>
                   <FormControl>
-                    <Input {...field} required />
+                    <Input {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -86,15 +93,32 @@ export const SignInForm = () => {
                 <FormItem>
                   <FormLabel>Parol</FormLabel>
                   <FormControl>
-                    <Input type="password" {...field} required />
+                    <PasswordInput {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
+
+            <div className="flex items-center space-x-2">
+              <Checkbox
+                id="rememberMe"
+                className="border-darkGray data-[state=checked]:bg-darkGray"
+              />
+              <label
+                htmlFor="rememberMe"
+                className="text-sm text-darkGray font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
+              >
+                Meni eslab qol
+              </label>
+            </div>
           </CardContent>
           <CardFooter>
-            <Button disabled={isPending} className="w-full" type="submit">
+            <Button
+              disabled={isPending}
+              className="w-full font-semibold"
+              type="submit"
+            >
               Tizimga kirish
               {isPending && <Loader2 className="h-4 w-4 ml-2 animate-spin" />}
             </Button>

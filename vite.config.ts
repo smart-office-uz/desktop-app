@@ -8,8 +8,6 @@ import svgr from "vite-plugin-svgr";
 
 // environment variables
 const host = process.env.TAURI_DEV_HOST;
-const token = process.env.CENTRIGUFO_TOKEN;
-const envGlobal = process.env;
 
 // https://vitejs.dev/config/
 export default defineConfig(async ({ mode }) => {
@@ -48,6 +46,7 @@ export default defineConfig(async ({ mode }) => {
     define: {
       "import.meta.env.CENTRIFUGE_TOKEN": JSON.stringify(CENTRIFUGE_TOKEN),
       "import.meta.env.CENTRIFUGE_PATH": JSON.stringify(CENTRIFUGE_PATH),
+      __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
     },
   };
 });

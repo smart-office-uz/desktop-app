@@ -137,8 +137,13 @@ async fn notify(message: &str, redirect: Option<String>) -> Result<(), String> {
             "default" => match redirect.clone() {
                 Some(url) => {
                     println!("redirecting to... {url}");
-                    if open::that(url).is_ok() {
-                        println!("Look at your browser !");
+                    match open::that(url) {
+                        Ok(_) => {
+                            println!("Look at your browser !");
+                        }
+                        Err(err) => {
+                            println!("Failed to open notification link on linux: {:?}", err);
+                        }
                     }
                 }
                 None => {}
