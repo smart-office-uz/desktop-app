@@ -12,8 +12,9 @@
     "windows": [
       {
         "title": "Smart Office",
-        "width": 500,
-        "height": 700
+        "width": 1440,
+        "height": 1024,
+        "zoomHotkeysEnabled": true
       }
     ],
     "security": {

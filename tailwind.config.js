@@ -42,8 +42,20 @@ export default {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
+        auth: {
+          secondary: "hsl(var(--auth-secondary-bg))",
+        },
+        darkGray: "hsl(var(--dark-gray))",
+        label: {
+          foreground: "hsl(var(--label-foreground))",
+        },
         border: "hsl(var(--border))",
-        input: "hsl(var(--input))",
+        input: {
+          DEFAULT: "hsl(var(--input))",
+          bg: "hsl(var(--input-bg))",
+          foreground: "hsl(var(--input-foreground))",
+          border: "hsl(var(--input-border))",
+        },
         ring: "hsl(var(--ring))",
         chart: {
           1: "hsl(var(--chart-1))",
