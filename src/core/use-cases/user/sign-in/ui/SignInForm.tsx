@@ -12,6 +12,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/app/components/card";
+import { Checkbox } from "@/app/components/checkbox";
 import {
   Form,
   FormControl,
@@ -21,7 +22,7 @@ import {
   FormMessage,
 } from "@/app/components/form";
 import { Input } from "@/app/components/input";
-
+import { PasswordInput } from "@/app/components/password-input";
 // api
 import { useSignInHandler } from "../api/useSignInHandler";
 
@@ -29,8 +30,6 @@ import { useSignInHandler } from "../api/useSignInHandler";
 import { useForm } from "../lib/useForm";
 
 // services
-import { Checkbox } from "@/app/components/checkbox";
-import { PasswordInput } from "@/app/components/password-input";
 import SessionService from "@/core/services/session.service";
 
 export const SignInForm = () => {
@@ -51,7 +50,9 @@ export const SignInForm = () => {
       window.location.href = "/";
     },
     onError: (response) => {
-      toast.error(response.message);
+      toast.error(response.message, {
+        className: "bg-destructive text-white",
+      });
     },
   });
   const { form, handleSubmit } = useForm({
