@@ -46,6 +46,9 @@ export const Notifications = (props: {
     queryClient.invalidateQueries({
       queryKey: ["notifications"],
     });
+    queryClient.invalidateQueries({
+      queryKey: ["notification-count"],
+    });
   };
 
   const handleRedirectOnEnter = (
@@ -65,11 +68,11 @@ export const Notifications = (props: {
     );
 
   return (
-    <ul className="space-y-4 max-h-[350px] overflow-y-auto cursor-pointer">
+    <ul className="space-y-4 max-h-[60vh] overflow-y-auto cursor-pointer">
       {notifications.map((notification, index) => (
         <li
           key={notification.id}
-          className="flex items-center gap-6 bg-foreground text-background rounded-md p-2 hover:bg-blue-500 hover:text-white focus:bg-blue-500 focus:text-white transition-colors"
+          className="flex items-center gap-6 bg-background rounded-2xl p-6"
           onClick={() =>
             redirect({
               id: notification.id,
@@ -89,8 +92,8 @@ export const Notifications = (props: {
           {notification.avatarLink && (
             <Avatar aria-hidden="true">
               <AvatarImage
-                width={64}
-                height={64}
+                width={48}
+                height={48}
                 className="object-cover rounded-full"
                 src={notification.avatarLink}
                 alt={notification.title}
@@ -101,11 +104,14 @@ export const Notifications = (props: {
               </AvatarFallback>
             </Avatar>
           )}
-          <div>
-            <h3 className="text-lg hover:underline font-bold">
-              {notification.title}
-            </h3>
-            <p className="font-medium">{notification.date}</p>
+          <div className="flex-grow flex gap-2 text-darkGray">
+            {notification.title}
+          </div>
+          <div className="space-y-4 flex flex-col items-end">
+            <p className="font-medium text-darkGray dark:text-foreground">
+              {notification.date}
+            </p>
+            <button className="text-primary font-semibold">Batafsil</button>
           </div>
         </li>
       ))}

@@ -1,17 +1,23 @@
 // widgets
 import { AppLogo } from "./app-logo";
+import { LocaleSwitcher } from "./locale-switcher";
 import { ModeToggle } from "./mode-toggle";
+import { NotificationUpdateIndicator } from "./notification-update-indicator";
 import { UserMenu } from "./user-menu";
 
 export const Header = () => {
   return (
-    <header className="bg-background border-b">
-      <div className="container mx-auto px-4 py-3 flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+    <header>
+      <div className="container mx-auto gap-4 py-6 flex justify-between">
+        <div className="py-3 px-6 bg-background rounded-2xl">
           <AppLogo />
         </div>
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-end gap-4 flex-grow py-3 px-6 bg-background rounded-2xl">
           <ModeToggle />
+          <NotificationUpdateIndicator />
+          <div className="w-[2px] h-full bg-lightGray"></div>
+          <LocaleSwitcher />
+          <div className="w-[2px] h-full bg-lightGray"></div>
           <UserMenu />
         </div>
       </div>
