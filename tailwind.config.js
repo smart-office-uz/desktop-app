@@ -46,6 +46,7 @@ export default {
           secondary: "hsl(var(--auth-secondary-bg))",
         },
         darkGray: "hsl(var(--dark-gray))",
+        lightGray: "hsl(var(--light-gray))",
         label: {
           foreground: "hsl(var(--label-foreground))",
         },

@@ -1,7 +1,6 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
 // icons
-import { RefreshCw } from "lucide-react";
 
 // services
 import NotificationService from "@/core/services/notification.service";
@@ -12,16 +11,16 @@ import { useQuery } from "@tanstack/react-query";
 
 // widgets
 import { Header } from "@/app/widgets/header";
-import { Notifications } from "@/app/widgets/notifications";
 
 // components
-import { Button } from "@/app/components/button";
 import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/app/components/card";
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/app/components/tabs";
+import { TypographyH2, TypographyP } from "@/app/components/typography";
+import { Notifications } from "@/app/widgets/notifications";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async ({ location }) => {
@@ -56,30 +55,34 @@ function Index() {
     },
   });
 
-  const handleRefresh = () => {
-    refetch();
-  };
-
   return (
     <>
       <Header />
-      <div className="flex flex-col items-center justify-center min-h-[90vh] p-6">
-        <Card className="w-full max-w-lg mx-auto">
-          <CardHeader className="flex flex-row items-center justify-between">
-            <CardTitle className="text-3xl">Xabarlar</CardTitle>
-            <Button variant="outline" size="icon" onClick={handleRefresh}>
-              <RefreshCw className="h-4 w-4" />
-              <span className="sr-only">Ma'lumotlarni yangilash</span>
-            </Button>
-          </CardHeader>
-          <CardContent>
-            <Notifications
-              isLoading={isLoading || isFetching}
-              notifications={notifications ?? []}
-            />
-          </CardContent>
-        </Card>
-      </div>
+      <section className="mt-10">
+        <div className="container mx-auto">
+          <TypographyH2>Xabarlar</TypographyH2>
+          <TypographyP className="text-darkGray mb-6">
+            Bu yerda sizga yuborilgan barcha xabarlarni ko’rishingiz mumkin.
+          </TypographyP>
+          <Tabs defaultValue="unread">
+            <TabsList className="space-x-3 mb-4">
+              <TabsTrigger value="unread" className="w-full">
+                O'qilmagan xabarlar
+              </TabsTrigger>
+              <TabsTrigger value="all" className="w-full">
+                Barcha xabarlar
+              </TabsTrigger>
+            </TabsList>
+            <TabsContent value="unread">
+              <Notifications
+                isLoading={isLoading || isFetching}
+                notifications={notifications ?? []}
+              />
+            </TabsContent>
+            <TabsContent value="all"></TabsContent>
+          </Tabs>
+        </div>
+      </section>
     </>
   );
 }

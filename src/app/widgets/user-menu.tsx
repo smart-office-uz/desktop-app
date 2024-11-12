@@ -43,7 +43,11 @@ export const UserMenu = () => {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon">
+        <Button
+          variant="outline"
+          size="icon"
+          className="rounded-full border-green-500"
+        >
           <User className="h-5 w-5" />
           <span className="sr-only">Open user menu</span>
         </Button>
