@@ -221,6 +221,18 @@ async fn get_latest_notifications_count(token: &str) -> Result<String, String> {
 }
 
 #[tauri::command]
+async fn get_all_notifications(app: AppHandle, token: &str, page: u8) -> Result<String, String> {
+    let response = notification::notification::get_history(token, page, app).await;
+    match response {
+        Ok(response) => Ok(response),
+        Err(error) => {
+            println!("error: {:?}", error);
+            Err(error.to_string())
+        }
+    }
+}
+
+#[tauri::command]
 async fn read_notification(token: &str, id: &str, index: u16) -> Result<(), String> {
     let response = notification::notification::read_notification(token, id, index).await;
     match response {
@@ -369,6 +381,7 @@ pub fn run() {
             notify,
             get_latest_notifications,
             get_latest_notifications_count,
+            get_all_notifications,
             redirect,
             update_tray_icon,
             read_notification,

@@ -68,50 +68,66 @@ export const Notifications = (props: {
     );
 
   return (
-    <ul className="space-y-4 max-h-[60vh] overflow-y-auto cursor-pointer">
+    <ul className="space-y-4 max-h-[50vh] overflow-y-auto cursor-pointer">
       {notifications.map((notification, index) => (
         <li
-          key={notification.id}
-          className="flex items-center gap-6 bg-background rounded-2xl p-6"
+          key={notification.getId()}
+          className="group flex items-center gap-6 bg-background rounded-2xl p-6 hover:bg-primary hover:text-foreground transition-colors"
           onClick={() =>
             redirect({
-              id: notification.id,
-              link: notification.link,
+              id: notification.getId(),
+              link: notification.getLink(),
               index,
             })
           }
           tabIndex={0}
           onKeyUp={(evt) =>
             handleRedirectOnEnter(evt, {
-              link: notification.link,
-              id: notification.id,
+              link: notification.getLink(),
+              id: notification.getId(),
               index,
             })
           }
         >
-          {notification.avatarLink && (
+          {notification.hasAvatarLink() ? (
             <Avatar aria-hidden="true">
               <AvatarImage
                 width={48}
                 height={48}
                 className="object-cover rounded-full"
-                src={notification.avatarLink}
-                alt={notification.title}
+                src={notification.getAvatarLink()}
+                alt={notification.getTitle()}
               />
               <AvatarFallback className="bg-transparent">
-                {/* <AppLogo className="h-4 w-4" /> */}
                 <img src="/smart-office-logo.png" alt="Logo" />
               </AvatarFallback>
             </Avatar>
+          ) : (
+            <img
+              className="h-12 w-12 rounded-full"
+              src="/smart-office-logo.png"
+              alt="Logo"
+            />
           )}
-          <div className="flex-grow flex gap-2 text-darkGray">
-            {notification.title}
-          </div>
+
+          {notification.hasTaskOwnerName() ? (
+            <div className="flex-grow flex flex-col gap-2">
+              <div className="flex-grow flex text-darkGray font-semibold dark:text-white group-hover:text-white">
+                {notification.getTitle()}
+              </div>
+              <p className="font-semibold text-primary group-hover:text-white">
+                {notification.getTaskOwner().fullName}
+              </p>
+            </div>
+          ) : (
+            <div className="flex-grow flex gap-2 text-darkGray dark:text-white font-semibold text-lg group-hover:text-white">
+              {notification.getTitle()}
+            </div>
+          )}
           <div className="space-y-4 flex flex-col items-end">
-            <p className="font-medium text-darkGray dark:text-foreground">
-              {notification.date}
+            <p className="font-medium text-darkGray dark:text-foreground group-hover:text-white">
+              {notification.getDate()}
             </p>
-            <button className="text-primary font-semibold">Batafsil</button>
           </div>
         </li>
       ))}

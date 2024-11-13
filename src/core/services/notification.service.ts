@@ -11,6 +11,10 @@ export default class NotificationService {
     return await this.#repository.getLatestNotificationsCount();
   }
 
+  async getAll(page: number = 1) {
+    return await this.#repository.getAll({ page });
+  }
+
   display(message: string, redirect?: string) {
     if (!redirect) {
       invoke("notify", {
