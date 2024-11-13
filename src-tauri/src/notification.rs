@@ -47,6 +47,35 @@ pub mod notification {
         }
     }
 
+    pub async fn get_history(
+        token: &str,
+        page: u8,
+        app: tauri::AppHandle,
+    ) -> Result<String, Box<dyn Error>> {
+        let client = reqwest::Client::new();
+
+        let response = client.get(
+            format!("https://smart-office.uz/services/platon-core/web/v1/tables/history_notification/data?_page={page}"),
+        ).bearer_auth(token).send().await?;
+
+        match response.error_for_status() {
+            Ok(response) => Ok(response.text().await?),
+            Err(error) => {
+                println!(
+                               "Error occured when checked the error_for_status() inside the get_latest function: {:?}",
+                               error
+                           );
+                match error.status().expect("No status found!").as_u16() {
+                    401 => {
+                        event::event::logout_user(app);
+                        Err("Access token is expired!".into())
+                    }
+                    _ => Err("Something went wrong!".into()),
+                }
+            }
+        }
+    }
+
     pub async fn get_count(token: &str) -> Result<String, Box<dyn Error>> {
         let client = reqwest::Client::new();
 
