@@ -62,7 +62,7 @@ export const Notifications = (props: {
 
   if (props.isLoading)
     return (
-      <div className="flex items-center justify-center">
+      <div className="flex items-center justify-center min-h-[50vh]">
         <Loader2 className="h-8 w-8 animate-spin" />
       </div>
     );
@@ -89,26 +89,31 @@ export const Notifications = (props: {
             })
           }
         >
-          {notification.hasAvatarLink() ? (
-            <Avatar aria-hidden="true">
-              <AvatarImage
-                width={48}
-                height={48}
-                className="object-cover rounded-full"
-                src={notification.getAvatarLink()}
-                alt={notification.getTitle()}
+          <div className="flex items-center gap-2">
+            {notification.getStatus() === "SENT" && (
+              <div className="w-2 h-2 rounded-full bg-destructive"></div>
+            )}
+            {notification.hasAvatarLink() ? (
+              <Avatar aria-hidden="true">
+                <AvatarImage
+                  width={48}
+                  height={48}
+                  className="object-cover rounded-full"
+                  src={notification.getAvatarLink()}
+                  alt={notification.getTitle()}
+                />
+                <AvatarFallback className="bg-transparent">
+                  <img src="/smart-office-logo.png" alt="Logo" />
+                </AvatarFallback>
+              </Avatar>
+            ) : (
+              <img
+                className="h-12 w-12 rounded-full"
+                src="/smart-office-logo.png"
+                alt="Logo"
               />
-              <AvatarFallback className="bg-transparent">
-                <img src="/smart-office-logo.png" alt="Logo" />
-              </AvatarFallback>
-            </Avatar>
-          ) : (
-            <img
-              className="h-12 w-12 rounded-full"
-              src="/smart-office-logo.png"
-              alt="Logo"
-            />
-          )}
+            )}
+          </div>
 
           {notification.hasTaskOwnerName() ? (
             <div className="flex-grow flex flex-col gap-2">
