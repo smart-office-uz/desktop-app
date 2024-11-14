@@ -6,6 +6,7 @@ export interface NotificationEntity {
   getLink: () => string;
   getDate: () => string;
   getAvatarLink: () => string;
+  getStatus: () => "READ" | "SENT";
 }
 
 export class Notification implements NotificationEntity {
@@ -55,6 +56,10 @@ export class Notification implements NotificationEntity {
 
   getTaskOwner() {
     return this.taskOwner;
+  }
+
+  getStatus() {
+    return this.status;
   }
 
   getId() {
