@@ -40,6 +40,10 @@ export const NotificationHistory = () => {
     },
   });
 
+  const totalNumberOfNotifications =
+    notificationHistory?.totalNumberOfNotifications ?? 0;
+  const numberOfPages = Math.floor(totalNumberOfNotifications / pageSize);
+
   return (
     <>
       <Notifications
@@ -89,10 +93,7 @@ export const NotificationHistory = () => {
           renderOnZeroPageCount={null}
         />
         <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Page {page + 1} of{" "}
-          {Math.floor(
-            (notificationHistory?.totalNumberOfNotifications ?? 0) / pageSize,
-          )}
+          Page {page + 1} of {numberOfPages}
         </div>
         <div className="flex items-center space-x-2">
           <Button
@@ -124,14 +125,7 @@ export const NotificationHistory = () => {
           <Button
             variant="default"
             className="hidden h-8 w-8 p-0 lg:flex"
-            onClick={() =>
-              setPage(
-                Math.floor(
-                  (notificationHistory?.totalNumberOfNotifications ?? 0) /
-                    pageSize,
-                ) - 1,
-              )
-            }
+            onClick={() => setPage(numberOfPages - 1)}
             // disabled={!table.getCanNextPage()}
           >
             <span className="sr-only">Go to last page</span>
