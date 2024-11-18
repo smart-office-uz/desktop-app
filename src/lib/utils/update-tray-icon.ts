@@ -1,8 +1,8 @@
-// tauri
-import { invoke } from "@tauri-apps/api/core";
+import TauriService from "@/core/services/tauri.service";
 
 export async function updateAppIcon(count?: number) {
   try {
+    const { invoke } = new TauriService();
     const { rgba, height, width } = count
       ? await createAppIcon(count)
       : await createAppIcon();
@@ -25,7 +25,7 @@ export async function createAppIcon(count?: number) {
   canvas.height = iconSize;
 
   const baseImage = (await loadImage(
-    "/smart-office-logo.png",
+    "/smart-office-logo.png"
   )) as CanvasImageSource;
   context.drawImage(baseImage, 0, 0, iconSize, iconSize);
 

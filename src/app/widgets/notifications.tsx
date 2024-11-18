@@ -13,7 +13,7 @@ import { Notification } from "@/core/entities/notification.entity";
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/avatar";
 
 // tauri
-import { invoke } from "@tauri-apps/api/core";
+import TauriService from "@/core/services/tauri.service";
 
 export const Notifications = (props: {
   notifications: Notification[];
@@ -32,23 +32,25 @@ export const Notifications = (props: {
     id: string;
     index: number;
   }) => {
-    invoke("read_notification", {
+    const tauriService = new TauriService();
+
+    tauriService.invoke("read_notification", {
       id,
       index,
       token: sessionService.getAccessToken(),
     });
-    invoke("redirect", {
+    tauriService.invoke("redirect", {
       url: link,
     });
 
-    // invalidate the query cache 
+    // invalidate the query cache
     // WARNING: this doesn't remove the existing data, it just marks it as stale so it can be refetched
     queryClient.invalidateQueries();
   };
 
   const handleRedirectOnEnter = (
     e: React.KeyboardEvent<HTMLLIElement>,
-    redirectProps: Parameters<typeof redirect>[0],
+    redirectProps: Parameters<typeof redirect>[0]
   ) => {
     if (e.key === "Enter") {
       redirect(redirectProps);

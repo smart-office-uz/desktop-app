@@ -1,9 +1,12 @@
-// tauri
-import { invoke } from "@tauri-apps/api/core";
+// services
+import TauriService from "../services/tauri.service";
 
 class UserRepository {
+  private readonly tauriService = new TauriService();
+
   async signIn(payload: { username: string; password: string }) {
     const { password, username } = payload;
+    const { invoke } = this.tauriService;
     try {
       let response = (await invoke("authenticate", {
         username,

@@ -1,21 +1,20 @@
-// tauri
-import { invoke } from "@tauri-apps/api/core";
-
 // repositories
 import UserRepository from "../repositories/user.repository";
 
 // services
 import SessionService from "./session.service";
+import TauriService from "./tauri.service";
 
 class UserService {
-  #repository: UserRepository = new UserRepository();
+  private readonly tauriService = new TauriService();
+  private readonly repository: UserRepository = new UserRepository();
 
   async signInUser(payload: { username: string; password: string }): Promise<{
     accessToken: string;
     refreshToken: string;
   }> {
     try {
-      return await this.#repository.signIn(payload);
+      return await this.repository.signIn(payload);
     } catch (error) {
       throw new Error(error as string);
     }
@@ -23,6 +22,7 @@ class UserService {
 
   async getUserStaffId(): Promise<string> {
     const sessionService = new SessionService();
+    const { invoke } = this.tauriService;
 
     const response = (await invoke("get_user_staff_id", {
       token: sessionService.getAccessToken(),
