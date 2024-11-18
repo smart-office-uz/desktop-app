@@ -26,10 +26,9 @@ export const NotificationUpdateIndicator = () => {
 
   useMemo(() => {
     if (data.isSuccess && data.data > 0) {
-      updateAppIcon(data.data)
+      updateAppIcon(data.data);
     }
-  },
-    [data])
+  }, [data]);
 
   return (
     <Button className="relative rounded-2xl" variant="outline" size="icon">

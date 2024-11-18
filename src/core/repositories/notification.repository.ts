@@ -1,15 +1,18 @@
 // store
 import { useSessionStore } from "@/store/session";
 
-// tauri
-import { invoke } from "@tauri-apps/api/core";
+// services
+import TauriService from "../services/tauri.service";
 
 // entities
 import { Notification } from "../entities/notification.entity";
 
 export default class NotificationRepository {
+  private readonly tauriService = new TauriService();
+
   async getLatest(): Promise<Notification[]> {
     const { accessToken } = useSessionStore.getState();
+    const { invoke } = this.tauriService;
 
     const response = (await invoke("get_latest_notifications", {
       token: accessToken,
@@ -39,7 +42,7 @@ export default class NotificationRepository {
         avatarLink: notification.image_url,
         taskOwner: {
           staffId: notification.staff_id,
-          fullName: index % 2 === 0 ? "John Doe" : undefined,
+          fullName: "",
         },
         status: "SENT",
       });
@@ -51,6 +54,7 @@ export default class NotificationRepository {
     totalNumberOfNotifications: number;
   }> {
     const { accessToken } = useSessionStore.getState();
+    const { invoke } = this.tauriService;
 
     const response = (await invoke("get_all_notifications", {
       token: accessToken,
@@ -89,7 +93,7 @@ export default class NotificationRepository {
             },
             status: notificationStatus,
           });
-        },
+        }
       ),
       totalNumberOfNotifications: notifications?.data?.total,
     };
@@ -97,6 +101,8 @@ export default class NotificationRepository {
 
   async getLatestNotificationsCount(): Promise<number> {
     const { accessToken } = useSessionStore.getState();
+    const { invoke } = this.tauriService;
+
     const response = (await invoke("get_latest_notifications_count", {
       token: accessToken,
     })) as string;
