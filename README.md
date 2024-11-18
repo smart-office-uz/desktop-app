@@ -81,13 +81,13 @@ If you encounter any issues during the installation process, please feel free to
 - [x] Add a nicer shadcn-ui theme
 - [x] Add uzbek language support
 - [ ] Refresh tokens must be handled
-- [ ] Clean up unnecessary crates
+- [x] Clean up unnecessary crates
 - [ ] (Maybe) Add auth checks to all invoke() handlers
 - [ ] (Maybe) Save user session in tauri store
 - [x] Remove tanstack router devtools
 - [x] Remove tanstack query devtools
 - [x] Make window size smaller
-- [ ] (Maybe) Redesign
+- [x] (Maybe) Redesign
 - [x] Add installation instructions
 - [ ] Add precommit hook for type-checking
 - [x] Fix system tray icon updating twice
@@ -96,11 +96,11 @@ If you encounter any issues during the installation process, please feel free to
 - [x] Update app menu icon alongside the tray icon
 - [x] Fix notification links that do not contain http:// or https://
 - [x] (Maybe) Telegram bot to automatically send new release notifications
-- [ ] Icon should be changed
+- [x] Icon should be changed
 - [x] Tray icon notification number should have a bigger font size
-- [ ] (Maybe) Add a logo to the login page
+- [x] (Maybe) Add a logo to the login page
 - [x] Change window size based on pages
 - [x] Add notification link to each individual notification
 - [x] Hide the window when user tries to exit
-- [ ] Fix notification blocking main thread
+- [x] Fix notification blocking main thread
 - [ ] Create a tauri service on the frontend to call Rust commands

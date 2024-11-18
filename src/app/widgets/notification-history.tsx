@@ -16,13 +16,6 @@ import {
   ChevronsRight,
 } from "lucide-react";
 import { Button, buttonVariants } from "../components/button";
-// import {
-//   Select,
-//   SelectContent,
-//   SelectItem,
-//   SelectTrigger,
-//   SelectValue,
-// } from "../components/select";
 
 export const NotificationHistory = () => {
   const [page, setPage] = useState(0);
@@ -38,6 +31,8 @@ export const NotificationHistory = () => {
       const notifications = await notificationService.getAll(page);
       return notifications;
     },
+    experimental_prefetchInRender: true,
+    staleTime: 1000 * 60 * 5,
   });
 
   const totalNumberOfNotifications =
@@ -53,26 +48,7 @@ export const NotificationHistory = () => {
         notifications={notificationHistory?.notifications ?? []}
       />
       <div className="flex items-center space-x-6 lg:space-x-8 mt-6 justify-center">
-        {/* <div className="flex items-center space-x-2">
-            <p className="text-sm font-medium">Rows per page</p>
-            <Select
-              value={String(pageSize)}
-              onValueChange={(value) => {
-                setPageSize(Number(value));
-              }}
-            >
-              <SelectTrigger className="h-8 w-[70px]">
-                <SelectValue placeholder={pageSize} />
-              </SelectTrigger>
-              <SelectContent side="top">
-                {[10, 20, 30, 40, 50].map((pageSize) => (
-                  <SelectItem key={pageSize} value={`${pageSize}`}>
-                    {pageSize}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div> */}
+
         <ReactPaginate
           breakLabel="..."
           nextLabel="Next"
@@ -126,7 +102,7 @@ export const NotificationHistory = () => {
             variant="default"
             className="hidden h-8 w-8 p-0 lg:flex"
             onClick={() => setPage(numberOfPages - 1)}
-            // disabled={!table.getCanNextPage()}
+          // disabled={!table.getCanNextPage()}
           >
             <span className="sr-only">Go to last page</span>
             <ChevronsRight />
