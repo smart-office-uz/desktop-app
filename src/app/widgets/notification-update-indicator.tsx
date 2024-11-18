@@ -6,13 +6,15 @@ import { Button } from "../components/button";
 
 // services
 import NotificationService from "@/core/services/notification.service";
+import { updateAppIcon } from "@/lib/utils/update-tray-icon";
+import { useMemo } from "react";
 
 export const getNotificationCount = (): number => {
   return 5;
 };
 
 export const NotificationUpdateIndicator = () => {
-  const { data: notificationCount } = useQuery({
+  const data = useQuery({
     queryKey: ["notification-count"],
     queryFn: async () => {
       const notificationService = new NotificationService();
@@ -20,6 +22,14 @@ export const NotificationUpdateIndicator = () => {
     },
     experimental_prefetchInRender: true,
   });
+  const notificationCount = data.data;
+
+  useMemo(() => {
+    if (data.isSuccess && data.data > 0) {
+      updateAppIcon(data.data)
+    }
+  },
+    [data])
 
   return (
     <Button className="relative rounded-2xl" variant="outline" size="icon">
