@@ -41,14 +41,9 @@ export const Notifications = (props: {
       url: link,
     });
 
-    // invalidate the query cache for notifications
+    // invalidate the query cache 
     // WARNING: this doesn't remove the existing data, it just marks it as stale so it can be refetched
-    queryClient.invalidateQueries({
-      queryKey: ["notifications"],
-    });
-    queryClient.invalidateQueries({
-      queryKey: ["notification-count"],
-    });
+    queryClient.invalidateQueries();
   };
 
   const handleRedirectOnEnter = (
