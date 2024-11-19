@@ -33,11 +33,20 @@ export const Notifications = (props: {
     index: number;
   }) => {
     const tauriService = new TauriService();
+    const accessToken = sessionService.getAccessToken();
+    if (
+      accessToken === null ||
+      accessToken === "" ||
+      accessToken === undefined
+    ) {
+      console.error("Access token is null or undefined");
+      return;
+    }
 
     tauriService.invoke("read_notification", {
       id,
       index,
-      token: sessionService.getAccessToken(),
+      token: accessToken,
     });
     tauriService.invoke("redirect", {
       url: link,
@@ -50,7 +59,7 @@ export const Notifications = (props: {
 
   const handleRedirectOnEnter = (
     e: React.KeyboardEvent<HTMLLIElement>,
-    redirectProps: Parameters<typeof redirect>[0]
+    redirectProps: Parameters<typeof redirect>[0],
   ) => {
     if (e.key === "Enter") {
       redirect(redirectProps);

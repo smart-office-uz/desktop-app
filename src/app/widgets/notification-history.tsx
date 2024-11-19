@@ -19,7 +19,7 @@ import { Button, buttonVariants } from "../components/button";
 
 export const NotificationHistory = () => {
   const [page, setPage] = useState(0);
-  const [pageSize, setPageSize] = useState(15);
+  const [pageSize] = useState(15);
   const {
     data: notificationHistory,
     isFetching: isFetchingNotificationHistory,
@@ -48,7 +48,6 @@ export const NotificationHistory = () => {
         notifications={notificationHistory?.notifications ?? []}
       />
       <div className="flex items-center space-x-6 lg:space-x-8 mt-6 justify-center">
-
         <ReactPaginate
           breakLabel="..."
           nextLabel="Next"
@@ -102,7 +101,7 @@ export const NotificationHistory = () => {
             variant="default"
             className="hidden h-8 w-8 p-0 lg:flex"
             onClick={() => setPage(numberOfPages - 1)}
-          // disabled={!table.getCanNextPage()}
+            // disabled={!table.getCanNextPage()}
           >
             <span className="sr-only">Go to last page</span>
             <ChevronsRight />

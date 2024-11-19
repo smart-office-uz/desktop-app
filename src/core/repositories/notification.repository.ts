@@ -14,6 +14,15 @@ export default class NotificationRepository {
     const { accessToken } = useSessionStore.getState();
     const { invoke } = this.tauriService;
 
+    if (
+      accessToken === null ||
+      accessToken === "" ||
+      accessToken === undefined
+    ) {
+      console.error("Access token is null or undefined");
+      return [];
+    }
+
     const response = (await invoke("get_latest_notifications", {
       token: accessToken,
     })) as string;
@@ -33,7 +42,7 @@ export default class NotificationRepository {
       };
     };
 
-    return notifications?.data?.notify?.map((notification, index) => {
+    return notifications?.data?.notify?.map((notification) => {
       return new Notification({
         id: notification.id,
         title: notification.title,
@@ -55,6 +64,18 @@ export default class NotificationRepository {
   }> {
     const { accessToken } = useSessionStore.getState();
     const { invoke } = this.tauriService;
+
+    if (
+      accessToken === null ||
+      accessToken === "" ||
+      accessToken === undefined
+    ) {
+      console.error("Access token is null or undefined");
+      return {
+        notifications: [],
+        totalNumberOfNotifications: 0,
+      };
+    }
 
     const response = (await invoke("get_all_notifications", {
       token: accessToken,
@@ -93,7 +114,7 @@ export default class NotificationRepository {
             },
             status: notificationStatus,
           });
-        }
+        },
       ),
       totalNumberOfNotifications: notifications?.data?.total,
     };
@@ -102,7 +123,14 @@ export default class NotificationRepository {
   async getLatestNotificationsCount(): Promise<number> {
     const { accessToken } = useSessionStore.getState();
     const { invoke } = this.tauriService;
-
+    if (
+      accessToken === null ||
+      accessToken === "" ||
+      accessToken === undefined
+    ) {
+      console.error("Access token is null or undefined");
+      return 0;
+    }
     const response = (await invoke("get_latest_notifications_count", {
       token: accessToken,
     })) as string;
