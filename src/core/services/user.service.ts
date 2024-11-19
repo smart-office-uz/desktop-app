@@ -23,10 +23,20 @@ class UserService {
   async getUserStaffId(): Promise<string> {
     const sessionService = new SessionService();
     const { invoke } = this.tauriService;
+    const accessToken = sessionService.getAccessToken();
 
+    if (
+      accessToken === null ||
+      accessToken === "" ||
+      accessToken === undefined
+    ) {
+      console.error("Access token is null or undefined");
+      return "";
+    }
     const response = (await invoke("get_user_staff_id", {
-      token: sessionService.getAccessToken(),
+      token: accessToken,
     })) as string;
+
     const json = JSON.parse(response) as {
       data: {
         username: string;
