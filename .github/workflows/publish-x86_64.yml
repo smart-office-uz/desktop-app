@@ -130,7 +130,7 @@ jobs:
           security find-identity -v -p codesigning build.keychain
       - name: Verify Certificate
         run: |
-          CERT_INFO=$(security find-identity -v -p codesigning build.keychain | grep "Apple Development")
+          CERT_INFO=$(security find-identity -v -p codesigning build.keychain | grep "Apple Distribution: REALSOFT, OOO (2M9QYY9NBD)")
           echo "CERT_INFO=$CERT_INFO"
           CERT_ID=$(echo "$CERT_INFO" | awk -F'"' '{print $2}')
           echo "CERT_ID=$CERT_ID" >> $GITHUB_ENV
