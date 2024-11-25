@@ -33,7 +33,6 @@ import { useForm } from "../lib/useForm";
 import SessionService from "@/core/services/session.service";
 
 export const SignInForm = () => {
-  // const { navigate } = useRouter();
   const { signIn, isPending } = useSignInHandler({
     onSuccess: (response) => {
       const sessionService = new SessionService();
@@ -43,10 +42,6 @@ export const SignInForm = () => {
       });
       toast.success("Tizimga kirish muvaffaqqiyatli amalga oshirildi!");
       // TODO: display a native notification
-      // navigate({
-      //   to: "/",
-      // });
-      // this is a temporary solution to make sure the notification service is reinitialized after the user is signed in
       window.location.href = "/";
     },
     onError: (response) => {
@@ -63,7 +58,7 @@ export const SignInForm = () => {
     <Form {...form}>
       <form className="w-full max-w-sm" onSubmit={handleSubmit}>
         <Card className="border-0 shadow-none">
-          <CardHeader className="">
+          <CardHeader className="px-0">
             <CardTitle className="text-4xl font-semibold">
               Tizimga kirish
             </CardTitle>
@@ -71,7 +66,7 @@ export const SignInForm = () => {
               Tizimga kirish uchun shaxsiy login va parolni kiriting
             </CardDescription>
           </CardHeader>
-          <CardContent className="grid gap-4">
+          <CardContent className="grid gap-4 px-0">
             <FormField
               control={form.control}
               name="username"
@@ -113,7 +108,7 @@ export const SignInForm = () => {
               </label>
             </div>
           </CardContent>
-          <CardFooter>
+          <CardFooter className="px-0">
             <Button
               disabled={isPending}
               className="w-full font-semibold"

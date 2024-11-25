@@ -92,7 +92,7 @@ pub mod notification {
             }
             Err(error) => {
                 println!(
-                    "Error occured when checked the error_for_status() inside the get_count function: {:?}",
+                    "Error occured when checked the error_for_status() inside the get_count function: {:?}, {token}",
                     error
                 );
                 Err("Something went wrong!".into())

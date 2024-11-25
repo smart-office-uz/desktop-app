@@ -94,7 +94,6 @@ fn update_tray_icon(app: AppHandle, rgba: Vec<u8>, width: u32, height: u32) -> R
                     println!("Couldn't update the app icon: {:?}", err);
                 }
             }
-            
         }
         _ => {
             println!("No existing tray found!");

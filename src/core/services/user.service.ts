@@ -6,8 +6,7 @@ import SessionService from "./session.service";
 import TauriService from "./tauri.service";
 
 class UserService {
-  private readonly tauriService = new TauriService();
-  private readonly repository: UserRepository = new UserRepository();
+  private readonly repository = new UserRepository();
 
   async signInUser(payload: { username: string; password: string }): Promise<{
     accessToken: string;
@@ -21,8 +20,9 @@ class UserService {
   }
 
   async getUserStaffId(): Promise<string> {
+    const tauriService = new TauriService();
     const sessionService = new SessionService();
-    const { invoke } = this.tauriService;
+    const { invoke } = tauriService;
     const accessToken = sessionService.getAccessToken();
 
     if (

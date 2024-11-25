@@ -28,19 +28,38 @@ export default defineConfig(async ({ mode }) => {
     clearScreen: false,
     // 2. tauri expects a fixed port, fail if that port is not available
     server: {
-      port: 1420,
+      port: 5173,
       strictPort: true,
       host: host || false,
       hmr: host
         ? {
             protocol: "ws",
             host,
-            port: 1421,
+            port: 5174,
           }
         : undefined,
       watch: {
         // 3. tell vite to ignore watching `src-tauri`
         ignored: ["**/src-tauri/**"],
+      },
+      proxy: {
+        "/api/eimzo/challenge": {
+          // target: "https://hujjat.uz/mobile-id/frontend/challenge",
+          target:"https://smart-office.uz/services/platon-auth/api/eimzo/challenge",
+          changeOrigin: true,
+          secure: false,
+          rewrite: () => {
+            return "";
+          },
+        },
+        "/api/esign/authenticate": {
+          target: "https://smart-office.uz/services/platon-auth/api/eimzo",
+          // changeorigin: true,
+          secure: false,
+          rewrite: (path: string) => {
+            return "";
+          },
+        },
       },
     },
     define: {

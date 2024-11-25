@@ -21,11 +21,16 @@ export const useWebSocket = (deps: {
     const centrifuge = new Centrifuge(import.meta.env.CENTRIFUGE_PATH, {
       token: import.meta.env.CENTRIFUGE_TOKEN,
     });
-
-    const notificationSubscriptionStaffId = await deps.getUserStaffId();
+    let notificationSubscriptionStaffId;
+    try {
+      notificationSubscriptionStaffId = await deps.getUserStaffId();
+    } catch (error) {
+      console.error(error);
+      return;
+    }
     const notificationSubscriptionPath = `smart-office-notification_${notificationSubscriptionStaffId}`;
     const notificationSubscription = centrifuge.newSubscription(
-      notificationSubscriptionPath,
+      notificationSubscriptionPath
     );
 
     notificationSubscription.on("publication", async (ctx) => {
@@ -49,7 +54,7 @@ export const useWebSocket = (deps: {
         setTimeout(() => {
           notificationService.display(
             `Sizda ${notifications} ta yangi xabar bor!`,
-            redirectUrl,
+            redirectUrl
           );
         }, 2000);
       } catch (err) {}
