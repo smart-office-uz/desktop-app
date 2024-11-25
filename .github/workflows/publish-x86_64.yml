@@ -99,7 +99,7 @@ jobs:
           prerelease: false
           args: ${{ matrix.args }}
   build-macos:
-    needs: prepare
+    needs: publish-tauri
     strategy:
       matrix:
         include:
