@@ -10,7 +10,6 @@ import { SignInForm } from "@/core/use-cases/user/sign-in/ui/SignInForm";
 import { AppLogo } from "@/app/widgets/app-logo";
 import { AppVersion } from "@/app/widgets/app-version";
 import { Copyright } from "@/app/widgets/copyright";
-import { ESignAuthView } from "@/core/presentation/esign-auth/esign-auth";
 
 export const Route = createFileRoute("/sign-in")({
   component: SignIn,
@@ -33,7 +32,7 @@ function SignIn() {
         <AppLogo width={159} />
         <div className="flex flex-col items-center justify-center h-full max-h-[95%]">
           <SignInForm />
-          <ESignAuthView />
+          {/* <ESignAuthView /> */}
         </div>
         <div className="flex gap-6 items-center">
           <Copyright />

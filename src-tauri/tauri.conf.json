@@ -1,7 +1,7 @@
 {
   "$schema": "https://schema.tauri.app/config/2.0.0",
   "productName": "smart-office",
-  "identifier": "com.smart-office",
+  "identifier": "smart-office-desktop-app",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:5173",
@@ -41,6 +41,9 @@
     },
     "category": "Productivity",
     "homepage": "https://github.com/khaitbek/smart-office-desktop-app",
-    "publisher": "Realsoft LLC"
+    "publisher": "Realsoft LLC",
+    "macOS":{
+      
+    }
   }
 }
