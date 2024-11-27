@@ -1,5 +1,8 @@
 // services
 import ESignService from "@/adapters/e-sign/e-sign.service";
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
+// Initialize an agent at application startup.
+const fpPromise = FingerprintJS.load();
 
 // types
 import {
@@ -40,23 +43,24 @@ export const useESignAuth = (ctx: ESignAuthCtx) => {
 
   async function authenticate(certificate: ECertificate<Cert>["original"]) {
     try {
-      const challenge = await (await fetch("/api/eimzo/challenge", {})).json();
-      console.log({ challenge });
+      const challenge = await (await fetch("/api/esign/challenge")).json();
       const challengeString = challenge.data.body.challenge;
-      console.log({ challengeString });
       const signatureToken = await eSignService.signCertificate(
         certificate,
         challengeString
       );
+      const fp = await fpPromise;
+      const result = await fp.get();
       const eSignAuth = await (
         await fetch("/api/esign/authenticate", {
           method: "POST",
           body: signatureToken,
           headers: {
-            "Device-Id": "Iphone X",
+            "device-ip": "127.0.0.1",
+            "device-id": "Iphone X",
+            "device-fingerprint": result.visitorId,
             "Content-Type": "text/plain",
           },
-          
         })
       ).json();
       onAuthenticated({

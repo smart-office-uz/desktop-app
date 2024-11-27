@@ -1,7 +1,7 @@
 {
   "name": "smart-office-desktop-app",
   "private": true,
-  "version": "0.1.8",
+  "version": "0.2.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -12,6 +12,7 @@
     "watch-routes": "tsr watch"
   },
   "dependencies": {
+    "@fingerprintjs/fingerprintjs": "^4.5.1",
     "@hookform/resolvers": "^3.9.1",
     "@radix-ui/react-alert-dialog": "^1.1.2",
     "@radix-ui/react-avatar": "^1.1.1",
