@@ -69,7 +69,7 @@ export const ESignAuthView = (_ctx: ESignAuthViewCtx) => {
         onClick={eSignAuthHandler}
         variant="outline"
       >
-        Continue with E-IMZO
+        E-IMZO orqali kirish
       </Button>
       <Dialog open={isESignModalOpen} onOpenChange={setESignModalOpen}>
         <DialogContent>
