@@ -26,11 +26,13 @@ export default defineConfig(async ({ mode }) => {
     //
     // 1. prevent vite from obscuring rust errors
     clearScreen: false,
+
     // 2. tauri expects a fixed port, fail if that port is not available
     server: {
       port: 5173,
       strictPort: true,
       host: host || false,
+
       hmr: host
         ? {
             protocol: "ws",
@@ -47,10 +49,7 @@ export default defineConfig(async ({ mode }) => {
           target:
             "https://smart-office.uz/services/platon-auth/api/eimzo/challenge",
           changeOrigin: true,
-          secure: false,
-          rewrite: () => {
-            return "";
-          },
+          rewrite: () => "",
         },
         "/api/esign/authenticate": {
           target: "https://smart-office.uz/services/platon-auth/api/eimzo",
@@ -63,6 +62,11 @@ export default defineConfig(async ({ mode }) => {
       "import.meta.env.CENTRIFUGE_TOKEN": JSON.stringify(CENTRIFUGE_TOKEN),
       "import.meta.env.CENTRIFUGE_PATH": JSON.stringify(CENTRIFUGE_PATH),
       __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
+    },
+    build: {
+      commonjsOptions: {
+        include: ["node_modules/**/*.js"],
+      },
     },
   };
 });

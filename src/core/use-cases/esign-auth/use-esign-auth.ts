@@ -1,3 +1,5 @@
+import { fetch } from "@tauri-apps/plugin-http";
+
 // services
 import ESignService from "@/adapters/e-sign/e-sign.service";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
@@ -43,7 +45,11 @@ export const useESignAuth = (ctx: ESignAuthCtx) => {
 
   async function authenticate(certificate: ECertificate<Cert>["original"]) {
     try {
-      const challenge = await (await fetch("/api/esign/challenge")).json();
+      const challenge = await (
+        await fetch(
+          "https://smart-office.uz/services/platon-auth/api/eimzo/challenge"
+        )
+      ).json();
       const challengeString = challenge.data.body.challenge;
       const signatureToken = await eSignService.signCertificate(
         certificate,
@@ -52,7 +58,7 @@ export const useESignAuth = (ctx: ESignAuthCtx) => {
       const fp = await fpPromise;
       const result = await fp.get();
       const eSignAuth = await (
-        await fetch("/api/esign/authenticate", {
+        await fetch("https://smart-office.uz/services/platon-auth/api/eimzo", {
           method: "POST",
           body: signatureToken,
           headers: {
