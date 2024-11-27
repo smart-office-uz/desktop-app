@@ -43,9 +43,9 @@ export default defineConfig(async ({ mode }) => {
         ignored: ["**/src-tauri/**"],
       },
       proxy: {
-        "/api/eimzo/challenge": {
-          // target: "https://hujjat.uz/mobile-id/frontend/challenge",
-          target:"https://smart-office.uz/services/platon-auth/api/eimzo/challenge",
+        "/api/esign/challenge": {
+          target:
+            "https://smart-office.uz/services/platon-auth/api/eimzo/challenge",
           changeOrigin: true,
           secure: false,
           rewrite: () => {
@@ -54,11 +54,8 @@ export default defineConfig(async ({ mode }) => {
         },
         "/api/esign/authenticate": {
           target: "https://smart-office.uz/services/platon-auth/api/eimzo",
-          // changeorigin: true,
-          secure: false,
-          rewrite: (path: string) => {
-            return "";
-          },
+          changeOrigin: true,
+          rewrite: () => "",
         },
       },
     },

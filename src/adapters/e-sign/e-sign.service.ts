@@ -2,7 +2,7 @@ import {
   ECertificate,
   type ECertificateEntity,
 } from "./e-certificate.entity.js";
-import EIMZO, { Cert } from "./e-sign.config.js";
+import EIMZO, { type Cert } from "./e-sign.config.js";
 import "./e-sign.js";
 
 interface IESignService {
