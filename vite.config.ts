@@ -22,6 +22,7 @@ export default defineConfig(async ({ mode }) => {
         "@": path.resolve(__dirname, "./src"),
       },
     },
+
     // Vite options tailored for Tauri development and only applied in `tauri dev` or `tauri build`
     //
     // 1. prevent vite from obscuring rust errors
@@ -32,7 +33,12 @@ export default defineConfig(async ({ mode }) => {
       port: 5173,
       strictPort: true,
       host: host || false,
+      origin: "http://127.0.0.1:8080",
 
+      headers: {
+        origin: "https://smart-office.uz",
+        host: "smart-office.uz",
+      },
       hmr: host
         ? {
             protocol: "ws",
@@ -63,6 +69,7 @@ export default defineConfig(async ({ mode }) => {
       "import.meta.env.CENTRIFUGE_PATH": JSON.stringify(CENTRIFUGE_PATH),
       __APP_VERSION__: JSON.stringify(process.env.npm_package_version),
     },
+
     build: {
       commonjsOptions: {
         include: ["node_modules/**/*.js"],

@@ -28,6 +28,7 @@ export const ESignAuthView = (_ctx: ESignAuthViewCtx) => {
   const [certificates, setSertificates] = useState<
     Array<ECertificateEntity<Cert>>
   >([]);
+
   const {
     handler: eSignAuthHandler,
     loadCertificates,
@@ -58,7 +59,6 @@ export const ESignAuthView = (_ctx: ESignAuthViewCtx) => {
         to: "/",
       });
       // window.location.href = "/";
-
     },
   });
 

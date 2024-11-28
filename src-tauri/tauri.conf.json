@@ -18,7 +18,8 @@
       }
     ],
     "security": {
-      "csp": null
+      "csp": null,
+      "dangerousDisableAssetCspModification": true
     }
   },
   "bundle": {
@@ -42,8 +43,6 @@
     "category": "Productivity",
     "homepage": "https://github.com/khaitbek/smart-office-desktop-app",
     "publisher": "Realsoft LLC",
-    "macOS":{
-      
-    }
+    "macOS": {}
   }
 }

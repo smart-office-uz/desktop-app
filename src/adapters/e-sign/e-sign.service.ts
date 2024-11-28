@@ -28,7 +28,10 @@ class ESignService implements IESignService {
   ) {
     try {
       await this.instance.install();
-      success();
+      console.log("E-IMZO installed, now calling list_certificates");
+      setTimeout(() => {
+        success();
+      }, 1000);
     } catch (error) {
       if (error instanceof Error) {
         fail(error);
