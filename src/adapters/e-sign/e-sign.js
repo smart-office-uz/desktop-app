@@ -1,3 +1,5 @@
+import WebSocket from "@tauri-apps/plugin-websocket";
+
 /* eslint-disable */
 (function () {
   const global = window;
@@ -450,99 +452,182 @@ window.CAPIWS =
           (window.location.protocol.toLowerCase() === "https:"
             ? "wss://127.0.0.1:64443"
             : "ws://127.0.0.1:64646") + "/service/cryptapi",
-        callFunction: function (funcDef, callback, error) {
+        // URL: "/ws/esign",
+        callFunction: async function (funcDef, callback, error) {
+          console.log("callFunction", funcDef);
           if (!window.WebSocket) {
             if (error) error();
             return;
           }
+          /**
+           * @type {WebSocket}
+           */
           var socket;
           try {
-            socket = new WebSocket(this.URL);
+            socket = await WebSocket.connect(this.URL,{
+              headers:{
+                "origin": "https://localhost:5173",
+                "host": "smart-office.uz",
+              }
+            });
           } catch (e) {
+            console.log("error", e);
             error(e);
           }
-          socket.onerror = function (e) {
-            if (error) error(e);
-          };
-          socket.onmessage = function (event) {
-            var data = JSON.parse(event.data);
-            socket.close();
-            callback(event, data);
-          };
-          socket.onopen = function () {
-            socket.send(JSON.stringify(funcDef));
-          };
+          await socket.send({
+            type: "Text",
+            data: JSON.stringify(funcDef),
+          });
+          socket.addListener((event) => {
+            if (typeof event.data === "string") {
+              event.data = JSON.parse(event.data);
+            }
+            callback(null, event.data);
+          });
+
+          await socket.disconnect();
+          // socket.onerror = function (e) {
+          //   if (error) error(e);
+          // };
+          // socket.onmessage = function (event) {
+          //   var data = JSON.parse(event.data);
+          //   socket.close();
+          //   callback(event, data);
+          // };
+          // socket.onopen = function () {
+          //   socket.send(JSON.stringify(funcDef));
+          // };
         },
-        version: function (callback, error) {
+        version: async function (callback, error) {
           if (!window.WebSocket) {
             if (error) error();
             return;
           }
+          // var socket;
+          // try {
+          //   socket = new WebSocket(this.URL);
+          // } catch (e) {
+          //   error(e);
+          // }
+          // socket.onerror = function (e) {
+          //   if (error) error(e);
+          // };
+          // socket.onmessage = function (event) {
+          //   var data = JSON.parse(event.data);
+          //   socket.close();
+          //   callback(event, data);
+          // };
+          // socket.onopen = function () {
+          //   var o = { name: "version" };
+          //   socket.send(JSON.stringify(o));
+          // };
+          if (!window.WebSocket) {
+            if (error) error();
+            return;
+          }
+          /**
+           * @type {WebSocket}
+           */
           var socket;
           try {
-            socket = new WebSocket(this.URL);
+            socket = await WebSocket.connect(this.URL);
           } catch (e) {
+            console.log("error", e);
             error(e);
           }
-          socket.onerror = function (e) {
-            if (error) error(e);
-          };
-          socket.onmessage = function (event) {
-            var data = JSON.parse(event.data);
-            socket.close();
-            callback(event, data);
-          };
-          socket.onopen = function () {
-            var o = { name: "version" };
-            socket.send(JSON.stringify(o));
-          };
+          await socket.send({
+            type: "Text",
+            data: JSON.stringify({ name: "version" }),
+          });
+          socket.addListener((event) => {
+            if (typeof event.data === "string") {
+              event.data = JSON.parse(event.data);
+            }
+            callback(null, event.data);
+          });
+
+          await socket.disconnect();
+          // socket.send(JSON.stringify({ name: "version" }));
+          // socket.addListener("message", (event) => {
+          //   console.log("message", event);
+
+          //   callback(event, JSON.parse(event.data));
+          // });
+          // socket.addListener("error", (event) => {
+          //   console.log("error", event);
+          //   error(event);
+          // });
+          // socket.addListener("close", (event) => {
+          //   console.log("close", event);
+          //   socket.disconnect();
+          // });
+          // socket.addListener("open", (event) => {
+          //   console.log("open", event);
+          //   socket.send(JSON.stringify(funcDef));
+          // });
         },
-        apidoc: function (callback, error) {
+        apidoc: async function (callback, error) {
           if (!window.WebSocket) {
             if (error) error();
             return;
           }
+          if (!window.WebSocket) {
+            if (error) error();
+            return;
+          }
+          /**
+           * @type {WebSocket}
+           */
           var socket;
           try {
-            socket = new WebSocket(this.URL);
+            socket = await WebSocket.connect(this.URL);
           } catch (e) {
+            console.log("error", e);
             error(e);
           }
-          socket.onerror = function (e) {
-            if (error) error(e);
-          };
-          socket.onmessage = function (event) {
-            var data = JSON.parse(event.data);
-            socket.close();
-            callback(event, data);
-          };
-          socket.onopen = function () {
-            var o = { name: "apidoc" };
-            socket.send(JSON.stringify(o));
-          };
+          await socket.send({
+            type: "Text",
+            data: JSON.stringify({ name: "apidoc" }),
+          });
+          socket.addListener((event) => {
+            if (typeof event.data === "string") {
+              event.data = JSON.parse(event.data);
+            }
+            callback(null, event.data);
+          });
+
+          await socket.disconnect();
         },
-        apikey: function (domainAndKey, callback, error) {
+        apikey: async function (domainAndKey, callback, error) {
           if (!window.WebSocket) {
             if (error) error();
             return;
           }
+          if (!window.WebSocket) {
+            if (error) error();
+            return;
+          }
+          /**
+           * @type {WebSocket}
+           */
           var socket;
           try {
-            socket = new WebSocket(this.URL);
+            socket = await WebSocket.connect(this.URL);
           } catch (e) {
+            console.log("error", e);
             error(e);
           }
-          socket.onerror = function (e) {
-            if (error) error(e);
-          };
-          socket.onmessage = function (event) {
-            var data = JSON.parse(event.data);
-            socket.close();
-            callback(event, data);
-          };
-          socket.onopen = function () {
-            var o = { name: "apikey", arguments: domainAndKey };
-            socket.send(JSON.stringify(o));
-          };
+          await socket.send({
+            type: "Text",
+            data: JSON.stringify({ name: "apikey", arguments: domainAndKey }),
+          });
+          socket.addListener((event) => {
+            if (typeof event.data === "string") {
+              event.data = JSON.parse(event.data);
+            }
+            callback(null, event.data);
+          });
+
+          await socket.disconnect();
         },
       };

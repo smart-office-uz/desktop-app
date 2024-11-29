@@ -11,6 +11,8 @@
     "core:app:default",
     "log:default",
     "os:default",
+    "websocket:default",
+    "websocket:allow-connect",
     {
       "identifier": "http:default",
       "allow": [

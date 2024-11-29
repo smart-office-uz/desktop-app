@@ -1,6 +1,6 @@
 [package]
 name = "smart-office"
-version = "0.2.0"
+version = "0.2.1"
 description = "Desktop app for smart-office.uz"
 authors = ["Hayitbek Yusupov"]
 edition = "2021"
@@ -40,6 +40,7 @@ tauri-plugin-os = "2"
 open = "5.3.0"
 tauri-plugin-http = "2"
 tauri-plugin-localhost = "2"
+tauri-plugin-websocket = "2"
 
 [target.'cfg(target_os = "windows")'.dependencies]
 winrt-notification = "0.5.1"

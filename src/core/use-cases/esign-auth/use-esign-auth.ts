@@ -20,6 +20,7 @@ export const useESignAuth = (ctx: ESignAuthCtx) => {
   const { onSuccessFullyInitialized, onAuthenticated, onError } = ctx;
 
   async function handler() {
+    console.log("calling e-sign auth handler");
     await eSignService.init(
       () => {
         onSuccessFullyInitialized();

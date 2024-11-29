@@ -61,6 +61,15 @@ export default defineConfig(async ({ mode }) => {
           target: "https://smart-office.uz/services/platon-auth/api/eimzo",
           changeOrigin: true,
           rewrite: () => "",
+
+        },
+        "/ws/esign": {
+          target: "wss://127.0.0.1:64443/service/cryptapi",
+          // changeOrigin: true,
+          rewrite: () => "",
+          ws: true,
+          rewriteWsOrigin: true,
+          secure: false,
         },
       },
     },
