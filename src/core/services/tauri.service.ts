@@ -5,6 +5,9 @@ type TauriCommandArgs = {
     username: string;
     password: string;
   };
+  refresh_token: {
+    refreshToken: string;
+  };
   notify: {
     message: string;
     redirect?: string;
@@ -44,8 +47,8 @@ type TauriCommandArgs = {
 
 type TauriCommand = keyof TauriCommandArgs;
 
-interface ITauriService {
-  invoke: (command: TauriCommand, args: object) => unknown;
+export interface ITauriService {
+  invoke: <T extends TauriCommand>(command: T, args: TauriCommandArgs[T]) => unknown;
 }
 
 export default class TauriService implements ITauriService {

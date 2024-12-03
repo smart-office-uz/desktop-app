@@ -5,29 +5,33 @@ import { useEffect } from "react";
 import { listen } from "@tauri-apps/api/event";
 
 // services
-import NotificationService from "@/core/services/notification.service";
-import SessionService from "@/core/services/session.service";
+import type {
+  INotificationService,
+} from "@/core/services/notification.service";
 
 // helpers
 import { updateAppIcon } from "@/lib/utils/update-tray-icon";
 
-export const useLogoutEvent = () => {
+export const useLogoutEvent = (ctx: {
+  notificationService: INotificationService;
+}) => {
   const navigate = useNavigate();
-  const sessionService = new SessionService();
-  const notificationService = new NotificationService();
+
+  const { notificationService } = ctx;
 
   useEffect(() => {
     listen("logout_user", async () => {
-      console.log(sessionService.getAccessToken());
-      // navigate({
-      //   to: "/sign-in",
-      // });
-      // await updateAppIcon();
-      // setTimeout(() => {
-      //   notificationService.display(
-      //     "Tokeningiz eskirdi, iltimos qaytadan tizimga kiring!",
-      //   );
-      // }, 2000);
+      navigate({
+        to: "/sign-in",
+      });
+
+      await updateAppIcon();
+
+      setTimeout(() => {
+        notificationService.display(
+          "Tokeningiz eskirdi, iltimos qaytadan tizimga kiring!"
+        );
+      }, 2000);
     });
   }, []);
 };
