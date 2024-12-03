@@ -18,16 +18,15 @@ export const useLogoutEvent = () => {
 
   useEffect(() => {
     listen("logout_user", async () => {
-      console.log(sessionService.getAccessToken());
-      // navigate({
-      //   to: "/sign-in",
-      // });
-      // await updateAppIcon();
-      // setTimeout(() => {
-      //   notificationService.display(
-      //     "Tokeningiz eskirdi, iltimos qaytadan tizimga kiring!",
-      //   );
-      // }, 2000);
+      navigate({
+        to: "/sign-in",
+      });
+      await updateAppIcon();
+      setTimeout(() => {
+        notificationService.display(
+          "Tokeningiz eskirdi, iltimos qaytadan tizimga kiring!",
+        );
+      }, 2000);
     });
   }, []);
 };

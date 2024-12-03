@@ -3,58 +3,30 @@ import { fetch } from "@tauri-apps/plugin-http";
 // services
 import ESignService from "@/adapters/e-sign/e-sign.service";
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
-// Initialize an agent at application startup.
+
 const fpPromise = FingerprintJS.load();
 
 // types
-import {
-  type ECertificate,
-  ECertificateEntity,
-} from "@/adapters/e-sign/e-certificate.entity";
+import { type ECertificate } from "@/adapters/e-sign/e-certificate.entity";
 import type { Cert } from "@/adapters/e-sign/e-sign.config";
 import type { ESignAuthCtx } from "./context";
 
 export const useESignAuth = (ctx: ESignAuthCtx) => {
   const eSignService = new ESignService();
 
-  const { onSuccessFullyInitialized, onAuthenticated, onError } = ctx;
-
-  async function handler() {
-    console.log("calling e-sign auth handler");
-    await eSignService.init(
-      () => {
-        onSuccessFullyInitialized();
-      },
-      (error) => {
-        onError(error);
-      }
-    );
-  }
-
-  async function loadCertificates(): Promise<ECertificateEntity<Cert>[]> {
-    let certificates: Array<ECertificateEntity<Cert>> = [];
-    await eSignService.loadUserKeys(
-      (data) => {
-        certificates = data;
-      },
-      () => {
-        return [];
-      }
-    );
-    return certificates;
-  }
+  const { onAuthenticated, onError } = ctx;
 
   async function authenticate(certificate: ECertificate<Cert>["original"]) {
     try {
       const challenge = await (
         await fetch(
-          "https://smart-office.uz/services/platon-auth/api/eimzo/challenge"
+          "https://smart-office.uz/services/platon-auth/api/eimzo/challenge",
         )
       ).json();
       const challengeString = challenge.data.body.challenge;
       const signatureToken = await eSignService.signCertificate(
         certificate,
-        challengeString
+        challengeString,
       );
       const fp = await fpPromise;
       const result = await fp.get();
@@ -84,8 +56,6 @@ export const useESignAuth = (ctx: ESignAuthCtx) => {
   }
 
   return {
-    handler,
-    loadCertificates,
     authenticate,
   };
 };

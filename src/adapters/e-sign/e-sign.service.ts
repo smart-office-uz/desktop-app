@@ -5,16 +5,19 @@ import {
 import EIMZO, { type Cert } from "./e-sign.config.js";
 import "./e-sign.js";
 
-interface IESignService {
-  init: (successs: () => void, fail: (err: Error) => void) => void;
-  loadUserKeys: (
-    success: (data: Array<ECertificateEntity<Cert>>) => void,
-    fail: (err: Error) => void
-  ) => void;
+export interface IESignService {
+  initialize: (callbacks: {
+    onSuccess: () => void;
+    onError: (err: Error) => void;
+  }) => Promise<void>;
+  loadUserKeys: (callbacks: {
+    onSuccess: (data: Array<ECertificateEntity<Cert>>) => void;
+    onError: (err: Error) => Promise<void>;
+  }) => Promise<void>;
   signCertificate: (
     certificate: ReturnType<ECertificateEntity<Cert>["getOriginal"]>,
-    challenge: string
-  ) => void;
+    challenge: string,
+  ) => Promise<string>;
 }
 
 class ESignService implements IESignService {
@@ -22,30 +25,27 @@ class ESignService implements IESignService {
 
   constructor() {}
 
-  async init(
-    success: Parameters<IESignService["init"]>["0"],
-    fail: Parameters<IESignService["init"]>["1"]
-  ) {
+  async initialize({
+    onError,
+    onSuccess,
+  }: Parameters<IESignService["initialize"]>["0"]) {
     try {
       await this.instance.install();
-      console.log("E-IMZO installed, now calling list_certificates");
-      setTimeout(() => {
-        success();
-      }, 1000);
+      onSuccess();
     } catch (error) {
       if (error instanceof Error) {
-        fail(error);
+        onError(error);
       }
       if (error instanceof Event) {
-        fail(new Error("E-IMZO ga ulanib bo'lmadi!"));
+        onError(new Error("E-IMZO ga ulanib bo'lmadi!"));
       }
     }
   }
 
-  async loadUserKeys(
-    success: Parameters<IESignService["loadUserKeys"]>["0"],
-    fail: Parameters<IESignService["loadUserKeys"]>["1"]
-  ) {
+  async loadUserKeys({
+    onError,
+    onSuccess,
+  }: Parameters<IESignService["loadUserKeys"]>["0"]) {
     try {
       const certificates = (await this.instance.listAllUserKeys()).map(
         (certificate) => {
@@ -61,19 +61,19 @@ class ESignService implements IESignService {
             validTo: certificate.validTo,
           });
           return certificateEntity;
-        }
+        },
       );
-      success(certificates);
+      onSuccess(certificates);
     } catch (error) {
       if (error instanceof Error) {
-        fail(error);
+        onError(error);
       }
     }
   }
 
   async signCertificate(
     certificate: ReturnType<ECertificateEntity<Cert>["getOriginal"]>,
-    challenge: string
+    challenge: string,
   ): Promise<string> {
     const pkcs7String = await this.instance.signPkcs7(certificate, challenge);
     return pkcs7String.pkcs7_64;

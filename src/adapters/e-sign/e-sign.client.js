@@ -140,15 +140,13 @@ export const EIMZOClient = {
       },
       function (e) {
         fail(e, null);
-      }
+      },
     );
   },
   installApiKeys: function (success, fail) {
-    console.log(CAPIWS, EIMZOClient);
     CAPIWS.apikey(
       EIMZOClient.API_KEYS,
       function (event, data) {
-        console.log({ event, data });
         if (data.success) {
           success();
         } else {
@@ -156,9 +154,8 @@ export const EIMZOClient = {
         }
       },
       function (e) {
-        console.log({ e });
         fail(e, null);
-      }
+      },
     );
   },
   listAllUserKeys: function (itemIdGen, itemUiGen, success, fail) {
@@ -185,7 +182,7 @@ export const EIMZOClient = {
               }
               success(items, firstId);
             }
-          }
+          },
         );
       } else {
         EIMZOClient._findPfxs2(
@@ -213,9 +210,9 @@ export const EIMZOClient = {
                   }
                   success(items, firstId);
                 }
-              }
+              },
             );
-          }
+          },
         );
       }
     }
@@ -235,7 +232,7 @@ export const EIMZOClient = {
         },
         function (e) {
           fail(e, null);
-        }
+        },
       );
     }
   },
@@ -268,7 +265,7 @@ export const EIMZOClient = {
                   },
                   function (e) {
                     fail(e, null);
-                  }
+                  },
                 );
               } else {
                 success(id);
@@ -279,7 +276,7 @@ export const EIMZOClient = {
           },
           function (e) {
             fail(e, null);
-          }
+          },
         );
       } else if (vo.type === "ftjc") {
         CAPIWS.callFunction(
@@ -307,7 +304,7 @@ export const EIMZOClient = {
                   },
                   function (e) {
                     fail(e, null);
-                  }
+                  },
                 );
               } else {
                 success(id);
@@ -318,7 +315,7 @@ export const EIMZOClient = {
           },
           function (e) {
             fail(e, null);
-          }
+          },
         );
       }
     }
@@ -351,7 +348,7 @@ export const EIMZOClient = {
                 },
                 function (e) {
                   fail(e, null);
-                }
+                },
               );
             } else {
               fail(null, data.reason);
@@ -359,7 +356,7 @@ export const EIMZOClient = {
           },
           function (e) {
             fail(e, null);
-          }
+          },
         );
       } else if (vo.type === "ftjc") {
         CAPIWS.callFunction(
@@ -386,7 +383,7 @@ export const EIMZOClient = {
                 },
                 function (e) {
                   fail(e, null);
-                }
+                },
               );
             } else {
               fail(null, data.reason);
@@ -394,7 +391,7 @@ export const EIMZOClient = {
           },
           function (e) {
             fail(e, null);
-          }
+          },
         );
       }
     }
@@ -407,7 +404,7 @@ export const EIMZOClient = {
     fail,
     detached,
     isDataBase64Encoded,
-    enableAttachTimestamp = true
+    enableAttachTimestamp = true,
   ) {
     var data64;
     if (isDataBase64Encoded === true) {
@@ -442,7 +439,6 @@ export const EIMZOClient = {
                       arguments: [pkcs7, sn, tst],
                     },
                     function (event, data) {
-                      console.log({ data, event });
                       if (data.success) {
                         var pkcs7tst = data.pkcs7_64;
                         success(pkcs7tst);
@@ -452,14 +448,14 @@ export const EIMZOClient = {
                     },
                     function (e) {
                       fail(e, null);
-                    }
+                    },
                   );
                 } else {
                   success(tst);
                 }
               },
               fail,
-              data.pkcs7_64
+              data.pkcs7_64,
             );
           } else {
             success(pkcs7);
@@ -470,7 +466,7 @@ export const EIMZOClient = {
       },
       function (e) {
         fail(e, null);
-      }
+      },
     );
   },
   _getX500Val: function (s, f) {
@@ -501,17 +497,17 @@ export const EIMZOClient = {
               alias: el.alias,
               serialNumber: EIMZOClient._getX500Val(
                 x500name_ex,
-                "SERIALNUMBER"
+                "SERIALNUMBER",
               ),
               validFrom: new Date(
                 EIMZOClient._getX500Val(x500name_ex, "VALIDFROM")
                   .replace(/\./g, "-")
-                  .replace(" ", "T")
+                  .replace(" ", "T"),
               ),
               validTo: new Date(
                 EIMZOClient._getX500Val(x500name_ex, "VALIDTO")
                   .replace(/\./g, "-")
-                  .replace(" ", "T")
+                  .replace(" ", "T"),
               ),
               CN: EIMZOClient._getX500Val(x500name_ex, "CN"),
               TIN: EIMZOClient._getX500Val(x500name_ex, "INN")
@@ -539,7 +535,7 @@ export const EIMZOClient = {
       function (e) {
         errors.push({ e: e });
         callback(itmkey0);
-      }
+      },
     );
   },
   _findTokens2: function (itemIdGen, itemUiGen, items, errors, callback) {
@@ -560,13 +556,13 @@ export const EIMZOClient = {
               info: el.info,
               serialNumber: EIMZOClient._getX500Val(
                 x500name_ex,
-                "SERIALNUMBER"
+                "SERIALNUMBER",
               ),
               validFrom: new Date(
-                EIMZOClient._getX500Val(x500name_ex, "VALIDFROM")
+                EIMZOClient._getX500Val(x500name_ex, "VALIDFROM"),
               ),
               validTo: new Date(
-                EIMZOClient._getX500Val(x500name_ex, "VALIDTO")
+                EIMZOClient._getX500Val(x500name_ex, "VALIDTO"),
               ),
               CN: EIMZOClient._getX500Val(x500name_ex, "CN"),
               TIN: EIMZOClient._getX500Val(x500name_ex, "INN")
@@ -594,7 +590,7 @@ export const EIMZOClient = {
       function (e) {
         errors.push({ e: e });
         callback(itmkey0);
-      }
+      },
     );
   },
 };

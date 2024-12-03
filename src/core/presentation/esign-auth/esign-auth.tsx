@@ -1,11 +1,17 @@
+import { useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { toast } from "sonner";
+
+// use-cases
+import { useESignAuth } from "../../use-cases/esign-auth/use-esign-auth";
+
+// adapters
+import type { ECertificateEntity } from "@/adapters/e-sign/e-certificate.entity";
+import type { Cert } from "@/adapters/e-sign/e-sign.config";
 
 // components
 import { Button, buttonVariants } from "@/app/components/button";
 
-// use-cases
-import { ECertificateEntity } from "@/adapters/e-sign/e-certificate.entity";
-import { Cert } from "@/adapters/e-sign/e-sign.config";
 import {
   Dialog,
   DialogClose,
@@ -14,40 +20,48 @@ import {
   DialogHeader,
   DialogTitle,
 } from "@/app/components/dialog";
-import SessionService from "@/core/services/session.service";
-import { useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
-import { useESignAuth } from "../../use-cases/esign-auth/use-esign-auth";
 import { ESignCertificateList } from "./esign-certificate-list";
+
+// services
+import SessionService from "@/core/services/session.service";
+import { initializeESignUseCase } from "@/core/use-cases/esign-initialize/use-initialize-esign";
 
 export interface ESignAuthViewCtx {}
 
 export const ESignAuthView = (_ctx: ESignAuthViewCtx) => {
   const navigate = useNavigate();
+
   const [isESignModalOpen, setESignModalOpen] = useState<boolean>(false);
   const [certificates, setSertificates] = useState<
     Array<ECertificateEntity<Cert>>
   >([]);
 
-  const {
-    handler: eSignAuthHandler,
-    loadCertificates,
-    authenticate,
-  } = useESignAuth({
-    onError(error) {
-      toast.error(error.message, {
-        richColors: true,
-        important: true,
-        dismissible: true,
-        className: "!bg-red-500 !text-white",
-        closeButton: true,
-      });
-    },
-    async onSuccessFullyInitialized() {
-      const certificates = await loadCertificates();
-      setSertificates(certificates);
-      setESignModalOpen(true);
-    },
+  async function handleESignAuthError(error: Error) {
+    toast.error(error.message, {
+      richColors: true,
+      important: true,
+      dismissible: true,
+      className: "!bg-red-500 !text-white",
+      closeButton: true,
+    });
+  }
+
+  const initializeESignService = async () => {
+    await initializeESignUseCase({
+      onSuccess: async (service) => {
+        await service.loadUserKeys({
+          onSuccess: (certificates) => {
+            setSertificates(certificates);
+            setESignModalOpen(true);
+          },
+          onError: handleESignAuthError,
+        });
+      },
+      onError: handleESignAuthError,
+    });
+  };
+  const { authenticate } = useESignAuth({
+    onError: handleESignAuthError,
     onAuthenticated(data) {
       toast.success("E-IMZO orqali kirish muvaffaqqiyatli amalga oshirildi!");
       const sessionService = new SessionService();
@@ -66,7 +80,7 @@ export const ESignAuthView = (_ctx: ESignAuthViewCtx) => {
     <>
       <Button
         className="mt-6 invert w-full max-w-sm"
-        onClick={eSignAuthHandler}
+        onClick={initializeESignService}
         variant="outline"
       >
         E-IMZO orqali kirish

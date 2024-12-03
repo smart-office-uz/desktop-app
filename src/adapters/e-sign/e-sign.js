@@ -97,7 +97,7 @@ import WebSocket from "@tauri-apps/plugin-websocket";
       "[\xE0-\xEF][\x80-\xBF]{2}",
       "[\xF0-\xF7][\x80-\xBF]{3}",
     ].join("|"),
-    "g"
+    "g",
   );
   var cb_btou = function (cccc) {
     switch (cccc.length) {
@@ -116,11 +116,11 @@ import WebSocket from "@tauri-apps/plugin-websocket";
         return fromCharCode(
           ((0x0f & cccc.charCodeAt(0)) << 12) |
             ((0x3f & cccc.charCodeAt(1)) << 6) |
-            (0x3f & cccc.charCodeAt(2))
+            (0x3f & cccc.charCodeAt(2)),
         );
       default:
         return fromCharCode(
-          ((0x1f & cccc.charCodeAt(0)) << 6) | (0x3f & cccc.charCodeAt(1))
+          ((0x1f & cccc.charCodeAt(0)) << 6) | (0x3f & cccc.charCodeAt(1)),
         );
     }
   };
@@ -163,7 +163,7 @@ import WebSocket from "@tauri-apps/plugin-websocket";
         .replace(/[-_]/g, function (m0) {
           return m0 == "-" ? "+" : "/";
         })
-        .replace(/[^A-Za-z0-9\+\/]/g, "")
+        .replace(/[^A-Za-z0-9\+\/]/g, ""),
     );
   };
   var noConflict = function () {
@@ -201,21 +201,21 @@ import WebSocket from "@tauri-apps/plugin-websocket";
         "fromBase64",
         noEnum(function () {
           return decode(this);
-        })
+        }),
       );
       Object.defineProperty(
         String.prototype,
         "toBase64",
         noEnum(function (urisafe) {
           return encode(this, urisafe);
-        })
+        }),
       );
       Object.defineProperty(
         String.prototype,
         "toBase64URI",
         noEnum(function () {
           return encode(this, true);
-        })
+        }),
       );
     };
   }
@@ -317,7 +317,7 @@ import WebSocket from "@tauri-apps/plugin-websocket";
       "[\xE0-\xEF][\x80-\xBF]{2}",
       "[\xF0-\xF7][\x80-\xBF]{3}",
     ].join("|"),
-    "g"
+    "g",
   );
   var cb_btou = function (cccc) {
     switch (cccc.length) {
@@ -336,11 +336,11 @@ import WebSocket from "@tauri-apps/plugin-websocket";
         return fromCharCode(
           ((0x0f & cccc.charCodeAt(0)) << 12) |
             ((0x3f & cccc.charCodeAt(1)) << 6) |
-            (0x3f & cccc.charCodeAt(2))
+            (0x3f & cccc.charCodeAt(2)),
         );
       default:
         return fromCharCode(
-          ((0x1f & cccc.charCodeAt(0)) << 6) | (0x3f & cccc.charCodeAt(1))
+          ((0x1f & cccc.charCodeAt(0)) << 6) | (0x3f & cccc.charCodeAt(1)),
         );
     }
   };
@@ -383,7 +383,7 @@ import WebSocket from "@tauri-apps/plugin-websocket";
         .replace(/[-_]/g, function (m0) {
           return m0 == "-" ? "+" : "/";
         })
-        .replace(/[^A-Za-z0-9\+\/]/g, "")
+        .replace(/[^A-Za-z0-9\+\/]/g, ""),
     );
   };
   var noConflict = function () {
@@ -421,21 +421,21 @@ import WebSocket from "@tauri-apps/plugin-websocket";
         "fromBase64",
         noEnum(function () {
           return decode(this);
-        })
+        }),
       );
       Object.defineProperty(
         String.prototype,
         "toBase64",
         noEnum(function (urisafe) {
           return encode(this, urisafe);
-        })
+        }),
       );
       Object.defineProperty(
         String.prototype,
         "toBase64URI",
         noEnum(function () {
           return encode(this, true);
-        })
+        }),
       );
     };
   }
@@ -454,7 +454,6 @@ window.CAPIWS =
             : "ws://127.0.0.1:64646") + "/service/cryptapi",
         // URL: "/ws/esign",
         callFunction: async function (funcDef, callback, error) {
-          console.log("callFunction", funcDef);
           if (!window.WebSocket) {
             if (error) error();
             return;
@@ -464,14 +463,13 @@ window.CAPIWS =
            */
           var socket;
           try {
-            socket = await WebSocket.connect(this.URL,{
-              headers:{
-                "origin": "https://localhost:5173",
-                "host": "smart-office.uz",
-              }
+            socket = await WebSocket.connect(this.URL, {
+              headers: {
+                origin: "https://localhost:5173",
+                host: "smart-office.uz",
+              },
             });
           } catch (e) {
-            console.log("error", e);
             error(e);
           }
           await socket.send({
@@ -486,41 +484,12 @@ window.CAPIWS =
           });
 
           await socket.disconnect();
-          // socket.onerror = function (e) {
-          //   if (error) error(e);
-          // };
-          // socket.onmessage = function (event) {
-          //   var data = JSON.parse(event.data);
-          //   socket.close();
-          //   callback(event, data);
-          // };
-          // socket.onopen = function () {
-          //   socket.send(JSON.stringify(funcDef));
-          // };
         },
         version: async function (callback, error) {
           if (!window.WebSocket) {
             if (error) error();
             return;
           }
-          // var socket;
-          // try {
-          //   socket = new WebSocket(this.URL);
-          // } catch (e) {
-          //   error(e);
-          // }
-          // socket.onerror = function (e) {
-          //   if (error) error(e);
-          // };
-          // socket.onmessage = function (event) {
-          //   var data = JSON.parse(event.data);
-          //   socket.close();
-          //   callback(event, data);
-          // };
-          // socket.onopen = function () {
-          //   var o = { name: "version" };
-          //   socket.send(JSON.stringify(o));
-          // };
           if (!window.WebSocket) {
             if (error) error();
             return;
@@ -532,7 +501,6 @@ window.CAPIWS =
           try {
             socket = await WebSocket.connect(this.URL);
           } catch (e) {
-            console.log("error", e);
             error(e);
           }
           await socket.send({
@@ -547,24 +515,6 @@ window.CAPIWS =
           });
 
           await socket.disconnect();
-          // socket.send(JSON.stringify({ name: "version" }));
-          // socket.addListener("message", (event) => {
-          //   console.log("message", event);
-
-          //   callback(event, JSON.parse(event.data));
-          // });
-          // socket.addListener("error", (event) => {
-          //   console.log("error", event);
-          //   error(event);
-          // });
-          // socket.addListener("close", (event) => {
-          //   console.log("close", event);
-          //   socket.disconnect();
-          // });
-          // socket.addListener("open", (event) => {
-          //   console.log("open", event);
-          //   socket.send(JSON.stringify(funcDef));
-          // });
         },
         apidoc: async function (callback, error) {
           if (!window.WebSocket) {
@@ -582,7 +532,6 @@ window.CAPIWS =
           try {
             socket = await WebSocket.connect(this.URL);
           } catch (e) {
-            console.log("error", e);
             error(e);
           }
           await socket.send({
@@ -614,7 +563,6 @@ window.CAPIWS =
           try {
             socket = await WebSocket.connect(this.URL);
           } catch (e) {
-            console.log("error", e);
             error(e);
           }
           await socket.send({
