@@ -1,7 +1,18 @@
+import { Notification } from "../entities/notification.entity";
 import NotificationRepository from "../repositories/notification.repository";
 import TauriService from "./tauri.service";
 
-export default class NotificationService {
+export interface INotificationService {
+  getLatest: () => Promise<Notification[]>;
+  getLatestNotificationsCount: () => Promise<number>;
+  getAll: (page: number) => Promise<{
+    notifications: Notification[];
+    totalNumberOfNotifications: number;
+  }>;
+  display: (message: string, redirect?: string) => void;
+}
+
+export default class NotificationService implements INotificationService {
   private readonly repository: NotificationRepository =
     new NotificationRepository();
   private readonly tauriService = new TauriService();

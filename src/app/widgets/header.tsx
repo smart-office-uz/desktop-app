@@ -1,6 +1,7 @@
 // widgets
 import { AppLogo } from "./app-logo";
 import { LocaleSwitcher } from "./locale-switcher";
+import { MockSessionUpdater } from "./mock-session-updater";
 import { ModeToggle } from "./mode-toggle";
 import { NotificationUpdateIndicator } from "./notification-update-indicator";
 import { UserMenu } from "./user-menu";
@@ -14,6 +15,7 @@ export const Header = () => {
         </div>
         <div className="flex items-center justify-end gap-4 flex-grow py-3 px-6 bg-background rounded-2xl">
           <ModeToggle />
+          <MockSessionUpdater />
           <NotificationUpdateIndicator />
           <div className="w-[2px] h-full bg-lightGray"></div>
           <LocaleSwitcher />

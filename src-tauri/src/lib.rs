@@ -10,14 +10,17 @@ use tauri_winrt_notification::{Duration, Sound, Toast};
 
 // local
 mod auth;
+mod device;
 mod event;
 mod gui;
 mod linux_gui;
 mod macos_gui;
 mod notification;
+mod session;
 mod user;
 mod windows_gui;
 use auth::auth::sign_in;
+use session::{session::RefreshTokenCtx, *};
 use user::user::*;
 
 // macos
@@ -271,6 +274,34 @@ async fn authenticate(username: &str, password: &str) -> Result<String, String> 
 }
 
 #[tauri::command]
+async fn refresh_token(app: AppHandle, refresh_token: &str) -> Result<String, String> {
+    println!("{refresh_token}");
+    struct RefreshTokenParams {
+        refresh_token: String,
+        device_id: String,
+    }
+    impl RefreshTokenCtx for RefreshTokenParams {
+        fn get_device_id(&self) -> String {
+            self.device_id.clone()
+        }
+        fn get_refresh_token(&self) -> String {
+            self.refresh_token.clone()
+        }
+    }
+
+    let device_id = device::device::get_device_id();
+    let params = RefreshTokenParams {
+        refresh_token: refresh_token.to_owned(),
+        device_id,
+    };
+    let response = session::session::refresh_token(params).await.unwrap_or_else(|err| {
+        println!("error: {:?}", err);
+        err.to_string()
+    });
+    Ok(response)
+}
+
+#[tauri::command]
 async fn get_user_staff_id(token: &str) -> Result<String, String> {
     let response = get_staff_id(token).await;
     match response {
@@ -406,7 +437,8 @@ pub fn run() {
             read_notification,
             get_user_staff_id,
             change_window_size,
-            center_window
+            center_window,
+            refresh_token
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
