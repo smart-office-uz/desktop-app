@@ -11,8 +11,12 @@ use tauri_winrt_notification::{Duration, Sound, Toast};
 // local
 mod auth;
 mod event;
+mod gui;
+mod linux_gui;
+mod macos_gui;
 mod notification;
 mod user;
+mod windows_gui;
 use auth::auth::sign_in;
 use user::user::*;
 
@@ -120,8 +124,21 @@ fn redirect(url: String) -> () {
     }
 }
 
+fn native_notification_initializer() -> &'static dyn gui::NativeNotification {
+    if (!cfg!(linux)) {
+        &linux_gui::LinuxNotification
+    } else if (!cfg!(windows)) {
+        &windows_gui::WindowsNotification
+    } else {
+        &macos_gui::MacOSNotification
+    }
+}
+
 #[tauri::command]
 async fn notify(message: &str, redirect: Option<String>) -> Result<(), String> {
+    let native_notification = native_notification_initializer();
+    native_notification.show(message, "Smart Office");
+
     // linux
     #[cfg(target_os = "linux")]
     Notification::new()
