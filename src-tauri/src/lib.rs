@@ -1,18 +1,10 @@
 extern crate open;
 
-// windows
-#[cfg(target_os = "windows")]
-extern crate winrt_notification;
 use std::sync::Mutex;
-
-use linux_gui::LinuxNotification;
-use macos_gui::MacOSNotification;
-
-#[cfg(target_os = "windows")]
-use tauri_winrt_notification::{Duration, Sound, Toast};
 
 // local
 mod auth;
+mod commands;
 mod device;
 mod event;
 mod gui;
@@ -23,25 +15,13 @@ mod notification_platform;
 mod session;
 mod user;
 mod windows_gui;
-use auth::auth::sign_in;
-use notification_platform::NotificationPlatform;
-use session::session::RefreshTokenCtx;
-use user::user::*;
 
-// macos
-#[cfg(target_os = "macos")]
-use mac_notification_sys;
-
-use notify_rust::{Hint, Notification};
 use tauri::{
-    image::Image,
     menu::{Menu, MenuItem},
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent, TrayIconId},
-    AppHandle, Manager, PhysicalPosition,
+    Manager, PhysicalPosition,
 };
-use windows_gui::WindowsNotification;
 
-// #[derive(Default)]
 struct AppState {
     current_tray_id: Option<TrayIconId>,
 }
@@ -51,168 +31,6 @@ impl Default for AppState {
         Self {
             current_tray_id: None,
         }
-    }
-}
-
-#[tauri::command]
-fn change_window_size(app: AppHandle, width: u16, height: u16) -> Result<(), String> {
-    if let Some(main_window) = app.get_webview_window("main") {
-        main_window
-            .set_size(tauri::PhysicalSize { height, width })
-            .expect("Failed to change window size!");
-    };
-    Ok(())
-}
-
-#[tauri::command]
-fn center_window(app: AppHandle) -> Result<(), String> {
-    if let Some(main_window) = app.get_webview_window("main") {
-        main_window.center().expect("Failed to center window!");
-    };
-    Ok(())
-}
-
-#[tauri::command]
-fn update_tray_icon(app: AppHandle, rgba: Vec<u8>, width: u32, height: u32) -> Result<(), String> {
-    app.manage(Mutex::new(AppState::default()));
-
-    let state = app.state::<Mutex<AppState>>();
-
-    // Lock the mutex to get mutable access:
-    let state = state.lock().unwrap();
-
-    match state.current_tray_id.clone() {
-        Some(id) => {
-            let tray = app.tray_by_id(&id).unwrap();
-            let icon = Image::new(&rgba, width, height);
-            match tray.set_icon(Some(icon)) {
-                Ok(_) => {}
-                Err(err) => {
-                    println!("Couldn't update the tray icon: {:?}", err);
-                }
-            }
-
-            let icon = Image::new(&rgba, width, height);
-            match app
-                .get_webview_window("main")
-                .expect("Couldn't get the webview window with the name main!")
-                .set_icon(icon)
-            {
-                Ok(_) => {}
-                Err(err) => {
-                    println!("Couldn't update the app icon: {:?}", err);
-                }
-            }
-        }
-        _ => {
-            println!("No existing tray found!");
-        }
-    }
-    Ok(())
-}
-
-#[tauri::command]
-fn redirect(url: String) -> () {
-    // url might look like this -> https://smart-office.uz/blablabla
-    // or like this -> pages/somepage, forms/someform, tables/sometable and etc.
-    // so we need to check what kind of url we are getting
-    // if we get a url that starts with https://smart-office.uz, then life is good we can just redirect the user
-    // but if it doesn't, we need to append https://smart-office.uz ourselves
-    if url.starts_with("https://smart-office.uz") {
-        if open::that(url.clone()).is_err() {
-            println!("Error when trying to open {:?}", url);
-        }
-    } else {
-        let redirect_url = url.clone();
-        if open::that(format!("https://smart-office.uz/{redirect_url}")).is_err() {
-            println!("Error when trying to open {:?}", url);
-        }
-    }
-}
-
-#[tauri::command]
-async fn notify(message: &str, redirect: Option<&str>) -> Result<(), String> {
-    let notification_platform = NotificationPlatform::new();
-    notification_platform.show(message, redirect).await;
-    Ok(())
-}
-
-#[tauri::command]
-async fn get_latest_notifications(app: AppHandle, token: &str) -> Result<String, String> {
-    let response = notification::notification::get_latest(token, app).await;
-    match response {
-        Ok(response) => Ok(response),
-        Err(error) => Err(error.to_string()),
-    }
-}
-#[tauri::command]
-async fn get_latest_notifications_count(token: &str) -> Result<String, String> {
-    let response = notification::notification::get_count(token).await;
-    match response {
-        Ok(response) => Ok(response),
-        Err(error) => Err(error.to_string()),
-    }
-}
-
-#[tauri::command]
-async fn get_all_notifications(app: AppHandle, token: &str, page: u8) -> Result<String, String> {
-    let response = notification::notification::get_history(token, page, app).await;
-    match response {
-        Ok(response) => Ok(response),
-        Err(error) => Err(error.to_string()),
-    }
-}
-
-#[tauri::command]
-async fn read_notification(token: &str, id: &str, index: u16) -> Result<(), String> {
-    let response = notification::notification::read_notification(token, id, index).await;
-    match response {
-        Ok(_) => Ok(()),
-        Err(error) => Err(error.to_string()),
-    }
-}
-
-#[tauri::command]
-async fn authenticate(username: &str, password: &str) -> Result<String, String> {
-    let response = sign_in(username.to_string(), password.to_string()).await;
-    match response {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.to_string()),
-    }
-}
-
-#[tauri::command]
-async fn refresh_token(refresh_token: &str) -> Result<String, String> {
-    struct RefreshTokenParams {
-        refresh_token: String,
-        device_id: String,
-    }
-    impl RefreshTokenCtx for RefreshTokenParams {
-        fn get_device_id(&self) -> String {
-            self.device_id.clone()
-        }
-        fn get_refresh_token(&self) -> String {
-            self.refresh_token.clone()
-        }
-    }
-
-    let device_id = device::device::get_device_id();
-    let params = RefreshTokenParams {
-        refresh_token: refresh_token.to_owned(),
-        device_id,
-    };
-    let response = session::session::refresh_token(params)
-        .await
-        .unwrap_or_else(|err| err.to_string());
-    Ok(response)
-}
-
-#[tauri::command]
-async fn get_user_staff_id(token: &str) -> Result<String, String> {
-    let response = get_staff_id(token).await;
-    match response {
-        Ok(response) => Ok(response),
-        Err(err) => Err(err.to_string()),
     }
 }
 
@@ -329,18 +147,18 @@ pub fn run() {
         })
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
-            authenticate,
-            notify,
-            get_latest_notifications,
-            get_latest_notifications_count,
-            get_all_notifications,
-            redirect,
-            update_tray_icon,
-            read_notification,
-            get_user_staff_id,
-            change_window_size,
-            center_window,
-            refresh_token
+            commands::notification::notify,
+            commands::notification::get_latest_notifications,
+            commands::notification::get_latest_notifications_count,
+            commands::notification::get_all_notifications,
+            commands::notification::read_notification,
+            commands::redirect_resolver::redirect,
+            commands::tray::update_tray_icon,
+            commands::user::get_user_staff_id,
+            commands::window::center_window,
+            commands::window::change_window_size,
+            commands::auth::refresh_token,
+            commands::auth::authenticate,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
