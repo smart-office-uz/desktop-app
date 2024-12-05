@@ -1,12 +1,13 @@
-use notify_rust::Notification;
+use notify_rust::{Hint, Notification};
+use crate::gui;
+
 extern crate open;
 
-use crate::{event, gui};
 
 pub struct LinuxNotification;
 
 impl gui::NativeNotification for LinuxNotification {
-    async fn show(&self, title: &str, description: &str) {
+    async fn show(&self, title: &str, redirect: Option<&str>) {
         Notification::new()
             .subtitle(title)
             .action("default", "default") // IDENTIFIER, LABEL

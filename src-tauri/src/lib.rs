@@ -5,6 +5,9 @@ extern crate open;
 extern crate winrt_notification;
 use std::sync::Mutex;
 
+use linux_gui::LinuxNotification;
+use macos_gui::MacOSNotification;
+
 #[cfg(target_os = "windows")]
 use tauri_winrt_notification::{Duration, Sound, Toast};
 
@@ -16,11 +19,13 @@ mod gui;
 mod linux_gui;
 mod macos_gui;
 mod notification;
+mod notification_platform;
 mod session;
 mod user;
 mod windows_gui;
 use auth::auth::sign_in;
-use session::{session::RefreshTokenCtx, *};
+use notification_platform::NotificationPlatform;
+use session::session::RefreshTokenCtx;
 use user::user::*;
 
 // macos
@@ -34,6 +39,7 @@ use tauri::{
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent, TrayIconId},
     AppHandle, Manager, PhysicalPosition,
 };
+use windows_gui::WindowsNotification;
 
 // #[derive(Default)]
 struct AppState {
@@ -80,9 +86,7 @@ fn update_tray_icon(app: AppHandle, rgba: Vec<u8>, width: u32, height: u32) -> R
             let tray = app.tray_by_id(&id).unwrap();
             let icon = Image::new(&rgba, width, height);
             match tray.set_icon(Some(icon)) {
-                Ok(_) => {
-                    println!("Successfully updated the tray icon!");
-                }
+                Ok(_) => {}
                 Err(err) => {
                     println!("Couldn't update the tray icon: {:?}", err);
                 }
@@ -94,9 +98,7 @@ fn update_tray_icon(app: AppHandle, rgba: Vec<u8>, width: u32, height: u32) -> R
                 .expect("Couldn't get the webview window with the name main!")
                 .set_icon(icon)
             {
-                Ok(_) => {
-                    println!("Successfully updated the webview icon");
-                }
+                Ok(_) => {}
                 Err(err) => {
                     println!("Couldn't update the app icon: {:?}", err);
                 }
@@ -117,106 +119,21 @@ fn redirect(url: String) -> () {
     // if we get a url that starts with https://smart-office.uz, then life is good we can just redirect the user
     // but if it doesn't, we need to append https://smart-office.uz ourselves
     if url.starts_with("https://smart-office.uz") {
-        if open::that(url).is_ok() {
-            println!("Look at your browser !");
+        if open::that(url.clone()).is_err() {
+            println!("Error when trying to open {:?}", url);
         }
     } else {
-        if open::that(format!("https://smart-office.uz/{url}")).is_ok() {
-            println!("Look at your browser !");
+        let redirect_url = url.clone();
+        if open::that(format!("https://smart-office.uz/{redirect_url}")).is_err() {
+            println!("Error when trying to open {:?}", url);
         }
-    }
-}
-
-fn native_notification_initializer() -> &'static dyn gui::NativeNotification {
-    if (!cfg!(linux)) {
-        &linux_gui::LinuxNotification
-    } else if (!cfg!(windows)) {
-        &windows_gui::WindowsNotification
-    } else {
-        &macos_gui::MacOSNotification
     }
 }
 
 #[tauri::command]
-async fn notify(message: &str, redirect: Option<String>) -> Result<(), String> {
-    let native_notification = native_notification_initializer();
-    native_notification.show(message, "Smart Office");
-
-    // linux
-    #[cfg(target_os = "linux")]
-    Notification::new()
-        .body(message)
-        .action("default", "default") // IDENTIFIER, LABEL
-        .appname("Smart Office")
-        .hint(Hint::Category("email".to_owned()))
-        .timeout(0) // this however is
-        .show_async()
-        .await
-        .unwrap()
-        .wait_for_action(|action| match action {
-            "default" => match redirect.clone() {
-                Some(url) => {
-                    println!("redirecting to... {url}");
-                    match open::that(url) {
-                        Ok(_) => {
-                            println!("Look at your browser !");
-                        }
-                        Err(err) => {
-                            println!("Failed to open notification link on linux: {:?}", err);
-                        }
-                    }
-                }
-                None => {}
-            },
-            _ => (),
-        });
-
-    // windows
-    #[cfg(target_os = "windows")]
-    Toast::new(Toast::POWERSHELL_APP_ID)
-        .title("Smart Office")
-        .text1(message)
-        .sound(Some(Sound::SMS))
-        .duration(Duration::Short)
-        .on_activated(move |_| {
-            match redirect.clone() {
-                Some(url) => {
-                    println!("redirecting to... {url}");
-                    if open::that(url).is_ok() {
-                        println!("Look at your browser !");
-                    };
-                }
-                _ => {}
-            }
-
-            Ok(())
-        })
-        .show()
-        .expect("unable to toast");
-
-    #[cfg(target_os = "macos")]
-    let result = mac_notification_sys::Notification::new()
-        .title("Smart Office")
-        .subtitle(message)
-        .send()
-        .unwrap();
-
-    #[cfg(target_os = "macos")]
-    match result {
-        mac_notification_sys::NotificationResponse::Click => {
-            println!("Clicked on the notification itself");
-            match redirect.clone() {
-                Some(url) => {
-                    if open::that(url).is_ok() {
-                        println!("Look at your browser !");
-                    };
-                }
-                _ => {}
-            }
-        }
-        _ => {}
-    }
-
+async fn notify(message: &str, redirect: Option<&str>) -> Result<(), String> {
+    let notification_platform = NotificationPlatform::new();
+    notification_platform.show(message, redirect).await;
     Ok(())
 }
 
@@ -233,10 +150,7 @@ async fn get_latest_notifications_count(token: &str) -> Result<String, String> {
     let response = notification::notification::get_count(token).await;
     match response {
         Ok(response) => Ok(response),
-        Err(error) => {
-            println!("error: {:?}", error);
-            Err(error.to_string())
-        }
+        Err(error) => Err(error.to_string()),
     }
 }
 
@@ -245,10 +159,7 @@ async fn get_all_notifications(app: AppHandle, token: &str, page: u8) -> Result<
     let response = notification::notification::get_history(token, page, app).await;
     match response {
         Ok(response) => Ok(response),
-        Err(error) => {
-            println!("error: {:?}", error);
-            Err(error.to_string())
-        }
+        Err(error) => Err(error.to_string()),
     }
 }
 
@@ -257,10 +168,7 @@ async fn read_notification(token: &str, id: &str, index: u16) -> Result<(), Stri
     let response = notification::notification::read_notification(token, id, index).await;
     match response {
         Ok(_) => Ok(()),
-        Err(error) => {
-            println!("error: {:?}", error);
-            Err(error.to_string())
-        }
+        Err(error) => Err(error.to_string()),
     }
 }
 
@@ -274,8 +182,7 @@ async fn authenticate(username: &str, password: &str) -> Result<String, String> 
 }
 
 #[tauri::command]
-async fn refresh_token(app: AppHandle, refresh_token: &str) -> Result<String, String> {
-    println!("{refresh_token}");
+async fn refresh_token(refresh_token: &str) -> Result<String, String> {
     struct RefreshTokenParams {
         refresh_token: String,
         device_id: String,
@@ -294,10 +201,9 @@ async fn refresh_token(app: AppHandle, refresh_token: &str) -> Result<String, St
         refresh_token: refresh_token.to_owned(),
         device_id,
     };
-    let response = session::session::refresh_token(params).await.unwrap_or_else(|err| {
-        println!("error: {:?}", err);
-        err.to_string()
-    });
+    let response = session::session::refresh_token(params)
+        .await
+        .unwrap_or_else(|err| err.to_string());
     Ok(response)
 }
 
@@ -342,7 +248,6 @@ pub fn run() {
                             rect: tray_rect,
                             position: PhysicalPosition { x: 1.0, y: 1.0 }, // id: tray.id(),
                         } => {
-                            println!("left click pressed and released");
                             // in this example, let's show and focus the main window when the tray is clicked
                             let app = tray.app_handle();
                             if let Some(window) = app.get_webview_window("main") {
@@ -403,8 +308,6 @@ pub fn run() {
                     "registered for autostart? {}",
                     autostart_manager.is_enabled().unwrap()
                 );
-                // Disable autostart
-                let _ = autostart_manager.disable();
             }
 
             #[cfg(desktop)]
@@ -416,7 +319,6 @@ pub fn run() {
                 window.on_window_event(move |event| match event {
                     tauri::WindowEvent::CloseRequested { api, .. } => {
                         api.prevent_close();
-                        println!("User tried to close the app, so we hide the app :)");
                         let main_window = app_handle.get_webview_window("main").unwrap();
                         main_window.hide().unwrap();
                     }

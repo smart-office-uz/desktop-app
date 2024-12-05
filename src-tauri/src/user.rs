@@ -9,13 +9,7 @@ pub mod user {
 
         match response.error_for_status() {
             Ok(response) => Ok(response.text().await?),
-            Err(error) => {
-                println!(
-                                "Error occured when checked the error_for_status() inside the get_staff_id function: {:?}",
-                                error
-                            );
-                Err("Something went wrong!".into())
-            }
+            Err(error) => Err("Something went wrong!".into()),
         }
     }
 }

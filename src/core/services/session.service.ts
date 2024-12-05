@@ -6,7 +6,9 @@ export interface ISessionService {
   createNew: (payload: { accessToken: string; refreshToken: string }) => void;
   getAccessToken: () => string | null;
   getRefreshToken: () => string | null;
-  refreshSession: (ctx: { tauriService: ITauriService }) => Promise<void>;
+  refreshSession: (ctx: {
+    tauriService: ITauriService;
+  }) => Promise<boolean | Error>;
   clear: () => void;
 }
 
@@ -30,7 +32,7 @@ export default class SessionService implements ISessionService {
 
   async refreshSession(ctx: { tauriService: ITauriService }) {
     const refreshToken = this.getRefreshToken();
-    if (refreshToken === null) throw new Error("Refresh token is not found!");
+    if (refreshToken === null) return new Error("Refresh token is not found!");
 
     const { tauriService } = ctx;
     const response = (await tauriService.invoke("refresh_token", {
@@ -48,10 +50,13 @@ export default class SessionService implements ISessionService {
       status: string;
       timestamp: number;
     };
+
     this.createNew({
       accessToken: data.data.access_token,
       refreshToken: data.data.refresh_token,
     });
+
+    return true;
   }
 
   clear() {

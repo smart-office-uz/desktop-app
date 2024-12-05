@@ -50,13 +50,7 @@ pub mod auth {
                 };
                 return Ok(serde_json::to_string(&out)?);
             }
-            Err(err) => {
-                println!(
-                    "Error occured when checked the error_for_status(): {:?}",
-                    err
-                );
-                Err("Login yoki parol noto'g'ri!".into())
-            }
+            Err(err) => Err("Login yoki parol noto'g'ri!".into()),
         }
     }
 }

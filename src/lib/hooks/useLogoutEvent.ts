@@ -5,33 +5,31 @@ import { useEffect } from "react";
 import { listen } from "@tauri-apps/api/event";
 
 // services
-import type {
-  INotificationService,
-} from "@/core/services/notification.service";
+import type { INotificationService } from "@/core/services/notification.service";
+import type { ISessionService } from "@/core/services/session.service";
 
 // helpers
-import { updateAppIcon } from "@/lib/utils/update-tray-icon";
+import { logOutUseCase } from "@/core/use-cases/log-out/log-out";
 
 export const useLogoutEvent = (ctx: {
   notificationService: INotificationService;
+  sessionService: ISessionService;
 }) => {
   const navigate = useNavigate();
 
-  const { notificationService } = ctx;
+  const { notificationService, sessionService } = ctx;
 
   useEffect(() => {
     listen("logout_user", async () => {
-      navigate({
-        to: "/sign-in",
+      await logOutUseCase({
+        notificationService,
+        sessionService,
+        redirectCallback: () => {
+          navigate({
+            to: "/sign-in",
+          });
+        },
       });
-
-      await updateAppIcon();
-
-      setTimeout(() => {
-        notificationService.display(
-          "Tokeningiz eskirdi, iltimos qaytadan tizimga kiring!"
-        );
-      }, 2000);
     });
   }, []);
 };

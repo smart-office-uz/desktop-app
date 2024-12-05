@@ -8,9 +8,10 @@ import { listen } from "@tauri-apps/api/event";
 import type { INotificationService } from "@/core/services/notification.service";
 import type { ISessionService } from "@/core/services/session.service";
 import type { ITauriService } from "@/core/services/tauri.service";
-import { refreshSessionUseCase } from "@/core/use-cases/refresh-session/refresh-session";
 
-// helpers
+// use cases
+import { logOutUseCase } from "@/core/use-cases/log-out/log-out";
+import { refreshSessionUseCase } from "@/core/use-cases/refresh-session/refresh-session";
 
 export const useRefreshSessionEvent = (ctx: {
   notificationService: INotificationService;
@@ -19,19 +20,29 @@ export const useRefreshSessionEvent = (ctx: {
 }) => {
   const navigate = useNavigate();
 
-  const { sessionService, tauriService } = ctx;
+  const { sessionService, tauriService, notificationService } = ctx;
 
   useEffect(() => {
     listen("refresh_session", async () => {
-      try {
-        await refreshSessionUseCase({
+      const response = await refreshSessionUseCase({
+        sessionService,
+        tauriService,
+      });
+      if (response instanceof Error) {
+        logOutUseCase({
           sessionService,
-          tauriService,
+          notificationService,
+          redirectCallback: () => {
+            navigate({
+              to: "/sign-in",
+            });
+          },
         });
+      } else {
         navigate({
           to: "/",
         });
-      } catch (error) {}
+      }
     });
   }, []);
 };

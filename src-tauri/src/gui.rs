@@ -1,3 +1,5 @@
+use std::future::Future;
+
 pub trait NativeNotification {
-    fn show(&self, title: &str, description: &str);
+    fn show(&self, title: &str, redirect: Option<&str>) -> impl Future<Output = ()>;
 }

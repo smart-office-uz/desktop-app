@@ -7,7 +7,10 @@ export async function refreshSessionUseCase(deps: {
   tauriService: ITauriService;
 }) {
   const { sessionService, tauriService } = deps;
-  await sessionService.refreshSession({
+
+  const response = await sessionService.refreshSession({
     tauriService,
   });
+
+  return response;
 }

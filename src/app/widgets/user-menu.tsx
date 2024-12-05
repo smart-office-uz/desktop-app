@@ -12,31 +12,43 @@ import {
 } from "@/app/components/dropdown-menu";
 
 // services
-import SessionService from "@/core/services/session.service";
+import NotificationService from "@/core/services/notification.service";
+import SessionService, {
+  ISessionService,
+} from "@/core/services/session.service";
 
-// helpers
-import { updateAppIcon } from "@/lib/utils/update-tray-icon";
+// use cases
+import { logOutUseCase } from "@/core/use-cases/log-out/log-out";
 
 // icons
 import { User } from "lucide-react";
 
+function doesUserSessionExist(sessionService: ISessionService): boolean {
+  return (
+    sessionService.getAccessToken() !== null &&
+    sessionService.getAccessToken() !== undefined
+  );
+}
+
 export const UserMenu = () => {
   const navigate = useNavigate();
+
   const sessionService = new SessionService();
+  const notificationService = new NotificationService();
 
   const handleLogout = async () => {
-    sessionService.clear();
-    navigate({
-      to: "/sign-in",
+    await logOutUseCase({
+      sessionService,
+      notificationService,
+      redirectCallback() {
+        navigate({
+          to: "/sign-in",
+        });
+      },
     });
-
-    await updateAppIcon();
   };
 
-  if (
-    sessionService.getAccessToken() === null ||
-    sessionService.getAccessToken() === undefined
-  ) {
+  if (doesUserSessionExist(sessionService) === false) {
     return null;
   }
 

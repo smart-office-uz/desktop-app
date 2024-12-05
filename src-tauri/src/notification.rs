@@ -31,19 +31,13 @@ pub mod notification {
 
         match response.error_for_status() {
             Ok(response) => Ok(response.text().await?),
-            Err(error) => {
-                println!(
-                    "Error occured when checked the error_for_status() inside the get_latest function: {:?}",
-                    error
-                );
-                match error.status().expect("No status found!").as_u16() {
-                    401 => {
-                        event::event::logout_user(app);
-                        Err("Access token is expired!".into())
-                    }
-                    _ => Err("Something went wrong!".into()),
+            Err(error) => match error.status().expect("No status found!").as_u16() {
+                401 => {
+                    event::event::refresh_session(app);
+                    Err("Access token is expired!".into())
                 }
-            }
+                _ => Err("Something went wrong!".into()),
+            },
         }
     }
 
@@ -60,19 +54,13 @@ pub mod notification {
 
         match response.error_for_status() {
             Ok(response) => Ok(response.text().await?),
-            Err(error) => {
-                println!(
-                               "Error occured when checked the error_for_status() inside the get_latest function: {:?}",
-                               error
-                           );
-                match error.status().expect("No status found!").as_u16() {
-                    401 => {
-                        event::event::logout_user(app);
-                        Err("Access token is expired!".into())
-                    }
-                    _ => Err("Something went wrong!".into()),
+            Err(error) => match error.status().expect("No status found!").as_u16() {
+                401 => {
+                    event::event::refresh_session(app);
+                    Err("Access token is expired!".into())
                 }
-            }
+                _ => Err("Something went wrong!".into()),
+            },
         }
     }
 
@@ -90,13 +78,7 @@ pub mod notification {
                 let response_to_json = response.json::<GetCountResultDto>().await?;
                 Ok(serde_json::to_string(&response_to_json)?)
             }
-            Err(error) => {
-                println!(
-                    "Error occured when checked the error_for_status() inside the get_count function: {:?}, {token}",
-                    error
-                );
-                Err("Something went wrong!".into())
-            }
+            Err(error) => Err("Something went wrong!".into()),
         }
     }
 
