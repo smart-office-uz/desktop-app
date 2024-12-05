@@ -3,18 +3,15 @@ extern crate open;
 use std::sync::Mutex;
 
 // local
-mod auth;
 mod commands;
 mod device;
 mod event;
 mod gui;
 mod linux_gui;
 mod macos_gui;
-mod notification;
 mod notification_platform;
-mod session;
-mod user;
 mod windows_gui;
+mod repositories;
 
 use tauri::{
     menu::{Menu, MenuItem},

@@ -1,6 +1,6 @@
 use tauri::AppHandle;
 
-use crate::notification::notification as notification_repository;
+use crate::repositories::notification_repository;
 use crate::notification_platform::NotificationPlatform;
 
 #[tauri::command]

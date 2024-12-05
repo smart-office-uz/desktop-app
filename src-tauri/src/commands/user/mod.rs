@@ -1,4 +1,4 @@
-use crate::user::user as user_repository;
+use crate::repositories::user_repository;
 
 #[tauri::command]
 pub async fn get_user_staff_id(token: &str) -> Result<String, String> {

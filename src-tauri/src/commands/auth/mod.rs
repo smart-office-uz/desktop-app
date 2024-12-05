@@ -1,6 +1,5 @@
-use crate::auth::auth as auth_repository;
 use crate::device::device;
-use crate::session::session;
+use crate::repositories::auth_repository;
 
 #[tauri::command]
 pub async fn refresh_token(refresh_token: &str) -> Result<String, String> {
@@ -8,7 +7,7 @@ pub async fn refresh_token(refresh_token: &str) -> Result<String, String> {
         refresh_token: String,
         device_id: String,
     }
-    impl session::RefreshTokenCtx for RefreshTokenParams {
+    impl auth_repository::RefreshTokenCtx for RefreshTokenParams {
         fn get_device_id(&self) -> String {
             self.device_id.clone()
         }
@@ -22,7 +21,7 @@ pub async fn refresh_token(refresh_token: &str) -> Result<String, String> {
         refresh_token: refresh_token.to_owned(),
         device_id,
     };
-    let response = session::refresh_token(params)
+    let response = auth_repository::refresh_token(params)
         .await
         .unwrap_or_else(|err| err.to_string());
     Ok(response)
