@@ -8,6 +8,7 @@ pub struct LinuxNotification;
 
 impl gui::NativeNotification for LinuxNotification {
     async fn show(&self, title: &str, redirect: Option<&str>) {
+        #[cfg(target_os = "linux")]
         Notification::new()
             .subtitle(title)
             .action("default", "default") // IDENTIFIER, LABEL
