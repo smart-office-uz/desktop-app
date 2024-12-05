@@ -7,7 +7,7 @@ use tauri_winrt_notification::{Duration, Sound, Toast};
 pub struct WindowsNotification;
 
 impl NativeNotification for WindowsNotification {
-    async fn show(&self, title: &str, redirect: Option<&str>) {
+    async fn show(&self, title: &str, redirect: Option<String>) {
         #[cfg(target_os = "windows")]
         Toast::new(Toast::POWERSHELL_APP_ID)
             .title("Smart Office")

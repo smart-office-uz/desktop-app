@@ -7,7 +7,7 @@ use mac_notification_sys;
 pub struct MacOSNotification;
 
 impl NativeNotification for MacOSNotification {
-    async fn show(&self, title: &str, redirect: Option<&str>) {
+    async fn show(&self, title: &str, redirect: Option<String>) {
         #[cfg(target_os = "macos")]
         let result = mac_notification_sys::Notification::new()
             .title("Smart Office")

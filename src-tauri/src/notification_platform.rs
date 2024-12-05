@@ -10,7 +10,7 @@ pub enum NotificationPlatform {
 }
 
 impl NotificationPlatform {
-    pub async fn show(&self, title: &str, redirect: Option<&str>) {
+    pub async fn show(&self, title: &str, redirect: Option<String>) {
         match self {
             NotificationPlatform::Linux(notification) => notification.show(title, redirect).await,
             NotificationPlatform::MacOS(notification) => notification.show(title, redirect).await,

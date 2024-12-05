@@ -4,7 +4,7 @@ use crate::repositories::notification_repository;
 use crate::notification_platform::NotificationPlatform;
 
 #[tauri::command]
-pub async fn notify(message: &str, redirect: Option<&str>) -> Result<(), String> {
+pub async fn notify(message: &str, redirect: Option<String>) -> Result<(), String> {
     let notification_platform = NotificationPlatform::new();
     notification_platform.show(message, redirect).await;
     Ok(())

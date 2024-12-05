@@ -7,7 +7,7 @@ extern crate open;
 pub struct LinuxNotification;
 
 impl gui::NativeNotification for LinuxNotification {
-    async fn show(&self, title: &str, redirect: Option<&str>) {
+    async fn show(&self, title: &str, redirect: Option<String>) {
         #[cfg(target_os = "linux")]
         Notification::new()
             .subtitle(title)
