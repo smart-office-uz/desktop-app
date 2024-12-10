@@ -1,11 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
-// icons
-
 // services
 import UserService from "@/core/services/user.service";
-
-// hooks
 
 // widgets
 import { Header } from "@/app/widgets/header";

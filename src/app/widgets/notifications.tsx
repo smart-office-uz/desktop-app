@@ -1,70 +1,39 @@
-import { useQueryClient } from "@tanstack/react-query";
 
 // icons
 import { Loader2 } from "lucide-react";
 
 // services
-import SessionService from "@/core/services/session.service";
 
 // entities
-import { Notification } from "@/core/entities/notification.entity";
+import { NotificationEntity } from "@/core/entities/notification.entity";
 
 // components
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/avatar";
 
 // tauri
-import TauriService from "@/core/services/tauri.service";
+import { markNotificationAsRead } from "@/core/use-cases/notifications/mask-as-read";
 
 export const Notifications = (props: {
-  notifications: Notification[];
+  notifications: NotificationEntity[];
   isLoading: boolean;
 }) => {
-  const sessionService = new SessionService();
-  const queryClient = useQueryClient();
   const { notifications } = props;
 
-  const redirect = ({
-    link,
-    id,
-    index,
-  }: {
-    link: string;
+  async function handleNotificationClick(notification: {
     id: string;
+    link: string;
     index: number;
-  }) => {
-    const tauriService = new TauriService();
-    const accessToken = sessionService.getAccessToken();
-    if (
-      accessToken === null ||
-      accessToken === "" ||
-      accessToken === undefined
-    ) {
-      console.error("Access token is null or undefined");
-      return;
-    }
-
-    tauriService.invoke("read_notification", {
-      id,
-      index,
-      token: accessToken,
+  }) {
+    await markNotificationAsRead({
+      notification,
     });
-    tauriService.invoke("redirect", {
-      url: link,
-    });
+  }
 
-    // invalidate the query cache
-    // WARNING: this doesn't remove the existing data, it just marks it as stale so it can be refetched
-    queryClient.invalidateQueries();
-  };
-
-  const handleRedirectOnEnter = (
-    e: React.KeyboardEvent<HTMLLIElement>,
-    redirectProps: Parameters<typeof redirect>[0],
-  ) => {
-    if (e.key === "Enter") {
-      redirect(redirectProps);
-    }
-  };
+  function handleRedirectOnEnter(
+    redirectProps: Parameters<typeof handleNotificationClick>[0]
+  ) {
+    handleNotificationClick(redirectProps);
+  }
 
   if (props.isLoading)
     return (
@@ -80,20 +49,22 @@ export const Notifications = (props: {
           key={notification.getId()}
           className="group flex items-center gap-6 bg-background rounded-2xl p-6 hover:bg-primary hover:text-foreground transition-colors"
           onClick={() =>
-            redirect({
+            handleNotificationClick({
               id: notification.getId(),
               link: notification.getLink(),
               index,
             })
           }
           tabIndex={0}
-          onKeyUp={(evt) =>
-            handleRedirectOnEnter(evt, {
-              link: notification.getLink(),
-              id: notification.getId(),
-              index,
-            })
-          }
+          onKeyUp={(evt) => {
+            if (evt.key === "Enter") {
+              handleRedirectOnEnter({
+                link: notification.getLink(),
+                id: notification.getId(),
+                index,
+              });
+            }
+          }}
         >
           <div className="flex items-center gap-2">
             {notification.getStatus() === "SENT" && (

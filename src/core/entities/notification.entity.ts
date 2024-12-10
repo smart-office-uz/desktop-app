@@ -7,6 +7,10 @@ export interface NotificationEntity {
   getDate: () => string;
   getAvatarLink: () => string;
   getStatus: () => "READ" | "SENT";
+  getTaskOwner: () => {
+    fullName?: string;
+    staffId: string;
+  };
 }
 
 export class Notification implements NotificationEntity {

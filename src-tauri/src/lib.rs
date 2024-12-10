@@ -12,6 +12,7 @@ mod macos_gui;
 mod notification_platform;
 mod windows_gui;
 mod repositories;
+mod http_service;
 
 use tauri::{
     menu::{Menu, MenuItem},

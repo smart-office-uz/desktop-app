@@ -19,9 +19,9 @@ impl NotificationPlatform {
     }
 
     pub fn new() -> NotificationPlatform {
-        if !cfg!(target_os = "linux") {
+        if cfg!(target_os = "linux") {
             NotificationPlatform::Linux(LinuxNotification)
-        } else if !cfg!(windows) {
+        } else if cfg!(windows) {
             NotificationPlatform::Windows(WindowsNotification)
         } else {
             NotificationPlatform::MacOS(MacOSNotification)

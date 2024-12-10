@@ -1,6 +1,6 @@
 // widgets
 import { AppLogo } from "./app-logo";
-import { LocaleSwitcher } from "./locale-switcher";
+// import { LocaleSwitcher } from "./locale-switcher";
 // import { MockSessionUpdater } from "./mock-session-updater";
 import { ModeToggle } from "./mode-toggle";
 import { NotificationUpdateIndicator } from "./notification-update-indicator";
@@ -18,7 +18,7 @@ export const Header = () => {
           {/* <MockSessionUpdater /> */}
           <NotificationUpdateIndicator />
           <div className="w-[2px] h-full bg-lightGray"></div>
-          <LocaleSwitcher />
+          {/* <LocaleSwitcher /> */}
           <div className="w-[2px] h-full bg-lightGray"></div>
           <UserMenu />
         </div>

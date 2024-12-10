@@ -23,6 +23,7 @@ export const Route = createRootRoute({
     });
     useLogoutEvent({
       notificationService,
+      sessionService,
     });
     useRefreshSessionEvent({
       notificationService,

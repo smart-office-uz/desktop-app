@@ -56,7 +56,7 @@ export const useWebSocket = (deps: {
             `Sizda ${notifications} ta yangi xabar bor!`,
             redirectUrl
           );
-        }, 2000);
+        }, 1000);
       } catch (err) {}
     });
 

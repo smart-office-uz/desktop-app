@@ -90,32 +90,33 @@ export default class NotificationRepository {
           link: string;
           status: "READ" | "SEND";
           task_text: string;
+          full_name: string;
+          staff_id: string;
         }[];
         total: number;
       };
     };
 
     return {
-      notifications: notifications?.data?.results?.map(
-        (notification, index) => {
-          let notificationStatus: "READ" | "SENT" = "READ";
-          if (notification.status === "SEND") {
-            notificationStatus = "SENT";
-          }
-          return new Notification({
-            id: notification.id,
-            title: notification.task_text,
-            link: notification.link,
-            date: notification.date,
-            avatarLink: "",
-            taskOwner: {
-              staffId: "",
-              fullName: index % 2 === 0 ? "John Doe" : undefined,
-            },
-            status: notificationStatus,
-          });
-        },
-      ),
+      notifications: notifications?.data?.results?.map((notification) => {
+        let notificationStatus: "READ" | "SENT" = "READ";
+
+        if (notification.status === "SEND") {
+          notificationStatus = "SENT";
+        }
+        return new Notification({
+          id: notification.id,
+          title: notification.task_text,
+          link: notification.link,
+          date: notification.date,
+          avatarLink: "",
+          taskOwner: {
+            staffId: notification.id,
+            fullName: notification.full_name,
+          },
+          status: notificationStatus,
+        });
+      }),
       totalNumberOfNotifications: notifications?.data?.total,
     };
   }

@@ -1,3 +1,4 @@
+use crate::http_service::{GetRequestOptions, HttpError, HttpService};
 use serde::{Deserialize, Serialize};
 use std::error::Error;
 
@@ -63,21 +64,53 @@ pub async fn get_history(
     }
 }
 
-pub async fn get_count(token: &str) -> Result<String, Box<dyn Error>> {
-    let client = reqwest::Client::new();
+// #[derive(Serialize, Deserialize, Debug)]
+// pub struct GetCountDto {
 
-    let response = client
-        .get("https://smart-office.uz/services/platon-core/api/v1/notification?type=1")
-        .bearer_auth(token)
-        .send()
-        .await?;
+// }
+#[derive(Serialize, Deserialize, Debug)]
+struct GetCountDto {
+    status: u16,
+    data: GetCountResultDtoData,
+}
 
-    match response.error_for_status() {
-        Ok(response) => {
-            let response_to_json = response.json::<GetCountResultDto>().await?;
-            Ok(serde_json::to_string(&response_to_json)?)
+#[derive(Serialize, Deserialize, Debug)]
+struct GetCountDtoData {
+    notify_count: GetCountResultDtoDataNotifyCount,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct GetCountDtoDataNotifyCount {
+    notify_count: u16,
+}
+
+pub async fn get_count(token: String, app: tauri::AppHandle) -> Result<String, HttpError> {
+    let response = HttpService::get::<GetCountDto>(GetRequestOptions {
+        url: "https://smart-office.uz/services/platon-core/api/v1/notification?type=1",
+        bearer_token: Some(token),
+        headers: vec![],
+    })
+    .await;
+
+    match response {
+        Ok(data) => {
+            let json = serde_json::to_string(&data).map_err(|err| HttpError {
+                message: err.to_string(),
+                status: 500,
+            })?;
+            Ok(json)
         }
-        Err(error) => Err("Something went wrong!".into()),
+        Err(error) => {
+            if error.status == 401 {
+                event::event::refresh_session(app);
+                Err(HttpError {
+                    message: "Unauthorized".to_owned(),
+                    status: 401,
+                })
+            } else {
+                Err(error)
+            }
+        }
     }
 }
 

@@ -1,8 +1,7 @@
-use notify_rust::{Hint, Notification};
 use crate::gui;
+use notify_rust::{Hint, Notification};
 
 extern crate open;
-
 
 pub struct LinuxNotification;
 
@@ -10,6 +9,7 @@ impl gui::NativeNotification for LinuxNotification {
     async fn show(&self, title: &str, redirect: Option<String>) {
         #[cfg(target_os = "linux")]
         Notification::new()
+            .summary(title)
             .subtitle(title)
             .action("default", "default") // IDENTIFIER, LABEL
             .appname("Smart Office")

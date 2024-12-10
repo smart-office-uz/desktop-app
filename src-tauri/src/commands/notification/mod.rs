@@ -1,7 +1,7 @@
 use tauri::AppHandle;
 
-use crate::repositories::notification_repository;
 use crate::notification_platform::NotificationPlatform;
+use crate::repositories::notification_repository;
 
 #[tauri::command]
 pub async fn notify(message: &str, redirect: Option<String>) -> Result<(), String> {
@@ -20,8 +20,8 @@ pub async fn get_latest_notifications(app: AppHandle, token: &str) -> Result<Str
 }
 
 #[tauri::command]
-pub async fn get_latest_notifications_count(token: &str) -> Result<String, String> {
-    let response = notification_repository::get_count(token).await;
+pub async fn get_latest_notifications_count(app: AppHandle, token: &str) -> Result<String, String> {
+    let response = notification_repository::get_count(token.to_string(), app).await;
     match response {
         Ok(response) => Ok(response),
         Err(error) => Err(error.to_string()),
@@ -29,7 +29,11 @@ pub async fn get_latest_notifications_count(token: &str) -> Result<String, Strin
 }
 
 #[tauri::command]
-pub async fn get_all_notifications(app: AppHandle, token: &str, page: u8) -> Result<String, String> {
+pub async fn get_all_notifications(
+    app: AppHandle,
+    token: &str,
+    page: u8,
+) -> Result<String, String> {
     let response = notification_repository::get_history(token, page, app).await;
     match response {
         Ok(response) => Ok(response),

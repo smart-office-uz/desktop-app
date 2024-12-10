@@ -41,7 +41,9 @@ export const useRefreshSessionEvent = (ctx: {
       } else {
         navigate({
           to: "/",
+
         });
+        window.location.pathname = "/";
       }
     });
   }, []);
