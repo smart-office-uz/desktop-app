@@ -11,9 +11,19 @@ import { AppLogo } from "@/app/widgets/app-logo";
 import { AppVersion } from "@/app/widgets/app-version";
 import { Copyright } from "@/app/widgets/copyright";
 import { ESignAuthView } from "@/core/presentation/esign-auth/esign-auth";
+import { useCheckAppInstanceBaseUrl } from "@/core/use-cases/app-instance/use-check-app-instance-base-url";
+import { redirect } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/sign-in")({
   component: SignIn,
+  beforeLoad: async function () {
+    const appInstanceBaseUrl = await useCheckAppInstanceBaseUrl();
+    if (appInstanceBaseUrl instanceof Error) {
+      throw redirect({
+        to: "/register-instance",
+      });
+    }
+  },
 });
 
 function SignIn() {

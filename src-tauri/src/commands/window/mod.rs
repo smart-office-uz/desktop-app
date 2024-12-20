@@ -17,4 +17,3 @@ pub fn center_window(app: AppHandle) -> Result<(), String> {
     };
     Ok(())
 }
-
