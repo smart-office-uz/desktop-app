@@ -20,14 +20,14 @@ struct GetCountResultDtoDataNotifyCount {
     notify_count: u16,
 }
 
-pub async fn get_latest(token: &str, app: tauri::AppHandle) -> Result<String, Box<dyn Error>> {
+pub async fn get_latest(
+    token: &str,
+    app: tauri::AppHandle,
+    base_url: String,
+) -> Result<String, Box<dyn Error>> {
     let client = reqwest::Client::new();
-
-    let response = client
-        .get("https://smart-office.uz/services/platon-core/api/v1/notification?type=2")
-        .bearer_auth(token)
-        .send()
-        .await?;
+    let endpoint = format!("{base_url}/services/platon-core/api/v1/notification?type=2",);
+    let response = client.get(endpoint).bearer_auth(token).send().await?;
 
     match response.error_for_status() {
         Ok(response) => Ok(response.text().await?),
@@ -67,8 +67,12 @@ pub async fn get_history(
     token: &str,
     page: u8,
     app: tauri::AppHandle,
+    base_url: String,
 ) -> Result<String, HttpError> {
-    let url = format!("https://smart-office.uz/services/platon-core/web/v1/tables/history_notification/data?_page={}",page);
+    let url = format!(
+        "{base_url}/services/platon-core/web/v1/tables/history_notification/data?_page={}",
+        page
+    );
     let response = HttpService::get::<GetHistoryDto>(GetRequestOptions {
         bearer_token: Some(token.to_owned()),
         headers: vec![],
@@ -114,9 +118,14 @@ struct GetCountDtoDataNotifyCount {
     notify_count: u16,
 }
 
-pub async fn get_count(token: String, app: tauri::AppHandle) -> Result<String, HttpError> {
+pub async fn get_count(
+    token: String,
+    app: tauri::AppHandle,
+    base_url: String,
+) -> Result<String, HttpError> {
+    let endpoint = format!("{base_url}/services/platon-core/api/v1/notification?type=1");
     let response = HttpService::get::<GetCountDto>(GetRequestOptions {
-        url: "https://smart-office.uz/services/platon-core/api/v1/notification?type=1".to_owned(),
+        url: endpoint.to_owned(),
         bearer_token: Some(token),
         headers: vec![],
     })
@@ -144,10 +153,16 @@ pub async fn get_count(token: String, app: tauri::AppHandle) -> Result<String, H
     }
 }
 
-pub async fn read_notification(token: &str, id: &str, index: u16) -> Result<(), Box<dyn Error>> {
+pub async fn read_notification(
+    token: &str,
+    id: &str,
+    index: u16,
+    base_url: String,
+) -> Result<(), Box<dyn Error>> {
     let client = reqwest::Client::new();
+    let endpoint = format!("{base_url}/services/platon-core/api/v1/notification");
     let response = client
-        .post("https://smart-office.uz/services/platon-core/api/v1/notification")
+        .post(endpoint)
         .bearer_auth(token)
         .query(&[("notify_id", id), ("index", &index.to_string())])
         .send()

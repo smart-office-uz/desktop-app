@@ -11,7 +11,7 @@ export default class AppStore implements StoreDef {
     })();
   }
 
-  get(key: string): any | undefined {
+  get(key: string): string | null {
     // const value = this.store?.get(key);
     const value = localStorage.getItem(key);
     return value;
