@@ -2,7 +2,7 @@ import AppStore from "@/store/app/store";
 
 export interface IAppInstanceService {
   getBaseUrl(): string | null;
-  setBaseUrl(value: string | undefined): void;
+  setBaseUrl(value: string | null): void;
 }
 
 class AppInstanceService implements IAppInstanceService {
@@ -12,7 +12,7 @@ class AppInstanceService implements IAppInstanceService {
     return this.appStore.get("baseUrl");
   }
 
-  setBaseUrl(value: string) {
+  setBaseUrl(value: string | null) {
     this.appStore.set("baseUrl", value);
   }
 }

@@ -1,3 +1,4 @@
+import { appInstanceService } from "@/core/services/app-instance.service";
 import type { INotificationService } from "@/core/services/notification.service";
 import type { ISessionService } from "@/core/services/session.service";
 
@@ -11,7 +12,7 @@ interface LogOutUseCaseCtx {
 
 export async function logOutUseCase(ctx: LogOutUseCaseCtx): Promise<void> {
   ctx.sessionService.clear();
-
+  appInstanceService.setBaseUrl(null);
   await updateAppIcon();
 
   ctx.redirectCallback?.();
