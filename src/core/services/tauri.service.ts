@@ -1,4 +1,5 @@
 import { invoke as invokeTauri } from "@tauri-apps/api/core";
+import { appInstanceService } from "./app-instance.service";
 
 type TauriCommandArgs = {
   authenticate: {
@@ -48,13 +49,20 @@ type TauriCommandArgs = {
 type TauriCommand = keyof TauriCommandArgs;
 
 export interface ITauriService {
-  invoke: <T extends TauriCommand>(command: T, args: TauriCommandArgs[T]) => unknown;
+  invoke: <T extends TauriCommand>(
+    command: T,
+    args: TauriCommandArgs[T]
+  ) => unknown;
 }
 
 export default class TauriService implements ITauriService {
   async invoke<T extends TauriCommand>(command: T, args: TauriCommandArgs[T]) {
+    const baseUrl = await appInstanceService.getBaseUrl();
+    if (baseUrl === undefined || baseUrl === null)
+      throw new Error("BASE_URL doesn't exist!");
     return await invokeTauri(command as string, {
       ...args,
+      baseUrl,
     });
   }
 }

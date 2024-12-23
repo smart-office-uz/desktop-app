@@ -8,6 +8,7 @@ import NotificationService from "@/core/services/notification.service";
 import { useSessionStore } from "@/store/session";
 
 // utils
+import { appInstanceService } from "@/core/services/app-instance.service";
 import { updateAppIcon } from "../utils/update-tray-icon";
 
 export const useWebSocket = (deps: {
@@ -46,9 +47,10 @@ export const useWebSocket = (deps: {
 
         await updateAppIcon(notifications);
 
+        const baseUrl = await appInstanceService.getBaseUrl();
         const redirectUrl = notificationData?.redirect
           ? notificationData.redirect
-          : "https://smart-office.uz/tables/history_notification";
+          : `${baseUrl}/tables/history_notification`;
 
         // this is a workaround for handling the blocking of the main thread by notify-rust
         setTimeout(() => {

@@ -1,3 +1,5 @@
+import { appInstanceService } from "../services/app-instance.service";
+
 export interface NotificationEntity {
   hasTaskOwnerName: () => boolean;
   hasAvatarLink: () => boolean;
@@ -83,6 +85,7 @@ export class Notification implements NotificationEntity {
   }
 
   getAvatarLink() {
-    return `https://smart-office.uz/uploads/images/${this.avatarLink}`;
+    const baseUrl = appInstanceService.getBaseUrl();
+    return `${baseUrl}/uploads/images/${this.avatarLink}`;
   }
 }

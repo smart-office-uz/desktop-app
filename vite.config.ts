@@ -33,12 +33,6 @@ export default defineConfig(async ({ mode }) => {
       port: 5173,
       strictPort: true,
       host: host || false,
-      origin: "http://127.0.0.1:8080",
-
-      headers: {
-        origin: "https://smart-office.uz",
-        host: "smart-office.uz",
-      },
       hmr: host
         ? {
             protocol: "ws",
@@ -49,28 +43,6 @@ export default defineConfig(async ({ mode }) => {
       watch: {
         // 3. tell vite to ignore watching `src-tauri`
         ignored: ["**/src-tauri/**"],
-      },
-      proxy: {
-        "/api/esign/challenge": {
-          target:
-            "https://smart-office.uz/services/platon-auth/api/eimzo/challenge",
-          changeOrigin: true,
-          rewrite: () => "",
-        },
-        "/api/esign/authenticate": {
-          target: "https://smart-office.uz/services/platon-auth/api/eimzo",
-          changeOrigin: true,
-          rewrite: () => "",
-
-        },
-        "/ws/esign": {
-          target: "wss://127.0.0.1:64443/service/cryptapi",
-          // changeOrigin: true,
-          rewrite: () => "",
-          ws: true,
-          rewriteWsOrigin: true,
-          secure: false,
-        },
       },
     },
     define: {

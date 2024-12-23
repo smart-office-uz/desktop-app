@@ -26,15 +26,19 @@ pub struct SignInResult {
     refresh_token: String,
 }
 
-pub async fn sign_in(username: String, password: String) -> Result<String, Box<dyn Error>> {
+pub async fn sign_in(
+    username: String,
+    password: String,
+    base_url: String,
+) -> Result<String, Box<dyn Error>> {
     let client = reqwest::Client::new();
     let params = [("username", username), ("password", password)];
 
     let mut headers = HeaderMap::new();
     headers.append("device-id", HeaderValue::from_str("Desktop")?);
-
+    let endpoint = format!("{}/services/platon-auth/api/login", base_url);
     let response = client
-        .post("https://smart-office.uz/services/platon-auth/api/login")
+        .post(endpoint)
         .form(&params)
         .headers(headers)
         .send()
@@ -56,6 +60,7 @@ pub async fn sign_in(username: String, password: String) -> Result<String, Box<d
 pub trait RefreshTokenCtx {
     fn get_refresh_token(&self) -> String;
     fn get_device_id(&self) -> String;
+    fn get_base_url(&self) -> String;
 }
 
 pub async fn refresh_token<Ctx>(ctx: Ctx) -> Result<String, Box<dyn Error>>
@@ -63,8 +68,12 @@ where
     Ctx: RefreshTokenCtx + Send + Sync,
 {
     let client = reqwest::Client::new();
+    let endpoint = format!(
+        "{}/services/platon-auth/api/refresh/token",
+        ctx.get_base_url()
+    );
     let response = client
-        .get("https://smart-office.uz/services/platon-auth/api/refresh/token")
+        .get(endpoint)
         .bearer_auth(ctx.get_refresh_token())
         .header("device-id", ctx.get_device_id())
         .send()
