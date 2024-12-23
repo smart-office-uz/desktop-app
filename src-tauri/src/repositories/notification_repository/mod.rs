@@ -1,6 +1,6 @@
 use crate::http_service::{GetRequestOptions, HttpError, HttpService};
 use serde::{Deserialize, Serialize};
-use std::error::Error;
+use std::{error::Error, str};
 
 use crate::event;
 
@@ -41,33 +41,63 @@ pub async fn get_latest(token: &str, app: tauri::AppHandle) -> Result<String, Bo
     }
 }
 
+#[derive(Serialize, Deserialize, Debug)]
+struct GetHistoryDto {
+    data: GetHistoryDataDto,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct GetHistoryDataDto {
+    results: Vec<GetHistoryDataNotificationDto>,
+    total: u128,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+struct GetHistoryDataNotificationDto {
+    date: String,
+    id: String,
+    link: String,
+    status: String,
+    task_text: String,
+    full_name: String,
+    staff_id: String,
+}
+
 pub async fn get_history(
     token: &str,
     page: u8,
     app: tauri::AppHandle,
-) -> Result<String, Box<dyn Error>> {
-    let client = reqwest::Client::new();
+) -> Result<String, HttpError> {
+    let url = format!("https://smart-office.uz/services/platon-core/web/v1/tables/history_notification/data?_page={}",page);
+    let response = HttpService::get::<GetHistoryDto>(GetRequestOptions {
+        bearer_token: Some(token.to_owned()),
+        headers: vec![],
+        url,
+    })
+    .await;
 
-    let response = client.get(
-            format!("https://smart-office.uz/services/platon-core/web/v1/tables/history_notification/data?_page={page}"),
-        ).bearer_auth(token).send().await?;
-
-    match response.error_for_status() {
-        Ok(response) => Ok(response.text().await?),
-        Err(error) => match error.status().expect("No status found!").as_u16() {
-            401 => {
+    match response {
+        Ok(data) => {
+            let json = serde_json::to_string(&data).map_err(|err| HttpError {
+                message: err.to_string(),
+                status: 500,
+            })?;
+            Ok(json)
+        }
+        Err(error) => {
+            if error.status == 401 {
                 event::event::refresh_session(app);
-                Err("Access token is expired!".into())
+                Err(HttpError {
+                    message: "Unauthorized".to_owned(),
+                    status: 401,
+                })
+            } else {
+                Err(error)
             }
-            _ => Err("Something went wrong!".into()),
-        },
+        }
     }
 }
 
-// #[derive(Serialize, Deserialize, Debug)]
-// pub struct GetCountDto {
-
-// }
 #[derive(Serialize, Deserialize, Debug)]
 struct GetCountDto {
     status: u16,
@@ -86,7 +116,7 @@ struct GetCountDtoDataNotifyCount {
 
 pub async fn get_count(token: String, app: tauri::AppHandle) -> Result<String, HttpError> {
     let response = HttpService::get::<GetCountDto>(GetRequestOptions {
-        url: "https://smart-office.uz/services/platon-core/api/v1/notification?type=1",
+        url: "https://smart-office.uz/services/platon-core/api/v1/notification?type=1".to_owned(),
         bearer_token: Some(token),
         headers: vec![],
     })

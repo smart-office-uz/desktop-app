@@ -29,7 +29,7 @@ impl fmt::Debug for HttpError {
 pub struct HttpService {}
 
 pub struct GetRequestOptions {
-    pub url: &'static str,
+    pub url: String,
     pub headers: Vec<(&'static str, String)>,
     pub bearer_token: Option<String>,
 }

@@ -17,10 +17,19 @@ import { TypographyH2, TypographyP } from "@/app/components/typography";
 import { NotificationHistory } from "@/app/widgets/notification-history";
 import { UnReadNotifications } from "@/app/widgets/unread-notifications";
 
+// use-cases
+import { useCheckAppInstanceBaseUrl } from "@/core/use-cases/app-instance/use-check-app-instance-base-url";
+
 export const Route = createFileRoute("/")({
   beforeLoad: async ({ location }) => {
-    const userService = new UserService();
+    const appInstanceBaseUrl = useCheckAppInstanceBaseUrl();
+    if (appInstanceBaseUrl instanceof Error) {
+      throw redirect({
+        to: "/register-instance",
+      });
+    }
 
+    const userService = new UserService();
     if (!userService.checkIfAuthorized()) {
       throw redirect({
         to: "/sign-in",
