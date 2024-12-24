@@ -5,7 +5,7 @@ import { ThemeProvider } from "./theme";
 export default function Providers() {
   return (
     <>
-      <ThemeProvider defaultTheme="system">
+      <ThemeProvider defaultTheme="light">
         <TanstackQueryProvider>
           <RouterProvider />
         </TanstackQueryProvider>

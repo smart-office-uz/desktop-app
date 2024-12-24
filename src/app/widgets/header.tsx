@@ -17,7 +17,7 @@ export const Header = () => {
           <ModeToggle />
           {/* <MockSessionUpdater /> */}
           <NotificationUpdateIndicator />
-          <div className="w-[2px] h-full bg-lightGray"></div>
+          {/* <div className="w-[2px] h-full bg-lightGray"></div> */}
           {/* <LocaleSwitcher /> */}
           <div className="w-[2px] h-full bg-lightGray"></div>
           <UserMenu />

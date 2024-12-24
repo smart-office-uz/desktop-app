@@ -43,12 +43,15 @@ export const NotificationHistory = () => {
             variant: "outline",
             className: "h-auto max-h-[10px] text-lg",
           })}
-          activeLinkClassName={buttonVariants({ variant: "default" })}
+          activeLinkClassName={buttonVariants({
+            variant: "default",
+            className: "hover:text-white text-white",
+          })}
           previousLabel="Prev"
           renderOnZeroPageCount={null}
         />
-        <div className="flex w-[100px] items-center justify-center text-sm font-medium">
-          Page {page + 1} of {totalPages}
+        <div className="flex font-semibold w-[100px] items-center justify-center">
+          {page + 1} / {totalPages}
         </div>
         <div className="flex items-center space-x-2">
           <Button

@@ -47,7 +47,7 @@ export const useWebSocket = (deps: {
 
         await updateAppIcon(notifications);
 
-        const baseUrl = await appInstanceService.getBaseUrl();
+        const baseUrl = appInstanceService.getBaseUrl();
         const redirectUrl = notificationData?.redirect
           ? notificationData.redirect
           : `${baseUrl}/tables/history_notification`;
