@@ -13,7 +13,7 @@ impl NativeNotification for WindowsNotification {
             .title("Smart Office")
             .text1(title)
             .sound(Some(Sound::SMS))
-            .duration(Duration::Short)
+            .duration(Duration::Long)
             .on_activated(move |_| {
                 match redirect.clone() {
                     Some(url) => {
