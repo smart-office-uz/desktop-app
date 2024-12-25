@@ -22,46 +22,69 @@ import {
 } from "@/app/components/dialog";
 import { ESignCertificateList } from "./esign-certificate-list";
 
+// use cases
+import { initializeESignUseCase } from "@/core/use-cases/esign-initialize/use-initialize-esign";
+
 // services
 import SessionService from "@/core/services/session.service";
-import { initializeESignUseCase } from "@/core/use-cases/esign-initialize/use-initialize-esign";
+
+const ESIGN_AUTH_PENDING_TOAST_ID = "eSignAuthPendingToast";
+
+function showESignAuthPendingToast() {
+  toast.loading("Amalga oshirilmoqda...", {
+    id: ESIGN_AUTH_PENDING_TOAST_ID,
+  });
+}
+
+function removeESignAuthPendingToast() {
+  toast.dismiss(ESIGN_AUTH_PENDING_TOAST_ID);
+}
+
+function showESignAuthError(error: Error) {
+  toast.error(error.message, {
+    richColors: true,
+    important: true,
+    dismissible: true,
+    className: "!bg-red-500 !text-white",
+    closeButton: true,
+  });
+}
 
 export interface ESignAuthViewCtx {}
 
 export const ESignAuthView = (_ctx: ESignAuthViewCtx) => {
   const navigate = useNavigate();
 
-  const [isESignModalOpen, setESignModalOpen] = useState<boolean>(false);
+  const [isESignModalOpen, setESignModalOpen] = useState(false);
   const [certificates, setSertificates] = useState<
     Array<ECertificateEntity<Cert>>
   >([]);
 
-  async function handleESignAuthError(error: Error) {
-    toast.error(error.message, {
-      richColors: true,
-      important: true,
-      dismissible: true,
-      className: "!bg-red-500 !text-white",
-      closeButton: true,
-    });
-  }
-
   const initializeESignService = async () => {
-    await initializeESignUseCase({
-      onSuccess: async (service) => {
-        await service.loadUserKeys({
-          onSuccess: (certificates) => {
-            setSertificates(certificates);
-            setESignModalOpen(true);
-          },
-          onError: handleESignAuthError,
-        });
-      },
-      onError: handleESignAuthError,
-    });
+    showESignAuthPendingToast();
+
+    const initializeResponse = await initializeESignUseCase();
+    if (initializeResponse.ok === false) {
+      showESignAuthError(initializeResponse.error);
+      return;
+    }
+
+    const response = await initializeResponse.data.loadUserKeys();
+    if (response.ok === false) {
+      showESignAuthError(response.error);
+      return;
+    }
+
+    setSertificates(response.data);
+    setESignModalOpen(true);
+    removeESignAuthPendingToast();
   };
+
   const { authenticate } = useESignAuth({
-    onError: handleESignAuthError,
+    onError(error) {
+      removeESignAuthPendingToast();
+      showESignAuthError(error);
+    },
     onAuthenticated(data) {
       toast.success("E-IMZO orqali kirish muvaffaqqiyatli amalga oshirildi!");
       const sessionService = new SessionService();
@@ -72,7 +95,7 @@ export const ESignAuthView = (_ctx: ESignAuthViewCtx) => {
       navigate({
         to: "/",
       });
-      // window.location.href = "/";
+      removeESignAuthPendingToast();
     },
   });
 
@@ -90,8 +113,12 @@ export const ESignAuthView = (_ctx: ESignAuthViewCtx) => {
           <DialogHeader>
             <DialogTitle>E-IMZO orqali kiring</DialogTitle>
           </DialogHeader>
+
           <ESignCertificateList
-            authenticate={authenticate}
+            authenticate={function (certificate) {
+              showESignAuthPendingToast();
+              authenticate(certificate);
+            }}
             certificates={certificates}
           />
 

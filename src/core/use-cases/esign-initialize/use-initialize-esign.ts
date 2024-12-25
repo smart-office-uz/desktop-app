@@ -1,14 +1,21 @@
-import ESignService from "@/adapters/e-sign/e-sign.service";
-import type { UseInitializeESignServiceContext } from "./context";
+import ESignService, {
+  type IESignService,
+} from "@/adapters/e-sign/e-sign.service";
 
-export async function initializeESignUseCase(
-  ctx: UseInitializeESignServiceContext,
-) {
+export async function initializeESignUseCase(): Promise<
+  Result<IESignService, Error>
+> {
   const eSignService = new ESignService();
-  await eSignService.initialize({
-    onSuccess: () => {
-      ctx.onSuccess(eSignService);
-    },
-    onError: ctx.onError,
-  });
+  const response = await eSignService.initialize();
+
+  if (response.ok === false) {
+    return {
+      ok: false,
+      error: response.error,
+    };
+  }
+  return {
+    ok: true,
+    data: eSignService,
+  };
 }
