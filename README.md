@@ -69,38 +69,3 @@ You can choose from one of the following formats for installation:
 ## Troubleshooting
 
 If you encounter any issues during the installation process, please feel free to open an issue on the [GitHub repository](https://github.com/smart-office-uz/desktop-app/issues).
-
-## Tasks
-
-- [x] Focus on the app when user clicks on the tray icon
-- [x] Redirect user to notifications table of smart office when user clicks on the notification
-- [x] User staff id must be fetched via smart-office api
-- [x] Send a message from rust to js to log out the user from the app when any request fails with 401 status code (temporary solution)
-- [x] Add autostart plugin
-- [x] Add a nicer font that supports cyrillic and latin
-- [x] Add a nicer shadcn-ui theme
-- [x] Add uzbek language support
-- [ ] Refresh tokens must be handled
-- [x] Clean up unnecessary crates
-- [ ] (Maybe) Add auth checks to all invoke() handlers
-- [ ] (Maybe) Save user session in tauri store
-- [x] Remove tanstack router devtools
-- [x] Remove tanstack query devtools
-- [x] Make window size smaller
-- [x] (Maybe) Redesign
-- [x] Add installation instructions
-- [ ] Add precommit hook for type-checking
-- [x] Fix system tray icon updating twice
-- [x] Fix notification showing up twice
-- [x] Add default tray icon when user logs out
-- [x] Update app menu icon alongside the tray icon
-- [x] Fix notification links that do not contain http:// or https://
-- [x] (Maybe) Telegram bot to automatically send new release notifications
-- [x] Icon should be changed
-- [x] Tray icon notification number should have a bigger font size
-- [x] (Maybe) Add a logo to the login page
-- [x] Change window size based on pages
-- [x] Add notification link to each individual notification
-- [x] Hide the window when user tries to exit
-- [x] Fix notification blocking main thread
-- [ ] Create a tauri service on the frontend to call Rust commands
