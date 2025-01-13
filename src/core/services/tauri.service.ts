@@ -44,6 +44,9 @@ type TauriCommandArgs = {
     width: number;
     height: number;
   };
+  get_org_list: {
+    token: string;
+  };
 };
 
 type TauriCommand = keyof TauriCommandArgs;
@@ -51,7 +54,7 @@ type TauriCommand = keyof TauriCommandArgs;
 export interface ITauriService {
   invoke: <T extends TauriCommand>(
     command: T,
-    args: TauriCommandArgs[T]
+    args: TauriCommandArgs[T],
   ) => unknown;
 }
 

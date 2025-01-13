@@ -1,5 +1,6 @@
 import type { IChatOrganization } from "../entities/chat-organization.entity";
 import type { IChatStaff } from "../entities/chat-staff.entity";
+import TauriService from "../services/tauri.service";
 
 export interface IChatStaffRepository {
   getByOrganizationId({}: {
@@ -8,6 +9,8 @@ export interface IChatStaffRepository {
 }
 
 export class ChatStaffRepository implements IChatStaffRepository {
+  private readonly tauriService = new TauriService();
+
   async getByOrganizationId({
     id,
   }: {
