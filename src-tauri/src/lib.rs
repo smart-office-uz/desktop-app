@@ -49,8 +49,10 @@ pub fn run() {
         )
         .setup(|app| {
             // at least 1 menu item is required
-            let quit_i = MenuItem::with_id(app, "open", "Open", true, None::<&str>)?;
-            let menu = Menu::with_items(app, &[&quit_i])?;
+            let open = MenuItem::with_id(app, "open", "Ochish", true, None::<&str>)?;
+            let quit = MenuItem::with_id(app, "quit", "Yopish", true, None::<&str>)?;
+
+            let menu = Menu::with_items(app, &[&open, &quit])?;
             let tray = TrayIconBuilder::new()
                 .icon(app.default_window_icon().unwrap().clone())
                 .menu(&menu)
@@ -90,9 +92,11 @@ pub fn run() {
                             let _ = window.set_focus();
                         }
                     }
-                    _ => {
-                        println!("menu item {:?} not handled", event.id);
+                    "quit" => {
+                        app.cleanup_before_exit();
+                        app.exit(0);
                     }
+                    _ => {}
                 })
                 .build(app)?;
             app.manage(Mutex::new(AppState::default()));
@@ -116,16 +120,11 @@ pub fn run() {
                         Some(vec!["--flag1", "--flag2"]),
                     ))
                     .expect("Failed to initialize the autostart plugin!");
-
                 // Get the autostart manager
                 let autostart_manager = app.autolaunch();
+
                 // Enable autostart
                 let _ = autostart_manager.enable();
-                // Check enable state
-                println!(
-                    "registered for autostart? {}",
-                    autostart_manager.is_enabled().unwrap()
-                );
             }
 
             #[cfg(desktop)]
@@ -140,6 +139,7 @@ pub fn run() {
                         let main_window = app_handle.get_webview_window("main").unwrap();
                         main_window.hide().unwrap();
                     }
+
                     _ => {}
                 });
             }
