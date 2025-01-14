@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { Button, buttonVariants } from "../components/button";
 
-export const NotificationHistory = () => {
+export function NotificationHistory() {
   const [page, setPage] = useState(0);
 
   const { notifications, totalPages, isLoadingNotificationHistory } =
@@ -92,4 +92,4 @@ export const NotificationHistory = () => {
       </div>
     </>
   );
-};
+}

@@ -1,4 +1,3 @@
-
 // icons
 import { Loader2 } from "lucide-react";
 
@@ -12,12 +11,17 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/avatar";
 
 // tauri
 import { markNotificationAsRead } from "@/core/use-cases/notifications/mask-as-read";
+import { useQueryClient } from "@tanstack/react-query";
 
-export const Notifications = (props: {
+interface Props {
   notifications: NotificationEntity[];
   isLoading: boolean;
-}) => {
+}
+
+export function Notifications(props: Props) {
   const { notifications } = props;
+
+  const queryClient = useQueryClient();
 
   async function handleNotificationClick(notification: {
     id: string;
@@ -26,6 +30,9 @@ export const Notifications = (props: {
   }) {
     await markNotificationAsRead({
       notification,
+    });
+    queryClient.invalidateQueries({
+      queryKey: ["unread-notifications"],
     });
   }
 
@@ -115,4 +122,4 @@ export const Notifications = (props: {
       ))}
     </ul>
   );
-};
+}
