@@ -11,7 +11,7 @@ import TauriService from "@/core/services/tauri.service";
 import { logOutUseCase } from "@/core/use-cases/log-out/log-out";
 import { refreshSessionUseCase } from "@/core/use-cases/refresh-session/refresh-session";
 
-export const MockSessionUpdater = () => {
+export function MockSessionUpdater() {
   const navigate = useNavigate();
 
   const sessionService = new SessionService();
@@ -47,4 +47,4 @@ export const MockSessionUpdater = () => {
       <RefreshCcw />
     </Button>
   );
-};
+}

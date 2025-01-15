@@ -6,7 +6,7 @@ import NotificationService from "@/core/services/notification.service";
 
 // widgets
 
-export const UnReadNotifications = () => {
+export function UnReadNotifications() {
   const {
     data: unReadNotifications,
     isFetching: isFetchingUnReadNotifications,
@@ -26,4 +26,4 @@ export const UnReadNotifications = () => {
       notifications={unReadNotifications ?? []}
     />
   );
-};
+}

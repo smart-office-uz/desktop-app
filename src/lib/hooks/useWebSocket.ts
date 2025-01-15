@@ -11,9 +11,7 @@ import { useSessionStore } from "@/store/session";
 import { appInstanceService } from "@/core/services/app-instance.service";
 import { updateAppIcon } from "../utils/update-tray-icon";
 
-export const useWebSocket = (deps: {
-  getUserStaffId: () => Promise<string>;
-}) => {
+export function useWebSocket(deps: { getUserStaffId: () => Promise<string> }) {
   const { accessToken } = useSessionStore();
 
   const connect = async () => {
@@ -75,4 +73,4 @@ export const useWebSocket = (deps: {
   // }, [accessToken]);
 
   return {};
-};
+}

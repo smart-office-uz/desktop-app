@@ -12,7 +12,7 @@ import type { Cert } from "@/adapters/e-sign/e-sign.config";
 import { appInstanceService } from "@/core/services/app-instance.service";
 import type { ESignAuthCtx } from "./context";
 
-export const useESignAuth = (ctx: ESignAuthCtx) => {
+export function useESignAuth(ctx: ESignAuthCtx) {
   const eSignService = new ESignService();
 
   const { onAuthenticated, onError } = ctx;
@@ -58,4 +58,4 @@ export const useESignAuth = (ctx: ESignAuthCtx) => {
   return {
     authenticate,
   };
-};
+}

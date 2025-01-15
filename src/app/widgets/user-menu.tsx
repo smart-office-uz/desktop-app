@@ -30,7 +30,7 @@ function doesUserSessionExist(sessionService: ISessionService): boolean {
   );
 }
 
-export const UserMenu = () => {
+export function UserMenu() {
   const navigate = useNavigate();
 
   const sessionService = new SessionService();

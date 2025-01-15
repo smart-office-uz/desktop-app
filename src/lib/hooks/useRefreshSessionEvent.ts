@@ -13,11 +13,11 @@ import type { ITauriService } from "@/core/services/tauri.service";
 import { logOutUseCase } from "@/core/use-cases/log-out/log-out";
 import { refreshSessionUseCase } from "@/core/use-cases/refresh-session/refresh-session";
 
-export const useRefreshSessionEvent = (ctx: {
+export function useRefreshSessionEvent(ctx: {
   notificationService: INotificationService;
   sessionService: ISessionService;
   tauriService: ITauriService;
-}) => {
+}) {
   const navigate = useNavigate();
 
   const { sessionService, tauriService, notificationService } = ctx;
@@ -41,10 +41,9 @@ export const useRefreshSessionEvent = (ctx: {
       } else {
         navigate({
           to: "/",
-
         });
         window.location.pathname = "/";
       }
     });
   }, []);
-};
+}

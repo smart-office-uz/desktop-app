@@ -16,7 +16,7 @@ interface ESignCertificateItemCtx {
   ) => void;
 }
 
-export const ESignCertificateItem = (ctx: ESignCertificateItemCtx) => {
+export function ESignCertificateItem(ctx: ESignCertificateItemCtx) {
   const { certificate, authenticate } = ctx;
 
   return (
@@ -39,4 +39,4 @@ export const ESignCertificateItem = (ctx: ESignCertificateItemCtx) => {
       </CardFooter>
     </Card>
   );
-};
+}
