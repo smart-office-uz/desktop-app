@@ -8,14 +8,14 @@ import type {
   SignInDto,
   SignInErrorResponseDto,
   SignInSuccessResponseDto,
-} from "../dtos/sign-in";
+} from "./dto";
 
-interface UseSignInHandlerProps {
+interface Props {
   onSuccess?: (response: SignInSuccessResponseDto) => void;
   onError?: (response: SignInErrorResponseDto) => void;
 }
 
-interface UseSignInHandlerDto {
+interface Result {
   isPending: boolean;
   isError: boolean;
   error: any;
@@ -26,22 +26,20 @@ interface UseSignInHandlerDto {
   }>;
 }
 
-export const useSignInHandler = (
-  props: UseSignInHandlerProps,
-): UseSignInHandlerDto => {
+export function useSignInUseCase(props: Props): Result {
   const mutation = useMutation({
     mutationKey: ["sign-in"],
-    mutationFn: async (payload: SignInDto) => {
+    mutationFn: async function (payload: SignInDto) {
       const service = new UserService();
       return await service.signInUser(payload);
     },
-    onSuccess: (response) => {
+    onSuccess(response) {
       props.onSuccess?.({
         accessToken: response.accessToken,
         refreshToken: response.refreshToken,
       });
     },
-    onError: (err) => {
+    onError(err) {
       props.onError?.({
         message: err.message,
       });
@@ -55,4 +53,4 @@ export const useSignInHandler = (
     response: mutation.data,
     signIn: mutation.mutateAsync,
   };
-};
+}

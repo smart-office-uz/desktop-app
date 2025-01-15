@@ -1,5 +1,5 @@
 import { AuthLayout } from "@/app/widgets/auth-layout";
-import { RegisterInstanceForm } from "@/core/presentation/register-instance/RegisterInstanceForm";
+import { RegisterInstanceForm } from "@/core/presentation/register-instance/register-instance-form";
 import { useSetAppInstanceBaseUrl } from "@/core/use-cases/app-instance/use-set-app-instance-base-url";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 

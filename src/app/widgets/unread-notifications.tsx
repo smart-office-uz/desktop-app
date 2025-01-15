@@ -1,10 +1,10 @@
 import { useQuery } from "@tanstack/react-query";
 
 // services
+import { NotificationList } from "@/core/presentation/notification/list";
 import NotificationService from "@/core/services/notification.service";
 
 // widgets
-import { Notifications } from "./notifications";
 
 export const UnReadNotifications = () => {
   const {
@@ -21,7 +21,7 @@ export const UnReadNotifications = () => {
   });
 
   return (
-    <Notifications
+    <NotificationList
       isLoading={isFetchingUnReadNotifications || isLoadingUnReadNotifications}
       notifications={unReadNotifications ?? []}
     />

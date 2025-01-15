@@ -2,9 +2,9 @@ import { useState } from "react";
 import ReactPaginate from "react-paginate";
 
 // widgets
-import { Notifications } from "./notifications";
 
 // components
+import { NotificationList } from "@/core/presentation/notification/list";
 import { useNotificationHistory } from "@/core/use-cases/notifications/get-history";
 import {
   ChevronLeft,
@@ -25,7 +25,7 @@ export function NotificationHistory() {
 
   return (
     <>
-      <Notifications
+      <NotificationList
         isLoading={isLoadingNotificationHistory}
         notifications={notifications}
       />

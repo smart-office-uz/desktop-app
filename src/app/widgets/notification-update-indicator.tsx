@@ -5,14 +5,9 @@ import { Button } from "@/app/components/button";
 
 // use cases
 import { useGetNumberOfUnreadNotifications } from "@/core/use-cases/notifications/get-number-of-unread-notifications";
-import { updateAppIcon } from "@/lib/utils/update-tray-icon";
 
-export const NotificationUpdateIndicator = () => {
-  const notificationsCount = useGetNumberOfUnreadNotifications({
-    onSuccess(count) {
-      updateAppIcon(count);
-    },
-  });
+export function NotificationUpdateIndicator() {
+  const notificationsCount = useGetNumberOfUnreadNotifications();
 
   return (
     <Button className="relative rounded-2xl" variant="outline" size="icon">
@@ -25,4 +20,4 @@ export const NotificationUpdateIndicator = () => {
       )}
     </Button>
   );
-};
+}

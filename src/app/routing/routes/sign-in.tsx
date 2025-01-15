@@ -1,16 +1,13 @@
-import { createFileRoute, useLayoutEffect } from "@tanstack/react-router";
-
-// services
-import WindowService from "@/core/services/window.service";
-
-// use-cases
-import { SignInForm } from "@/core/use-cases/user/sign-in/ui/SignInForm";
-
-// widgets
 import { AuthLayout } from "@/app/widgets/auth-layout";
 import { ESignAuthView } from "@/core/presentation/esign-auth/esign-auth";
+import { SignInForm } from "@/core/presentation/sign-in/sign-in-form";
+import WindowService from "@/core/services/window.service";
 import { useCheckAppInstanceBaseUrl } from "@/core/use-cases/app-instance/use-check-app-instance-base-url";
-import { redirect } from "@tanstack/react-router";
+import {
+  createFileRoute,
+  redirect,
+  useLayoutEffect,
+} from "@tanstack/react-router";
 
 export const Route = createFileRoute("/sign-in")({
   component: SignIn,
@@ -24,13 +21,12 @@ export const Route = createFileRoute("/sign-in")({
   },
 });
 
-function SignIn() {
+async function configureWindow() {
   const windowService = new WindowService();
+  await windowService.center_window();
+}
 
-  async function configureWindow() {
-    await windowService.center_window();
-  }
-
+function SignIn() {
   useLayoutEffect(() => {
     configureWindow();
   }, []);
