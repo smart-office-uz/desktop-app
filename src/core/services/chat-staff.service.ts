@@ -6,6 +6,7 @@ import { ChatStaffRepository } from "../repositories/chat-staff.repository";
 export interface IChatStaffService {
   getByOrganizationId({}: {
     id?: IChatOrganization["id"];
+    page?: number;
   }): Promise<IChatStaff[]>;
 }
 
@@ -14,14 +15,17 @@ export class ChatStaffService implements IChatStaffService {
 
   async getByOrganizationId({
     id,
+    page,
   }: {
     id?: IChatOrganization["id"];
+    page?: number;
   }): Promise<IChatStaff[]> {
     const accessToken = useSessionStore.getState().accessToken;
     if (!accessToken) return [];
 
     const staff = await this.repository.getByOrganizationId({
       id,
+      page,
       token: accessToken,
     });
 

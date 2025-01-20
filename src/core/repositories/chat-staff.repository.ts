@@ -15,8 +15,10 @@ export class ChatStaffRepository implements IChatStaffRepository {
   async getByOrganizationId({
     id,
     token,
+    page = 1,
   }: {
     id?: IChatOrganization["id"];
+    page?: number;
     token: string;
   }): Promise<IChatStaff[]> {
     const response = (await this.tauriService.invoke(
@@ -25,6 +27,7 @@ export class ChatStaffRepository implements IChatStaffRepository {
         token,
         params: {
           organizationId: id,
+          page,
         },
       }
     )) as string;

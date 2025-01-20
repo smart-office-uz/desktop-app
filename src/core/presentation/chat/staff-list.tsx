@@ -1,13 +1,14 @@
 import type { IChatStaff } from "@/core/entities/chat-staff.entity";
-import { StaffPerson } from "./staff-person";
+
+interface StaffDisplayerProps {
+  staff: IChatStaff;
+}
 
 interface Props {
   staffs: IChatStaff[];
-  handleStaffSelect(staff: IChatStaff): void;
+  PersonDisplayer<T extends StaffDisplayerProps>(props: T): JSX.Element;
 }
 
 export function StaffList(props: Props) {
-  return props.staffs.map((staff) => (
-    <StaffPerson handleStaffSelect={props.handleStaffSelect} person={staff} />
-  ));
+  return props.staffs.map((staff) => <props.PersonDisplayer staff={staff} />);
 }
