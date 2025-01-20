@@ -14,7 +14,7 @@ const locales = [
   { value: "uz", label: "Oʻzbekcha" },
 ];
 
-export const LocaleSwitcher = () => {
+export function LocaleSwitcher() {
   return (
     <Select>
       <SelectTrigger className="max-w-max rounded-2xl">
@@ -32,4 +32,4 @@ export const LocaleSwitcher = () => {
       </SelectContent>
     </Select>
   );
-};
+}

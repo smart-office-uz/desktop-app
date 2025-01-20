@@ -1,8 +1,3 @@
-// import { useRouter } from "@tanstack/react-router";
-import { Loader2 } from "lucide-react";
-import { toast } from "sonner";
-
-// components
 import { Button } from "@/app/components/button";
 import {
   Card,
@@ -23,18 +18,15 @@ import {
 } from "@/app/components/form";
 import { Input } from "@/app/components/input";
 import { PasswordInput } from "@/app/components/password-input";
-// api
-import { useSignInHandler } from "../api/useSignInHandler";
-
-// hooks
-import { useForm } from "../lib/useForm";
-
-// services
 import SessionService from "@/core/services/session.service";
+import { useSignInFields } from "@/core/use-cases/sign-in/fields";
+import { useSignInUseCase } from "@/core/use-cases/sign-in/use-sign-in";
+import { Loader2 } from "lucide-react";
+import { toast } from "sonner";
 
-export const SignInForm = () => {
-  const { signIn, isPending } = useSignInHandler({
-    onSuccess: (response) => {
+export function SignInForm() {
+  const { signIn, isPending } = useSignInUseCase({
+    onSuccess(response) {
       const sessionService = new SessionService();
       sessionService.createNew({
         accessToken: response.accessToken,
@@ -44,13 +36,13 @@ export const SignInForm = () => {
       // TODO: display a native notification
       window.location.href = "/";
     },
-    onError: (response) => {
-      toast.error(response.message, {
+    onError(error) {
+      toast.error(error.message, {
         className: "bg-destructive text-white",
       });
     },
   });
-  const { form, handleSubmit } = useForm({
+  const { form, handleSubmit } = useSignInFields({
     handler: signIn,
   });
 
@@ -122,4 +114,4 @@ export const SignInForm = () => {
       </form>
     </Form>
   );
-};
+}

@@ -1,13 +1,14 @@
 import { Button } from "@/app/components/button";
 import {
-    Form,
-    FormControl,
-    FormField,
-    FormItem,
-    FormLabel,
-    FormMessage,
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
 } from "@/app/components/form";
 import { Input } from "@/app/components/input";
+import { Textarea } from "@/app/components/textarea";
 import { Fields, useFields } from "./useFields";
 
 interface Props {
@@ -20,16 +21,17 @@ export function RegisterInstanceForm(props: Props) {
   return (
     <Form {...form}>
       <form
-        className="min-h-screen max-w-[650px] w-full mx-auto flex items-center justify-center"
+        className="min-h-screen max-w-[600px] w-full mx-auto flex items-center justify-center"
         onSubmit={form.handleSubmit(props.handleSubmit)}
       >
-        <div className="grid gap-2">
+        <div className="grid gap-2 w-full">
           <FormField
             control={form.control}
             name="instanceUrl"
             rules={{
               required: true,
             }}
+            defaultValue=""
             render={({ field }) => (
               <FormItem>
                 <FormLabel>Ilova linkini kiriting</FormLabel>
@@ -45,7 +47,25 @@ export function RegisterInstanceForm(props: Props) {
               </FormItem>
             )}
           />
-          <Button type="submit">Tasdiqlash</Button>
+          <FormField
+            control={form.control}
+            name="notificationServiceToken"
+            rules={{
+              required: true,
+            }}
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Centrifuge tokenni kiriting</FormLabel>
+                <FormControl>
+                  <Textarea className="w-full" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <Button type="submit" disabled={!form.formState.isValid}>
+            Tasdiqlash
+          </Button>
         </div>
       </form>
     </Form>

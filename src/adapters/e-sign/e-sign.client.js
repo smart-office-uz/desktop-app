@@ -107,10 +107,6 @@ export const EIMZOClient = {
   NEW_API: false,
   NEW_API2: false,
   API_KEYS: [
-    // "localhost",
-    // "96D0C1491615C82B9A54D9989779DF825B690748224C2B04F500F370D51827CE2644D8D4A82C18184D73AB8530BB8ED537269603F61DB0D03D2104ABF789970B",
-    // "127.0.0.1",
-    // "A7BCFA5D490B351BE0754130DF03A068F855DB4333D43921125B9CF2670EF6A40370C646B90401955E1F7BC9CDBF59CE0B2C5467D820BE189C845D0B79CFC96F",
     "E0A205EC4E7B78BBB56AFF83A733A1BB9FD39D562E67978CC5E7D73B0951DB1954595A20672A63332535E13CC6EC1E1FC8857BB09E0855D7E76E411B6FA16E9D",
     "localhost",
     "96D0C1491615C82B9A54D9989779DF825B690748224C2B04F500F370D51827CE2644D8D4A82C18184D73AB8530BB8ED537269603F61DB0D03D2104ABF789970B",
@@ -118,8 +114,6 @@ export const EIMZOClient = {
     "A7BCFA5D490B351BE0754130DF03A068F855DB4333D43921125B9CF2670EF6A40370C646B90401955E1F7BC9CDBF59CE0B2C5467D820BE189C845D0B79CFC96F",
     "hujjat.uz",
     "A7BE6A43B7504B207C8A1623141A6AFD14B3ADA7BE6B0E8C1596FFBBEDFD9391FBB12CCA0DD2D90D4766CA83141A666C5C560800C8D823D6216460590662BBB6",
-    // "tauri://localhost",
-    // "A7BE6A43B7504B207C8A1623141A6AFD14B3ADA7BE6B0E8C1596FFBBEDFD9391FBB12CCA0DD2D90D4766CA83141A666C5C560800C8D823D6216460590662BBB6",
   ],
   checkVersion: function (success, fail) {
     CAPIWS.version(
@@ -140,7 +134,7 @@ export const EIMZOClient = {
       },
       function (e) {
         fail(e, null);
-      },
+      }
     );
   },
   installApiKeys: function (success, fail) {
@@ -155,7 +149,7 @@ export const EIMZOClient = {
       },
       function (e) {
         fail(e, null);
-      },
+      }
     );
   },
   listAllUserKeys: function (itemIdGen, itemUiGen, success, fail) {
@@ -182,7 +176,7 @@ export const EIMZOClient = {
               }
               success(items, firstId);
             }
-          },
+          }
         );
       } else {
         EIMZOClient._findPfxs2(
@@ -210,9 +204,9 @@ export const EIMZOClient = {
                   }
                   success(items, firstId);
                 }
-              },
+              }
             );
-          },
+          }
         );
       }
     }
@@ -232,7 +226,7 @@ export const EIMZOClient = {
         },
         function (e) {
           fail(e, null);
-        },
+        }
       );
     }
   },
@@ -265,7 +259,7 @@ export const EIMZOClient = {
                   },
                   function (e) {
                     fail(e, null);
-                  },
+                  }
                 );
               } else {
                 success(id);
@@ -276,7 +270,7 @@ export const EIMZOClient = {
           },
           function (e) {
             fail(e, null);
-          },
+          }
         );
       } else if (vo.type === "ftjc") {
         CAPIWS.callFunction(
@@ -304,7 +298,7 @@ export const EIMZOClient = {
                   },
                   function (e) {
                     fail(e, null);
-                  },
+                  }
                 );
               } else {
                 success(id);
@@ -315,7 +309,7 @@ export const EIMZOClient = {
           },
           function (e) {
             fail(e, null);
-          },
+          }
         );
       }
     }
@@ -348,7 +342,7 @@ export const EIMZOClient = {
                 },
                 function (e) {
                   fail(e, null);
-                },
+                }
               );
             } else {
               fail(null, data.reason);
@@ -356,7 +350,7 @@ export const EIMZOClient = {
           },
           function (e) {
             fail(e, null);
-          },
+          }
         );
       } else if (vo.type === "ftjc") {
         CAPIWS.callFunction(
@@ -383,7 +377,7 @@ export const EIMZOClient = {
                 },
                 function (e) {
                   fail(e, null);
-                },
+                }
               );
             } else {
               fail(null, data.reason);
@@ -391,7 +385,7 @@ export const EIMZOClient = {
           },
           function (e) {
             fail(e, null);
-          },
+          }
         );
       }
     }
@@ -404,7 +398,7 @@ export const EIMZOClient = {
     fail,
     detached,
     isDataBase64Encoded,
-    enableAttachTimestamp = true,
+    enableAttachTimestamp = true
   ) {
     var data64;
     if (isDataBase64Encoded === true) {
@@ -448,14 +442,14 @@ export const EIMZOClient = {
                     },
                     function (e) {
                       fail(e, null);
-                    },
+                    }
                   );
                 } else {
                   success(tst);
                 }
               },
               fail,
-              data.pkcs7_64,
+              data.pkcs7_64
             );
           } else {
             success(pkcs7);
@@ -466,7 +460,7 @@ export const EIMZOClient = {
       },
       function (e) {
         fail(e, null);
-      },
+      }
     );
   },
   _getX500Val: function (s, f) {
@@ -497,17 +491,17 @@ export const EIMZOClient = {
               alias: el.alias,
               serialNumber: EIMZOClient._getX500Val(
                 x500name_ex,
-                "SERIALNUMBER",
+                "SERIALNUMBER"
               ),
               validFrom: new Date(
                 EIMZOClient._getX500Val(x500name_ex, "VALIDFROM")
                   .replace(/\./g, "-")
-                  .replace(" ", "T"),
+                  .replace(" ", "T")
               ),
               validTo: new Date(
                 EIMZOClient._getX500Val(x500name_ex, "VALIDTO")
                   .replace(/\./g, "-")
-                  .replace(" ", "T"),
+                  .replace(" ", "T")
               ),
               CN: EIMZOClient._getX500Val(x500name_ex, "CN"),
               TIN: EIMZOClient._getX500Val(x500name_ex, "INN")
@@ -535,7 +529,7 @@ export const EIMZOClient = {
       function (e) {
         errors.push({ e: e });
         callback(itmkey0);
-      },
+      }
     );
   },
   _findTokens2: function (itemIdGen, itemUiGen, items, errors, callback) {
@@ -556,13 +550,13 @@ export const EIMZOClient = {
               info: el.info,
               serialNumber: EIMZOClient._getX500Val(
                 x500name_ex,
-                "SERIALNUMBER",
+                "SERIALNUMBER"
               ),
               validFrom: new Date(
-                EIMZOClient._getX500Val(x500name_ex, "VALIDFROM"),
+                EIMZOClient._getX500Val(x500name_ex, "VALIDFROM")
               ),
               validTo: new Date(
-                EIMZOClient._getX500Val(x500name_ex, "VALIDTO"),
+                EIMZOClient._getX500Val(x500name_ex, "VALIDTO")
               ),
               CN: EIMZOClient._getX500Val(x500name_ex, "CN"),
               TIN: EIMZOClient._getX500Val(x500name_ex, "INN")
@@ -590,7 +584,7 @@ export const EIMZOClient = {
       function (e) {
         errors.push({ e: e });
         callback(itmkey0);
-      },
+      }
     );
   },
 };

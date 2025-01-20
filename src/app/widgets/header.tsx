@@ -1,4 +1,4 @@
-// widgets
+import { SettingsDialog } from "@/core/presentation/settings/dialog";
 import { AppLogo } from "./app-logo";
 // import { LocaleSwitcher } from "./locale-switcher";
 // import { MockSessionUpdater } from "./mock-session-updater";
@@ -7,7 +7,7 @@ import { ModeToggle } from "./mode-toggle";
 import { NotificationUpdateIndicator } from "./notification-update-indicator";
 import { UserMenu } from "./user-menu";
 
-export const Header = () => {
+export function Header() {
   return (
     <header>
       <div className="container mx-auto gap-4 py-6 flex justify-between">
@@ -22,9 +22,10 @@ export const Header = () => {
           {/* <div className="w-[2px] h-full bg-lightGray"></div> */}
           {/* <LocaleSwitcher /> */}
           <div className="w-[2px] h-full bg-lightGray"></div>
+          <SettingsDialog />
           <UserMenu />
         </div>
       </div>
     </header>
   );
-};
+}

@@ -11,10 +11,10 @@ import type { ISessionService } from "@/core/services/session.service";
 // helpers
 import { logOutUseCase } from "@/core/use-cases/log-out/log-out";
 
-export const useLogoutEvent = (ctx: {
+export function useLogoutEvent(ctx: {
   notificationService: INotificationService;
   sessionService: ISessionService;
-}) => {
+}) {
   const navigate = useNavigate();
 
   const { notificationService, sessionService } = ctx;
@@ -32,4 +32,4 @@ export const useLogoutEvent = (ctx: {
       });
     });
   }, []);
-};
+}

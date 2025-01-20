@@ -52,7 +52,7 @@ function showESignAuthError(error: Error) {
 
 export interface ESignAuthViewCtx {}
 
-export const ESignAuthView = (_ctx: ESignAuthViewCtx) => {
+export function ESignAuthView(_ctx: ESignAuthViewCtx) {
   const navigate = useNavigate();
 
   const [isESignModalOpen, setESignModalOpen] = useState(false);
@@ -131,4 +131,4 @@ export const ESignAuthView = (_ctx: ESignAuthViewCtx) => {
       </Dialog>
     </>
   );
-};
+}

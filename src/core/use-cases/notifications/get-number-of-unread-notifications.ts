@@ -4,11 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import NotificationService from "@/core/services/notification.service";
 
 type ReturnType = number;
-type Ctx = {
-  onSuccess: (notificationsCount: number) => void;
-};
 
-export function useGetNumberOfUnreadNotifications(ctx: Ctx): ReturnType {
+export function useGetNumberOfUnreadNotifications(): ReturnType {
   const query = useQuery({
     queryKey: ["notification-count"],
     queryFn: async () => {

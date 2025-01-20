@@ -2,9 +2,9 @@ import { useState } from "react";
 import ReactPaginate from "react-paginate";
 
 // widgets
-import { Notifications } from "./notifications";
 
 // components
+import { NotificationList } from "@/core/presentation/notification/list";
 import { useNotificationHistory } from "@/core/use-cases/notifications/get-history";
 import {
   ChevronLeft,
@@ -14,7 +14,7 @@ import {
 } from "lucide-react";
 import { Button, buttonVariants } from "../components/button";
 
-export const NotificationHistory = () => {
+export function NotificationHistory() {
   const [page, setPage] = useState(0);
 
   const { notifications, totalPages, isLoadingNotificationHistory } =
@@ -25,7 +25,7 @@ export const NotificationHistory = () => {
 
   return (
     <>
-      <Notifications
+      <NotificationList
         isLoading={isLoadingNotificationHistory}
         notifications={notifications}
       />
@@ -92,4 +92,4 @@ export const NotificationHistory = () => {
       </div>
     </>
   );
-};
+}

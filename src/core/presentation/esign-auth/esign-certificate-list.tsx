@@ -9,7 +9,7 @@ interface ESignCertificateListCtx {
   ) => void;
 }
 
-export const ESignCertificateList = (ctx: ESignCertificateListCtx) => {
+export function ESignCertificateList(ctx: ESignCertificateListCtx) {
   return (
     <ul className="grid gap-3 max-h-[500px] overflow-auto">
       {ctx.certificates.map((certificate) => (
@@ -22,4 +22,4 @@ export const ESignCertificateList = (ctx: ESignCertificateListCtx) => {
       ))}
     </ul>
   );
-};
+}
