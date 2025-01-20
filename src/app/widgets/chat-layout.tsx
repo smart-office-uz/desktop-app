@@ -1,6 +1,6 @@
 import { Button } from "@/app/components/button";
 import { Input } from "@/app/components/input";
-import { StaffDialog } from "@/core/presentation/chat/StaffDialog";
+import { StaffDialog } from "@/core/presentation/chat/staff-dialog";
 import { cn } from "@/lib/utils/classnames";
 import {
   Maximize2,

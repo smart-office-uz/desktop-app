@@ -7,27 +7,37 @@ import {
 } from "@/app/components/select";
 import { useGetOrganizationList } from "@/core/use-cases/chat/get-organization-list";
 import { Loader2 } from "lucide-react";
+import { useEffect } from "react";
 
-export function OrganizationList() {
+interface Props {
+  onSelect(organizationId: number): void;
+}
+
+export function OrganizationList({ onSelect }: Props) {
   const query = useGetOrganizationList();
   let defaultOrganizationId: string | undefined = undefined;
 
-  if (query.isLoading) return <Loader2 />;
+  useEffect(() => {
+    if (defaultOrganizationId) {
+      onSelect(Number(defaultOrganizationId));
+    }
+  }, [defaultOrganizationId]);
+
+  if (query.isLoading)
+    return (
+      <div className="flex items-center justify-center">
+        <Loader2 className="animate-spin" />
+      </div>
+    );
   if (query.isError) return <p>{query.error?.message}</p>;
 
   if (query.organizationList !== undefined) {
     const firstOrganization = query.organizationList?.[0];
-
     defaultOrganizationId = String(firstOrganization.id);
   }
 
   function handleValueChange(organizationId: string) {
-    console.log({
-      src: "OrganizationList -> handleValueChange",
-      data: {
-        organizationId,
-      },
-    });
+    onSelect(Number(organizationId));
   }
 
   return (

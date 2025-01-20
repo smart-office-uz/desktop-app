@@ -166,7 +166,8 @@ pub fn run() {
             commands::auth::refresh_token,
             commands::auth::authenticate,
             // chat
-            commands::chat::get_org_list
+            commands::chat::get_org_list,
+            commands::chat::get_staffs_by_organization_id
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

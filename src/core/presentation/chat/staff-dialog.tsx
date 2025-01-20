@@ -9,8 +9,7 @@ import {
 import { cn } from "@/lib/utils/classnames";
 import { Users } from "lucide-react";
 import { useState } from "react";
-import { OrganizationList } from "./OrganizationList";
-import { StaffList } from "./StaffList";
+import { StaffByOrganization } from "./staff-by-organization";
 
 export function StaffDialog() {
   const [isOpen, setIsOpen] = useState<boolean>();
@@ -22,7 +21,7 @@ export function StaffDialog() {
           variant="ghost"
           className={cn(
             "h-full rounded-none flex flex-col items-center justify-center gap-1",
-            isOpen && "bg-accent",
+            isOpen && "bg-accent"
           )}
         >
           <Users className="h-5 w-5" />
@@ -33,8 +32,7 @@ export function StaffDialog() {
         <DialogHeader>
           <DialogTitle>Kontaktlar</DialogTitle>
         </DialogHeader>
-        <OrganizationList />
-        <StaffList />
+        <StaffByOrganization />
       </DialogContent>
     </Dialog>
   );

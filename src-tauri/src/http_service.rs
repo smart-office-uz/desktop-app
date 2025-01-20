@@ -67,7 +67,7 @@ impl HttpService {
 
         match response.error_for_status() {
             Ok(response) => {
-                let json = response.json::<T>().await.map_err(|err| HttpError {
+                let json = response.json().await.map_err(|err| HttpError {
                     message: err.to_string(),
                     status: 500,
                 })?;

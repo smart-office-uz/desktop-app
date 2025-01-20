@@ -3,7 +3,7 @@ import type { IChatOrganization } from "./chat-organization.entity";
 export interface IChatStaff {
   identifier: string;
   organization: IChatOrganization;
-  pinfl: string;
+  pinfl: number;
   phoneNumber: string;
   officialName: string;
   displayName: string;
