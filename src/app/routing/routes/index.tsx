@@ -18,12 +18,12 @@ import { NotificationHistory } from "@/app/widgets/notification-history";
 import { UnReadNotifications } from "@/app/widgets/unread-notifications";
 
 // use-cases
-import { useCheckAppInstanceBaseUrl } from "@/core/use-cases/app-instance/use-check-app-instance-base-url";
+import { useCheckAppInstanceContext } from "@/core/use-cases/app-instance/use-check-app-instance-base-url";
 
 export const Route = createFileRoute("/")({
   beforeLoad: async ({ location }) => {
-    const appInstanceBaseUrl = useCheckAppInstanceBaseUrl();
-    if (appInstanceBaseUrl instanceof Error) {
+    const appInstanceContext = useCheckAppInstanceContext();
+    if (appInstanceContext instanceof Error) {
       throw redirect({
         to: "/register-instance",
       });

@@ -1,3 +1,4 @@
+import { SettingsDialog } from "@/core/presentation/settings/dialog";
 import { AppLogo } from "./app-logo";
 // import { LocaleSwitcher } from "./locale-switcher";
 // import { MockSessionUpdater } from "./mock-session-updater";
@@ -19,6 +20,7 @@ export function Header() {
           {/* <div className="w-[2px] h-full bg-lightGray"></div> */}
           {/* <LocaleSwitcher /> */}
           <div className="w-[2px] h-full bg-lightGray"></div>
+          <SettingsDialog />
           <UserMenu />
         </div>
       </div>

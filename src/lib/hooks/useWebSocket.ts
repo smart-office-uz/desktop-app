@@ -1,32 +1,29 @@
+import { appInstanceService } from "@/core/services/app-instance.service";
+import NotificationService from "@/core/services/notification.service";
+import { useSessionStore } from "@/store/session";
 import { Centrifuge } from "centrifuge";
 import { useEffect } from "react";
-
-// services
-import NotificationService from "@/core/services/notification.service";
-
-// store
-import { useSessionStore } from "@/store/session";
-
-// utils
-import { appInstanceService } from "@/core/services/app-instance.service";
+import { toast } from "sonner";
 import { updateAppIcon } from "../utils/update-tray-icon";
 
 export function useWebSocket(deps: { getUserStaffId: () => Promise<string> }) {
   const { accessToken } = useSessionStore();
 
-  const connect = async () => {
-    if (accessToken === undefined || accessToken === "" || accessToken === null)
-      return;
-    const centrifuge = new Centrifuge(import.meta.env.CENTRIFUGE_PATH, {
-      token: import.meta.env.CENTRIFUGE_TOKEN,
+  async function connect() {
+    if (!accessToken) return;
+
+    const baseUrl = appInstanceService.getBaseUrl();
+    if (!baseUrl) return;
+
+    const centrifugeToken = appInstanceService.getNotificationToken();
+    if (!centrifugeToken) return;
+
+    const centrifugePath = `wss://${baseUrl.replace("https://", "")}/centrifugo/connection/websocket`;
+    const centrifuge = new Centrifuge(centrifugePath, {
+      token: centrifugeToken,
     });
-    let notificationSubscriptionStaffId;
-    try {
-      notificationSubscriptionStaffId = await deps.getUserStaffId();
-    } catch (error) {
-      console.error(error);
-      return;
-    }
+
+    let notificationSubscriptionStaffId = await deps.getUserStaffId();
     const notificationSubscriptionPath = `smart-office-notification_${notificationSubscriptionStaffId}`;
     const notificationSubscription = centrifuge.newSubscription(
       notificationSubscriptionPath
@@ -45,7 +42,6 @@ export function useWebSocket(deps: { getUserStaffId: () => Promise<string> }) {
 
         await updateAppIcon(notifications);
 
-        const baseUrl = appInstanceService.getBaseUrl();
         const redirectUrl = notificationData?.redirect
           ? notificationData.redirect
           : `${baseUrl}/tables/history_notification`;
@@ -60,17 +56,17 @@ export function useWebSocket(deps: { getUserStaffId: () => Promise<string> }) {
       } catch (err) {}
     });
 
-    notificationSubscription.subscribe();
-    centrifuge.connect();
-  };
+    try {
+      notificationSubscription.subscribe();
+      centrifuge.connect();
+    } catch (error) {
+      toast.error("Centrifuge bilan ulanishda xatolik yuz berdi!");
+    }
+  }
 
   useEffect(() => {
     connect();
   }, []);
-
-  // useEffect(() => {
-  //   connect();
-  // }, [accessToken]);
 
   return {};
 }

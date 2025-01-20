@@ -1,6 +1,6 @@
 [package]
 name = "smart-office"
-version = "0.3.1"
+version = "0.3.2"
 description = "Desktop app for smart-office.uz"
 authors = ["Hayitbek Yusupov"]
 edition = "2021"

@@ -6,7 +6,6 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/app/components/dropdown-menu";
@@ -36,7 +35,7 @@ export function UserMenu() {
   const sessionService = new SessionService();
   const notificationService = new NotificationService();
 
-  const handleLogout = async () => {
+  async function handleLogout() {
     await logOutUseCase({
       sessionService,
       notificationService,
@@ -46,7 +45,7 @@ export function UserMenu() {
         });
       },
     });
-  };
+  }
 
   if (doesUserSessionExist(sessionService) === false) {
     return null;
@@ -65,8 +64,6 @@ export function UserMenu() {
         </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
-        <DropdownMenuLabel>Mening akkauntim</DropdownMenuLabel>
-        <DropdownMenuSeparator />
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
           Tizimdan chiqish
@@ -74,4 +71,4 @@ export function UserMenu() {
       </DropdownMenuContent>
     </DropdownMenu>
   );
-};
+}

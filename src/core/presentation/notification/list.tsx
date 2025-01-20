@@ -20,7 +20,11 @@ export function NotificationList(props: Props) {
   return (
     <ul className="space-y-4 max-h-[50vh] overflow-y-auto cursor-pointer">
       {notifications.map((notification, index) => (
-        <NotificationItem notification={notification} index={index} />
+        <NotificationItem
+          key={notification.getId()}
+          notification={notification}
+          index={index}
+        />
       ))}
     </ul>
   );
