@@ -1,5 +1,6 @@
 import { IChatOrganization } from "@/core/entities/chat-organization.entity";
 import { useGetStaffList } from "@/core/use-cases/chat/get-staff-list";
+import { useStartNewChatWithStaff } from "@/core/use-cases/chat/new-chat-with-staff";
 import { useInfiniteScroll } from "@/lib/hooks/useInfiniteScroll";
 import { useState } from "react";
 import { OrganizationList } from "./organization-list";
@@ -22,6 +23,7 @@ function InfiniteScrollStaffList(props: {
 }) {
   const { organizationId } = props;
 
+  const { handleStartNewChat } = useStartNewChatWithStaff();
   const staffListData = useGetStaffList({
     params: {
       organizationId,
@@ -37,12 +39,7 @@ function InfiniteScrollStaffList(props: {
     <ul className="max-h-[500px] grid gap-3 overflow-auto" ref={staffListRef}>
       <StaffList
         StaffDisplayer={({ staff }) => (
-          <StaffPerson
-            person={staff}
-            handleStaffSelect={function (staff) {
-              alert(staff.displayName);
-            }}
-          />
+          <StaffPerson person={staff} handleStaffSelect={handleStartNewChat} />
         )}
         staffs={staffListData.staffList}
       />

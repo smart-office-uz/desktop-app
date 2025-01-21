@@ -1,6 +1,5 @@
-import { Button } from "@/app/components/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/avatar";
 import type { IChatStaff } from "@/core/entities/chat-staff.entity";
-import { MessageCircle } from "lucide-react";
 
 interface Props {
   person: IChatStaff;
@@ -10,19 +9,23 @@ interface Props {
 export function StaffPerson(props: Props) {
   const { person, handleStaffSelect } = props;
 
-  function handleMessageButtonClick() {
+  function handleClick() {
     handleStaffSelect(person);
   }
 
   return (
-    <div className="flex gap-6 items-center border p-2 rounded-lg">
+    <li
+      className="flex gap-6 items-center border p-2 rounded-lg cursor-pointer transition-colors hover:bg-secondary"
+      onClick={handleClick}
+    >
+      <Avatar>
+        <AvatarImage className="object-cover" src={person.profileImageLink} />
+        <AvatarFallback>{person.displayName[0]}</AvatarFallback>
+      </Avatar>
       <div>
         <div>{person.displayName}</div>
         <div>{person.positionName}</div>
       </div>
-      <Button onClick={handleMessageButtonClick}>
-        <MessageCircle />
-      </Button>
-    </div>
+    </li>
   );
 }
