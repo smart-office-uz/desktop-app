@@ -9,13 +9,14 @@ import type { IChat } from "@/core/entities/chat.entity";
 
 interface Props {
   chat: IChat;
+  handleChatSelect(chat: IChat): void;
 }
 
 export function ChatSidebarListItem(props: Props) {
-  const { chat } = props;
+  const { chat, handleChatSelect } = props;
 
   return (
-    <li className="w-full">
+    <li className="w-full" onClick={() => handleChatSelect(chat)}>
       <Card className="bg-transparent hover:bg-secondary rounded-none border-none cursor-pointer transition-colors">
         <CardHeader className="py-2 px-3">
           <div className="flex gap-3 items-center">
@@ -26,8 +27,12 @@ export function ChatSidebarListItem(props: Props) {
               <AvatarFallback>CN</AvatarFallback>
             </Avatar>
             <div className="">
-              <CardTitle className="text-xl font-medium">{chat.name.uz}</CardTitle>
-              <CardDescription className="">{chat.lastMessage.content}</CardDescription>
+              <CardTitle className="text-xl font-medium">
+                {chat.name.uz}
+              </CardTitle>
+              <CardDescription className="">
+                {chat.lastMessage.content}
+              </CardDescription>
             </div>
           </div>
         </CardHeader>
