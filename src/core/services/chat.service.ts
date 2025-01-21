@@ -1,12 +1,12 @@
 import type { IChat } from "../entities/chat.entity";
-import { ChatRepository } from "../repositories/chat.repository";
+import { ChatMockRepository } from "../repositories/chat-mock.repository";
 
 export interface IChatService {
   getAll(): Promise<IChat[]>;
 }
 
-export class IChatService implements IChatService {
-  private readonly repository = new ChatRepository();
+export class ChatService implements IChatService {
+  private readonly repository = new ChatMockRepository();
 
   async getAll(): Promise<IChat[]> {
     const data = await this.repository.getAll();

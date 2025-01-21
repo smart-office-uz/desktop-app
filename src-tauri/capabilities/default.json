@@ -14,6 +14,7 @@
     "os:default",
     "websocket:default",
     "websocket:allow-connect",
+    "core:webview:allow-set-webview-zoom",
     {
       "identifier": "http:default",
       "allow": [

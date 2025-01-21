@@ -2,9 +2,9 @@ export interface IChat {
   id: string;
   lastMessage: {
     id: string;
-    messageType: "text" | "file" | "audio";
+    type: "text" | "file" | "audio";
     content: string;
-    sentAt: Date;
+    sentDate: Date;
   };
   name: {
     uz: string;

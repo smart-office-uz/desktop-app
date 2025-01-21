@@ -1,6 +1,7 @@
 import { IChatOrganization } from "@/core/entities/chat-organization.entity";
 import { useGetStaffList } from "@/core/use-cases/chat/get-staff-list";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useInfiniteScroll } from "@/lib/hooks/useInfiniteScroll";
+import { useState } from "react";
 import { OrganizationList } from "./organization-list";
 import { StaffList } from "./staff-list";
 import { StaffPerson } from "./staff-person";
@@ -26,43 +27,16 @@ function InfiniteScrollStaffList(props: {
       organizationId,
     },
   });
-
-  const listRef = useRef<HTMLUListElement | null>(null);
-
-  const handleScroll = useCallback(() => {
-    if (listRef.current) {
-      const { scrollTop, scrollHeight, clientHeight } = listRef.current;
-
-      // Check if scrolled to bottom
-      if (scrollTop + clientHeight >= scrollHeight) {
-        console.log("Scrolled to bottom!");
-        onScrollToBottom();
-      }
-    }
-  }, []);
-
-  function onScrollToBottom() {
-    staffListData.fetchNextPage();
-  }
-
-  useEffect(() => {
-    const ulElement = listRef.current;
-
-    if (ulElement) {
-      ulElement.addEventListener("scroll", handleScroll);
-    }
-
-    return () => {
-      if (ulElement) {
-        ulElement.removeEventListener("scroll", handleScroll);
-      }
-    };
-  }, [handleScroll]);
+  const staffListRef = useInfiniteScroll<HTMLUListElement>({
+    onScrollToBottom() {
+      staffListData.fetchNextPage();
+    },
+  });
 
   return (
-    <ul className="max-h-[500px] grid gap-3 overflow-auto" ref={listRef}>
+    <ul className="max-h-[500px] grid gap-3 overflow-auto" ref={staffListRef}>
       <StaffList
-        PersonDisplayer={({ staff }) => (
+        StaffDisplayer={({ staff }) => (
           <StaffPerson
             person={staff}
             handleStaffSelect={function (staff) {
