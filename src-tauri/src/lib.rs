@@ -167,7 +167,11 @@ pub fn run() {
             commands::auth::authenticate,
             // chat
             commands::chat::get_org_list,
-            commands::chat::get_staffs_by_organization_id
+            commands::chat::get_chat_messages,
+            commands::chat::get_chats,
+            commands::chat::get_staffs_by_organization_id,
+            commands::chat::send_message,
+            commands::chat::start_new,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

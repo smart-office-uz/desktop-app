@@ -1,4 +1,5 @@
 import ReactDOM from "react-dom/client";
+import { ErrorBoundary } from "react-error-boundary";
 
 // providers
 import Providers from "./app/providers";
@@ -11,9 +12,9 @@ import "./styles/globals.css";
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   // <React.StrictMode>
-  <>
+  <ErrorBoundary fallback={<div>Something went wrong!</div>}>
     <Providers />
     <Toaster />
-  </>,
+  </ErrorBoundary>
   // </React.StrictMode>,
 );

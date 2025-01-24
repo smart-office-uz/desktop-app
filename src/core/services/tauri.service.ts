@@ -55,6 +55,33 @@ type TauriCommandArgs = {
       page?: number;
     };
   };
+  get_chat_messages: {
+    token: string;
+    params: {
+      chat_id: string;
+      last_read_message_update_id?: number;
+    };
+  };
+  get_chats: {
+    token: string;
+  };
+  send_message: {
+    token: string;
+    params: {
+      room_id: string;
+      room_type: "Private" | "Group";
+      message: {
+        file_id?: string;
+        text?: string;
+      };
+    };
+  };
+  start_new: {
+    token: string;
+    params: {
+      receiver_id: string;
+    };
+  };
 };
 
 type TauriCommand = keyof TauriCommandArgs;

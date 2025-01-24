@@ -2,9 +2,10 @@ import { IChatStaff } from "@/core/entities/chat-staff.entity";
 import { chatService } from "@/core/services/chat.service";
 import { useChatStore } from "@/store/chat/store";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 import { useOpenChat } from "./open-chat";
 
-export function useStartNewChatWithStaff() {
+export function useOpenNewChatWithStaff() {
   const queryClient = useQueryClient();
 
   const { handleOpenChat } = useOpenChat();
@@ -12,27 +13,35 @@ export function useStartNewChatWithStaff() {
 
   const newChatMutation = useMutation({
     mutationKey: ["newChatWithStaff"],
-    mutationFn: async function (receiverId: string) {
-      const newChat = await chatService.createNew({
-        receiverId,
-      });
+    mutationFn: async function (staff: IChatStaff) {
+      const newChat = await chatService.openNewChatWithStaff(staff);
 
-      handleOpenChat(newChat.id);
+      if (newChat) {
+        handleOpenChat(newChat);
+      }
+
+      return newChat;
     },
-    onSuccess() {
+    onSuccess(data) {
       setIsStaffDialogOpen(false);
       queryClient.invalidateQueries({
         queryKey: ["getChatList"],
       });
+      if (data !== undefined) {
+        queryClient.setQueryData(["getChatById", data?.id], data);
+      }
+    },
+    onError(error) {
+      toast.error(error.message, {
+        important: true,
+        closeButton: true,
+        position: "top-right",
+      });
     },
   });
 
-  async function handleStartNewChat(staff: IChatStaff) {
-    await newChatMutation.mutateAsync(staff.identifier);
-  }
-
   return {
-    handleStartNewChat,
+    handleStartNewChat: newChatMutation.mutateAsync,
     isCreatingNewChat: newChatMutation.isPending,
     isError: newChatMutation.isError,
   };

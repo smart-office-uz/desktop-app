@@ -12,5 +12,5 @@ interface Props {
 export function ChatList(props: Props) {
   const { chatList, ChatItemDisplayer } = props;
 
-  return chatList.map((chat) => <ChatItemDisplayer chat={chat} />);
+  return chatList.map((chat) => <ChatItemDisplayer key={chat.id} chat={chat} />);
 }

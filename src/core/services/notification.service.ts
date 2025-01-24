@@ -32,14 +32,12 @@ export default class NotificationService implements INotificationService {
   display(message: string, redirect?: string) {
     const { invoke } = this.tauriService;
     if (!redirect) {
-      console.log({ message, source: "without redirect" });
       invoke("notify", {
         message,
       });
       return;
     }
 
-    console.log({ message, source: "with redirect", redirect });
     invoke("notify", {
       message,
       redirect,

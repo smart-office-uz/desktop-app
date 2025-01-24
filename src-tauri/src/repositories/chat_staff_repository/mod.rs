@@ -1,3 +1,4 @@
+
 use serde::{Deserialize, Serialize};
 
 use crate::http_service::{GetRequestOptions, HttpError, HttpService};
@@ -74,3 +75,4 @@ pub async fn get_by_organization_id(
         }
     }
 }
+

@@ -13,13 +13,11 @@ export default class ChatOrganizationService
   #storage = useSessionStore;
 
   constructor() {
-    console.log("Dafuq?");
   }
 
   async getAll(): Promise<IChatOrganization[]> {
     let token = useSessionStore.getState().accessToken;
     if (token === null) return [];
-    console.log(this);
     return await this.repository.getAll({
       token,
     });

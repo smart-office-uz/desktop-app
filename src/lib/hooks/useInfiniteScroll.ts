@@ -14,7 +14,6 @@ export function useInfiniteScroll<Element extends HTMLElement>(props: Props) {
 
       // Check if scrolled to bottom
       if (scrollTop + clientHeight >= scrollHeight) {
-        console.log("Scrolled to bottom!");
         onScrollToBottom();
       }
     }

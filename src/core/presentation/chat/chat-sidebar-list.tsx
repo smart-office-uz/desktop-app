@@ -10,10 +10,8 @@ export function ChatSidebarList() {
   const { handleOpenChat } = useOpenChat();
 
   function handleChatSelect(chat: IChat) {
-    handleOpenChat(chat.id);
+    handleOpenChat(chat);
   }
-
-  console.log(chatListData);
 
   return (
     <aside className="w-full">

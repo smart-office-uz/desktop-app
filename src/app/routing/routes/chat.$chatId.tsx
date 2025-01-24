@@ -1,22 +1,27 @@
 import { ChatRoom } from "@/core/presentation/chat/chat-room";
-import { getChatById } from "@/core/use-cases/chat/get-chat-by-id";
+import { useGetChatWithMessages } from "@/core/use-cases/chat/get-chat-with-messages";
+import { getCurrentUserStaffId } from "@/core/use-cases/current-user/get-staff-id";
 import { createFileRoute } from "@tanstack/react-router";
 
 export const Route = createFileRoute("/chat/$chatId")({
   component: Page,
-  loader: async function ({ params }) {
-    return await getChatById(params.chatId);
+  loader: function () {
+    const currentUserId = getCurrentUserStaffId();
+
+    return {
+      currentUserId,
+    };
   },
 });
 
 function Page() {
-  const chat = Route.useLoaderData();
-
-  if (chat === undefined) return null;
+  const { chatId } = Route.useParams();
+  const { chat, messages, isFetching } = useGetChatWithMessages(chatId);
+  const { currentUserId } = Route.useLoaderData();
 
   return (
     <section className="bg-background rounded-2xl h-full">
-      <ChatRoom chat={chat} />
+      <ChatRoom currentUserId={currentUserId} chat={chat} messages={messages} />
     </section>
   );
 }

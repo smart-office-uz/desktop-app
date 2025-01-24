@@ -1,16 +1,20 @@
 import { Avatar, AvatarFallback, AvatarImage } from "@/app/components/avatar";
-import { Button } from "@/app/components/button";
 import { ScrollArea } from "@/app/components/scroll-area";
-import { Textarea } from "@/app/components/textarea";
-import { IChat } from "@/core/entities/chat.entity";
-import { SendHorizontal } from "lucide-react";
+import { IChat, IChatMessage } from "@/core/entities/chat.entity";
+import { Await } from "@tanstack/react-router";
+import { Loader2 } from "lucide-react";
+import { ChatMessageItem } from "./message-item";
+import { MessageList } from "./message-list";
+import { SendMessageToChatRoom } from "./send-message-to-chat-room";
 
 interface Props {
-  chat: IChat;
+  chat?: IChat;
+  messages: IChatMessage[];
+  currentUserId: Promise<string>;
 }
 
 export function ChatRoom(props: Props) {
-  const { chat } = props;
+  const { chat, messages, currentUserId } = props;
 
   return (
     <div className="flex-1 flex flex-col h-full">
@@ -22,29 +26,37 @@ export function ChatRoom(props: Props) {
             <AvatarFallback>GP</AvatarFallback>
           </Avatar>
           <div>
-            <h3 className="font-medium">{chat.name.uz}</h3>
-            <p className="text-xs text-muted-foreground">3 members</p>
+            <h3 className="font-medium">{chat?.name.uz}</h3>
           </div>
         </div>
       </div>
 
-      {/* Messages */}
-      <ScrollArea className="flex-1 p-4">
-        
+      <ScrollArea className="flex-1 p-4 max-h-[600px]">
+        <div className="space-y-3">
+          <Await
+            promise={currentUserId}
+            fallback={
+              <div className="flex items-center justify-center">
+                <Loader2 className="animate-spin" />
+              </div>
+            }
+          >
+            {(currentUserId) => (
+              <MessageList
+                messages={messages}
+                MessagePresenter={({ message }) => (
+                  <ChatMessageItem
+                    currentUserId={currentUserId}
+                    message={message}
+                  />
+                )}
+              />
+            )}
+          </Await>
+        </div>
       </ScrollArea>
 
-      {/* Message input */}
-      <div className="p-4 border-t">
-        <div className="flex gap-6">
-          <Textarea
-            placeholder="Type a message..."
-            className="max-h-[200px] rounded-2xl"
-          />
-          <Button className="min-w-20 rounded-full">
-            <SendHorizontal className="w-8 h-8" />
-          </Button>
-        </div>
-      </div>
+      <SendMessageToChatRoom chat={chat} />
     </div>
   );
 }

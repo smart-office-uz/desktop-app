@@ -4,12 +4,11 @@ import { useNavigate } from "@tanstack/react-router";
 export function useOpenChat() {
   const navigate = useNavigate();
 
-  function handleOpenChat(chatId: IChat["id"]) {
+  function handleOpenChat(chat: IChat) {
     navigate({
-      from: "/chat",
-      to: "$chatId",
+      to: "/chat/$chatId",
       params: {
-        chatId,
+        chatId: chat.id,
       },
     });
   }
