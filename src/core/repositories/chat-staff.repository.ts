@@ -26,7 +26,7 @@ export class ChatStaffRepository implements IChatStaffRepository {
       {
         token,
         params: {
-          organizationId: id,
+          organization_id: id !== undefined ? String(id) : undefined,
           page,
         },
       }

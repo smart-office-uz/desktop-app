@@ -12,7 +12,7 @@ export function useGetStaffList(props: Props) {
   const { params } = props;
 
   const query = useInfiniteQuery({
-    queryKey: ["getStaffList"],
+    queryKey: ["getStaffList", params.organizationId],
     queryFn: async function ({ pageParam }) {
       const service = new ChatStaffService();
 
@@ -27,6 +27,7 @@ export function useGetStaffList(props: Props) {
       return lastPageParam + 1;
     },
     initialPageParam: 1,
+    enabled: params.organizationId !== undefined,
   });
 
   return {

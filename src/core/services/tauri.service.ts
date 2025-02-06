@@ -50,7 +50,7 @@ type TauriCommandArgs = {
   get_staffs_by_organization_id: {
     token: string;
     params: {
-      organizationId?: number;
+      organization_id?: string;
       search?: string;
       page?: number;
     };

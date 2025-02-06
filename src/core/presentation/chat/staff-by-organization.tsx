@@ -2,6 +2,7 @@ import { IChatOrganization } from "@/core/entities/chat-organization.entity";
 import { useGetStaffList } from "@/core/use-cases/chat/get-staff-list";
 import { useOpenNewChatWithStaff } from "@/core/use-cases/chat/new-chat-with-staff";
 import { useInfiniteScroll } from "@/lib/hooks/useInfiniteScroll";
+import { Loader2 } from "lucide-react";
 import { useState } from "react";
 import { OrganizationList } from "./organization-list";
 import { StaffList } from "./staff-list";
@@ -13,7 +14,9 @@ export function StaffByOrganization() {
   return (
     <>
       <OrganizationList onSelect={setOrganizationId} />
-      <InfiniteScrollStaffList organizationId={organizationId} />
+      {organizationId !== undefined && (
+        <InfiniteScrollStaffList organizationId={organizationId} />
+      )}
     </>
   );
 }
@@ -39,10 +42,18 @@ function InfiniteScrollStaffList(props: {
     <ul className="max-h-[500px] grid gap-3 overflow-auto" ref={staffListRef}>
       <StaffList
         StaffDisplayer={({ staff }) => (
-          <StaffPerson person={staff} handleStaffSelect={handleStartNewChat} />
+          <StaffPerson
+            person={staff}
+            handleStaffSelect={(staff) => handleStartNewChat(staff.identifier)}
+          />
         )}
         staffs={staffListData.staffList}
       />
+      {staffListData.isLoading && (
+        <div className="flex items-center justify-center">
+          <Loader2 className="animate-spin w-4 h-4" />
+        </div>
+      )}
     </ul>
   );
 }

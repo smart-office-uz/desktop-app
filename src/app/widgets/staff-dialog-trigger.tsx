@@ -1,18 +1,16 @@
 import { useChatStore } from "@/store/chat/store";
-import { Menu } from "lucide-react";
-import { Button } from "../components/button";
+import { Contact } from "lucide-react";
 
 export function StaffDialogTrigger() {
   const { setIsStaffDialogOpen } = useChatStore();
 
   return (
-    <Button
+    <button
       onClick={() => setIsStaffDialogOpen(true)}
-      variant="ghost"
-      size="icon"
-      className="h-8 w-8"
+      className="w-full flex px-3 py-2 font-bold items-center"
     >
-      <Menu className="h-4 w-4" />
-    </Button>
+      <Contact className="mr-2" />
+      Kontaktlar
+    </button>
   );
 }

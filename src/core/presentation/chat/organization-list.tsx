@@ -7,7 +7,7 @@ import {
 } from "@/app/components/select";
 import { useGetOrganizationList } from "@/core/use-cases/chat/get-organization-list";
 import { Loader2 } from "lucide-react";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 interface Props {
   onSelect(organizationId: number): void;
@@ -15,13 +15,14 @@ interface Props {
 
 export function OrganizationList({ onSelect }: Props) {
   const query = useGetOrganizationList();
-  let defaultOrganizationId: string | undefined = undefined;
+
+  const [value, setValue] = useState<string | undefined>(
+    String(query.organizationList?.[0]?.id)
+  );
 
   useEffect(() => {
-    if (defaultOrganizationId) {
-      onSelect(Number(defaultOrganizationId));
-    }
-  }, [defaultOrganizationId]);
+    if (value !== undefined) onSelect(Number(value));
+  }, [value]);
 
   if (query.isLoading)
     return (
@@ -31,19 +32,14 @@ export function OrganizationList({ onSelect }: Props) {
     );
   if (query.isError) return <p>{query.error?.message}</p>;
 
-  if (query.organizationList !== undefined) {
-    const firstOrganization = query.organizationList?.[0];
-    defaultOrganizationId = String(firstOrganization.id);
-  }
-
   function handleValueChange(organizationId: string) {
-    onSelect(Number(organizationId));
+    setValue(organizationId);
   }
 
   return (
     <Select
       onValueChange={handleValueChange}
-      defaultValue={defaultOrganizationId}
+      value={String(query.organizationList?.[0]?.id)}
     >
       <SelectTrigger>
         <SelectValue />

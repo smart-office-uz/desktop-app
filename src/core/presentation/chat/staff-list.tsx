@@ -10,7 +10,7 @@ interface Props {
 }
 
 export function StaffList(props: Props) {
-  return props.staffs.map((staff) => (
-    <props.StaffDisplayer key={staff.identifier} staff={staff} />
+  return props.staffs.map((staff, index) => (
+    <props.StaffDisplayer key={staff.identifier + index} staff={staff} />
   ));
 }

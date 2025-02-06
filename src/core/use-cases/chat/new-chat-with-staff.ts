@@ -13,8 +13,8 @@ export function useOpenNewChatWithStaff() {
 
   const newChatMutation = useMutation({
     mutationKey: ["newChatWithStaff"],
-    mutationFn: async function (staff: IChatStaff) {
-      const newChat = await chatService.openNewChatWithStaff(staff);
+    mutationFn: async function (staffId: IChatStaff["identifier"]) {
+      const newChat = await chatService.openNewChatWithStaff(staffId);
 
       if (newChat) {
         handleOpenChat(newChat);

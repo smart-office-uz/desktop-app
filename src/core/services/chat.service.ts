@@ -12,7 +12,9 @@ export interface IChatService {
   }): Promise<IChatMessage | undefined>;
   getChatMessages(chat: IChat): Promise<IChatMessage[]>;
   getById(id: IChat["id"]): Promise<IChat | undefined>;
-  openNewChatWithStaff(staff: IChatStaff): Promise<IChat | undefined>;
+  openNewChatWithStaff(
+    staffId: IChatStaff["identifier"]
+  ): Promise<IChat | undefined>;
 }
 
 export class ChatService implements IChatService {
@@ -67,13 +69,14 @@ export class ChatService implements IChatService {
     });
   }
 
-  async openNewChatWithStaff(staff: IChatStaff): Promise<IChat | undefined> {
-    const receiverId = staff.identifier;
+  async openNewChatWithStaff(
+    staffId: IChatStaff["identifier"]
+  ): Promise<IChat | undefined> {
     const token = useSessionStore.getState().accessToken;
     if (!token) return;
 
     return await this.repository.openNewChat({
-      receiverId,
+      receiverId: staffId,
       token,
     });
   }
