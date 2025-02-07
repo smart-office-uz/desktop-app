@@ -1,3 +1,4 @@
+import { sentryVitePlugin } from "@sentry/vite-plugin";
 import { defineConfig, loadEnv } from "vite";
 
 // plugins
@@ -16,7 +17,16 @@ export default defineConfig(async ({ mode }) => {
   const CENTRIFUGE_PATH = env.CENTRIFUGE_PATH;
 
   return {
-    plugins: [react(), TanStackRouterVite(), svgr()],
+    plugins: [
+      react(),
+      TanStackRouterVite(),
+      svgr(),
+      sentryVitePlugin({
+        authToken: process.env.SENTRY_AUTH_TOKEN,
+        org: "realsoft-cq",
+        project: "smart-office-desktop-app",
+      }),
+    ],
     resolve: {
       alias: {
         "@": path.resolve(__dirname, "./src"),
@@ -55,6 +65,7 @@ export default defineConfig(async ({ mode }) => {
       commonjsOptions: {
         include: ["node_modules/**/*.js"],
       },
+      sourcemap: true,
     },
   };
 });
