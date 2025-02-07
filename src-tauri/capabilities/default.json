@@ -2,9 +2,7 @@
   "$schema": "../gen/schemas/desktop-schema.json",
   "identifier": "default",
   "description": "Capability for the main window",
-  "windows": [
-    "main"
-  ],
+  "windows": ["main"],
   "permissions": [
     "core:default",
     "shell:default",
@@ -14,6 +12,7 @@
     "os:default",
     "websocket:default",
     "websocket:allow-connect",
+    "sentry:default",
     {
       "identifier": "http:default",
       "allow": [
