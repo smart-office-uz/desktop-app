@@ -1,6 +1,12 @@
 import ReactDOM from "react-dom/client";
 
 import * as Sentry from "@sentry/react";
+import posthog from "posthog-js";
+
+posthog.init("phc_P0XzDRzY68en9vVIFZdOp1PVAU7c85tIGESiP2mu89p", {
+  api_host: "https://us.i.posthog.com",
+  person_profiles: "always", // or 'always' to create profiles for anonymous users as well
+});
 
 Sentry.init({
   dsn: "https://f8119f98d7fa95eca8e1202033239387@o4508652864864256.ingest.de.sentry.io/4508652868862032",
