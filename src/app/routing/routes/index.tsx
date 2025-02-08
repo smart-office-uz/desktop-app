@@ -1,4 +1,3 @@
-import * as Sentry from "@sentry/react";
 import { createFileRoute, redirect } from "@tanstack/react-router";
 
 // services
@@ -19,7 +18,6 @@ import { NotificationHistory } from "@/app/widgets/notification-history";
 import { UnReadNotifications } from "@/app/widgets/unread-notifications";
 
 // use-cases
-import { Button } from "@/app/components/button";
 import { useCheckAppInstanceContext } from "@/core/use-cases/app-instance/use-check-app-instance-base-url";
 
 export const Route = createFileRoute("/")({
@@ -53,13 +51,6 @@ function Index() {
       <section className="mt-10">
         <div className="container mx-auto">
           <TypographyH2>Xabarlar</TypographyH2>
-          <Button
-            onClick={() => {
-              Sentry.captureException(new Error("custom exception"));
-            }}
-          >
-            Test capture error
-          </Button>
           <TypographyP className="text-darkGray dark:text-white mb-6">
             Bu yerda sizga yuborilgan barcha xabarlarni ko’rishingiz mumkin.
           </TypographyP>
