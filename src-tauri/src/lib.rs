@@ -59,6 +59,18 @@ pub fn run() {
                 .build(),
         )
         .setup(|app| {
+            // handling closing the app on autostart
+            let args: Vec<String> = std::env::args().collect();
+
+            if args.contains(&"--autostart".to_string()) {
+                // Do not show the main window
+                println!("App started in background (autostart)");
+                let main_window = app.get_webview_window("main");
+                if let Some(window) = main_window {
+                    window.hide().unwrap_or_else(|err| {})
+                }
+            }
+
             // at least 1 menu item is required
             let open = MenuItem::with_id(app, "open", "Ochish", true, None::<&str>)?;
             let quit = MenuItem::with_id(app, "quit", "Yopish", true, None::<&str>)?;
@@ -128,7 +140,7 @@ pub fn run() {
                 app.handle()
                     .plugin(tauri_plugin_autostart::init(
                         MacosLauncher::LaunchAgent,
-                        Some(vec!["--flag1", "--flag2"]),
+                        Some(vec!["--autostart"]),
                     ))
                     .expect("Failed to initialize the autostart plugin!");
                 // Get the autostart manager
