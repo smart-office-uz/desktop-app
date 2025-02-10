@@ -6,6 +6,7 @@ import { useRefreshSessionEvent } from "@/lib/hooks/useRefreshSessionEvent";
 import { useWebSocket } from "@/lib/hooks/useWebSocket";
 
 // services
+import { ErrorFallBack } from "@/app/providers/error";
 import NotificationService from "@/core/services/notification.service";
 import SessionService from "@/core/services/session.service";
 import TauriService from "@/core/services/tauri.service";
@@ -31,5 +32,8 @@ export const Route = createRootRoute({
       tauriService,
     });
     return <Outlet />;
+  },
+  errorComponent({ error, reset }) {
+    return <ErrorFallBack error={error} reset={reset} />;
   },
 });

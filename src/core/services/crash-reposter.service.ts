@@ -16,3 +16,5 @@ export class CrashReporterService implements ICrashReposterService {
     });
   }
 }
+
+export const crashReporter = new CrashReporterService();

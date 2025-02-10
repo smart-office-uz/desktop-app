@@ -46,6 +46,7 @@
     "posthog-js": "^1.215.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-error-boundary": "^5.0.0",
     "react-hook-form": "^7.53.0",
     "react-paginate": "^8.2.0",
     "sonner": "^1.5.0",
