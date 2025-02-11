@@ -12,6 +12,7 @@
     "os:default",
     "websocket:default",
     "websocket:allow-connect",
+    "core:webview:allow-set-webview-zoom",
     "sentry:default",
     {
       "identifier": "http:default",
