@@ -20,6 +20,7 @@ use tauri::{
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent, TrayIconId},
     Manager, PhysicalPosition,
 };
+use tauri_plugin_sentry::{minidump, sentry};
 
 struct AppState {
     current_tray_id: Option<TrayIconId>,
@@ -35,7 +36,17 @@ impl Default for AppState {
 
 #[cfg_attr(mobile, tauri::mobile_entry_point)]
 pub fn run() {
+    let sentry_client = sentry::init((
+        "https://f8119f98d7fa95eca8e1202033239387@o4508652864864256.ingest.de.sentry.io/4508652868862032",
+        sentry::ClientOptions {
+            release: sentry::release_name!(),
+            auto_session_tracking: true,
+            ..Default::default()
+        },
+    ));
+
     tauri::Builder::default()
+        .plugin(tauri_plugin_sentry::init_with_no_injection(&sentry_client))
         .plugin(tauri_plugin_store::Builder::new().build())
         .plugin(tauri_plugin_websocket::init())
         .plugin(tauri_plugin_http::init())
@@ -48,6 +59,18 @@ pub fn run() {
                 .build(),
         )
         .setup(|app| {
+            // handling closing the app on autostart
+            let args: Vec<String> = std::env::args().collect();
+
+            if args.contains(&"--autostart".to_string()) {
+                // Do not show the main window
+                println!("App started in background (autostart)");
+                let main_window = app.get_webview_window("main");
+                if let Some(window) = main_window {
+                    window.hide().unwrap_or_else(|err| {})
+                }
+            }
+
             // at least 1 menu item is required
             let open = MenuItem::with_id(app, "open", "Ochish", true, None::<&str>)?;
             let quit = MenuItem::with_id(app, "quit", "Yopish", true, None::<&str>)?;
@@ -117,7 +140,7 @@ pub fn run() {
                 app.handle()
                     .plugin(tauri_plugin_autostart::init(
                         MacosLauncher::LaunchAgent,
-                        Some(vec!["--flag1", "--flag2"]),
+                        Some(vec!["--autostart"]),
                     ))
                     .expect("Failed to initialize the autostart plugin!");
                 // Get the autostart manager
