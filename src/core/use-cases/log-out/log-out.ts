@@ -12,7 +12,8 @@ interface LogOutUseCaseCtx {
 
 export async function logOutUseCase(ctx: LogOutUseCaseCtx): Promise<void> {
   ctx.sessionService.clear();
-  appInstanceService.removeBaseUrl();
+
+  await appInstanceService.removeBaseUrl();
   await updateAppIcon();
 
   ctx.redirectCallback?.();

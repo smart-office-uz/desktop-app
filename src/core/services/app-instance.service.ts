@@ -2,41 +2,41 @@ import AppStore from "@/store/app/store";
 
 export interface IAppInstanceService {
   // baseUrl
-  getBaseUrl(): string | null;
-  setBaseUrl(value: string | null): void;
-  removeBaseUrl(): void;
+  getBaseUrl(): Promise<string | undefined>;
+  setBaseUrl(value: string | null): Promise<void>;
+  removeBaseUrl(): Promise<void>;
 
   // centrifugeToken
-  getNotificationToken(): string | null;
-  setNotificationToken(token: string): void;
-  removeNotificationToken(): void;
+  getNotificationToken(): Promise<string | undefined>;
+  setNotificationToken(token: string): Promise<void>;
+  removeNotificationToken(): Promise<void>;
 }
 
 class AppInstanceService implements IAppInstanceService {
   private readonly appStore = new AppStore();
 
-  getBaseUrl() {
-    return this.appStore.get("baseUrl");
+  async getBaseUrl() {
+    return await this.appStore.get("baseUrl");
   }
 
-  setBaseUrl(value: string | null) {
-    this.appStore.set("baseUrl", value);
+  async setBaseUrl(value: string | null) {
+    await this.appStore.set("baseUrl", value!);
   }
 
-  removeBaseUrl(): void {
-    this.appStore.remove("baseUrl");
+  async removeBaseUrl() {
+    await this.appStore.delete("baseUrl");
   }
 
-  getNotificationToken() {
-    return this.appStore.get("notificationServiceToken");
+  async getNotificationToken() {
+    return await this.appStore.get("notificationServiceToken");
   }
 
-  setNotificationToken(token: string): void {
-    return this.appStore.set("notificationServiceToken", token);
+  async setNotificationToken(token: string) {
+    await this.appStore.set("notificationServiceToken", token);
   }
 
-  removeNotificationToken(): void {
-    return this.appStore.remove("notificationServiceToken");
+  async removeNotificationToken() {
+    return this.appStore.delete("notificationServiceToken");
   }
 }
 

@@ -12,10 +12,10 @@ export function useWebSocket(deps: { getUserStaffId: () => Promise<string> }) {
   async function connect() {
     if (!accessToken) return;
 
-    const baseUrl = appInstanceService.getBaseUrl();
+    const baseUrl = await appInstanceService.getBaseUrl();
     if (!baseUrl) return;
 
-    const centrifugeToken = appInstanceService.getNotificationToken();
+    const centrifugeToken = await appInstanceService.getNotificationToken();
     if (!centrifugeToken) return;
 
     const centrifugePath = `wss://${baseUrl.replace("https://", "")}/centrifugo/connection/websocket`;

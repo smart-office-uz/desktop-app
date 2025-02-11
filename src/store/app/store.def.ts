@@ -1,4 +1,6 @@
 export interface StoreDef {
-  set: (key: string, value: any) => void;
-  get: (key: string) => any | undefined;
+  set(key: string, value: string): Promise<void>;
+  get(key: string): Promise<string | undefined>;
+  clear(): Promise<void>;
+  delete(key: string): Promise<void>;
 }

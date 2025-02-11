@@ -182,6 +182,10 @@ pub fn run() {
             commands::window::change_window_size,
             commands::auth::refresh_token,
             commands::auth::authenticate,
+            commands::store::get_store_value,
+            commands::store::set_store_value,
+            commands::store::clear_store,
+            commands::store::delete_store_value_by_key,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

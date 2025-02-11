@@ -8,7 +8,7 @@ export async function useCheckAppInstanceContext(): Promise<
   | Error
 > {
   const baseUrl = await appInstanceService.getBaseUrl();
-  const notificationServiceToken = appInstanceService.getNotificationToken();
+  const notificationServiceToken = await appInstanceService.getNotificationToken();
 
   if (!baseUrl) return new Error("Base URL is not set!");
 

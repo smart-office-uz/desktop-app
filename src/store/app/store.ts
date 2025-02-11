@@ -1,18 +1,33 @@
-import { StoreDef } from "./store.def";
+import TauriService from "@/core/services/tauri.service";
+import type { StoreDef } from "./store.def";
 
 export default class AppStore implements StoreDef {
+  private readonly tauriService = new TauriService();
+
   constructor() {}
 
-  get(key: string): string | null {
-    const value = localStorage.getItem(key);
-    return value;
+  async get(key: string): Promise<string | undefined> {
+    const value = await this.tauriService.invoke("get_store_value", {
+      key,
+    });
+
+    return value as string;
   }
 
-  set(key: string, value: any): void {
-    localStorage.setItem(key, value);
+  async set(key: string, value: string): Promise<void> {
+    await this.tauriService.invoke("set_store_value", {
+      key,
+      value,
+    });
   }
 
-  remove(key: string): void {
-    localStorage.removeItem(key);
+  async clear(): Promise<void> {
+    await this.tauriService.invoke("clear_store", {});
+  }
+
+  async delete(key: string) {
+    await this.tauriService.invoke("delete_store_value_by_key", {
+      key,
+    });
   }
 }

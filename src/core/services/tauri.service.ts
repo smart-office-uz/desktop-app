@@ -44,6 +44,17 @@ type TauriCommandArgs = {
     width: number;
     height: number;
   };
+  get_store_value: {
+    key: string;
+  };
+  set_store_value: {
+    key: string;
+    value: string;
+  };
+  clear_store: {};
+  delete_store_value_by_key: {
+    key: string;
+  };
 };
 
 type TauriCommand = keyof TauriCommandArgs;
