@@ -59,19 +59,27 @@ impl HttpService {
                     status: 500,
                 })?;
         } else {
-            response = request.send().await.map_err(|err| HttpError {
-                message: err.to_string(),
-                status: 500,
+            response = request.send().await.map_err(|err| {
+                println!("{:?}", err);
+                HttpError {
+                    message: err.to_string(),
+                    status: 500,
+                }
             })?;
         }
 
         match response.error_for_status() {
             Ok(response) => {
-                let json = response.json::<T>().await.map_err(|err| HttpError {
+                let text = response.text().await.unwrap_or_default();
+                println!("Response: {:?}", text);
+                let json = serde_json::from_str(&text).map_err(|err| HttpError {
                     message: err.to_string(),
                     status: 500,
-                })?;
-                Ok(json)
+                });
+                match json {
+                    Ok(dto) => Ok(dto),
+                    Err(err) => Err(err),
+                }
             }
             Err(error) => {
                 if let Some(error_status_code) = error.status() {

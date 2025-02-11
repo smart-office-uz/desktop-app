@@ -69,6 +69,9 @@ export default {
       fontFamily: {
         sans: ["var(--font-sans)"],
       },
+      width: {
+        chatSidebar: "300px",
+      },
     },
   },
   plugins: [twAnimatePlugin],

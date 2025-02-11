@@ -44,6 +44,44 @@ type TauriCommandArgs = {
     width: number;
     height: number;
   };
+  get_org_list: {
+    token: string;
+  };
+  get_staffs_by_organization_id: {
+    token: string;
+    params: {
+      organization_id?: string;
+      search?: string;
+      page?: number;
+    };
+  };
+  get_chat_messages: {
+    token: string;
+    params: {
+      chat_id: string;
+      last_read_message_update_id?: number;
+    };
+  };
+  get_chats: {
+    token: string;
+  };
+  send_message: {
+    token: string;
+    params: {
+      room_id: string;
+      room_type: "Private" | "Group";
+      message: {
+        file_id?: string;
+        text?: string;
+      };
+    };
+  };
+  start_new: {
+    token: string;
+    params: {
+      receiver_id: string;
+    };
+  };
 };
 
 type TauriCommand = keyof TauriCommandArgs;

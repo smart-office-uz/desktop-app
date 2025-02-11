@@ -1,4 +1,5 @@
 pub mod auth;
+pub mod chat;
 pub mod notification;
 pub mod redirect_resolver;
 pub mod tray;

@@ -170,18 +170,31 @@ pub fn run() {
         })
         .plugin(tauri_plugin_shell::init())
         .invoke_handler(tauri::generate_handler![
+            // notification
             commands::notification::notify,
             commands::notification::get_latest_notifications,
             commands::notification::get_latest_notifications_count,
             commands::notification::get_all_notifications,
             commands::notification::read_notification,
+            // redirect
             commands::redirect_resolver::redirect,
+            // tray
             commands::tray::update_tray_icon,
+            // user
             commands::user::get_user_staff_id,
+            // window
             commands::window::center_window,
             commands::window::change_window_size,
+            // auth
             commands::auth::refresh_token,
             commands::auth::authenticate,
+            // chat
+            commands::chat::get_org_list,
+            commands::chat::get_chat_messages,
+            commands::chat::get_chats,
+            commands::chat::get_staffs_by_organization_id,
+            commands::chat::send_message,
+            commands::chat::start_new,
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");
