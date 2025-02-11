@@ -2,7 +2,7 @@ import { SettingsDialog } from "@/core/presentation/settings/dialog";
 import { AppLogo } from "./app-logo";
 // import { LocaleSwitcher } from "./locale-switcher";
 // import { MockSessionUpdater } from "./mock-session-updater";
-import { ChatPageLink } from "./chat-page-link";
+// import { ChatPageLink } from "./chat-page-link";
 import { ModeToggle } from "./mode-toggle";
 import { NotificationUpdateIndicator } from "./notification-update-indicator";
 import { UserMenu } from "./user-menu";
@@ -18,7 +18,7 @@ export function Header() {
           <ModeToggle />
           {/* <MockSessionUpdater /> */}
           <NotificationUpdateIndicator />
-          <ChatPageLink />
+          {/* <ChatPageLink /> */}
           {/* <div className="w-[2px] h-full bg-lightGray"></div> */}
           {/* <LocaleSwitcher /> */}
           <div className="w-[2px] h-full bg-lightGray"></div>

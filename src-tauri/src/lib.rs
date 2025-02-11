@@ -1,4 +1,5 @@
 extern crate open;
+use tauri_plugin_store::StoreExt;
 
 use std::sync::Mutex;
 
@@ -20,7 +21,7 @@ use tauri::{
     tray::{MouseButton, MouseButtonState, TrayIconBuilder, TrayIconEvent, TrayIconId},
     Manager, PhysicalPosition,
 };
-use tauri_plugin_sentry::{minidump, sentry};
+use tauri_plugin_sentry::sentry;
 
 struct AppState {
     current_tray_id: Option<TrayIconId>,
@@ -68,6 +69,14 @@ pub fn run() {
                 let main_window = app.get_webview_window("main");
                 if let Some(window) = main_window {
                     window.hide().unwrap_or_else(|err| {})
+                }
+            }
+
+            // preloading the app store
+            match app.store("store.json") {
+                Ok(_) => {}
+                Err(err) => {
+                    println!("Error when loading the app store: {:?}", err);
                 }
             }
 

@@ -14,6 +14,7 @@ export async function logOutUseCase(ctx: LogOutUseCaseCtx): Promise<void> {
   ctx.sessionService.clear();
 
   await appInstanceService.removeBaseUrl();
+  await appInstanceService.removeNotificationToken();
   await updateAppIcon();
 
   ctx.redirectCallback?.();

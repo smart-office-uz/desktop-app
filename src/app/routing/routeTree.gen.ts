@@ -21,6 +21,7 @@ import { Route as ChatChatIdImport } from './routes/chat.$chatId'
 // Create/Update Routes
 
 const SomePageRoute = SomePageImport.update({
+  id: '/some-page',
   path: '/some-page',
   getParentRoute: () => rootRoute,
 } as any)
@@ -38,6 +39,7 @@ const RegisterInstanceRoute = RegisterInstanceImport.update({
 } as any)
 
 const ChatRoute = ChatImport.update({
+  id: '/chat',
   path: '/chat',
   getParentRoute: () => rootRoute,
 } as any)
@@ -49,6 +51,7 @@ const IndexRoute = IndexImport.update({
 } as any)
 
 const ChatChatIdRoute = ChatChatIdImport.update({
+  id: '/$chatId',
   path: '/$chatId',
   getParentRoute: () => ChatRoute,
 } as any)

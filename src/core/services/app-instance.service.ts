@@ -20,11 +20,11 @@ class AppInstanceService implements IAppInstanceService {
   }
 
   async setBaseUrl(value: string | null) {
-    await this.appStore.set("baseUrl", value!);
+    return await this.appStore.set("baseUrl", value!);
   }
 
   async removeBaseUrl() {
-    await this.appStore.delete("baseUrl");
+    return await this.appStore.delete("baseUrl");
   }
 
   async getNotificationToken() {

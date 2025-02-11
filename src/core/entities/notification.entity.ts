@@ -1,5 +1,3 @@
-import { appInstanceService } from "../services/app-instance.service";
-
 export interface NotificationEntity {
   hasTaskOwnerName: () => boolean;
   hasAvatarLink: () => boolean;
@@ -7,7 +5,7 @@ export interface NotificationEntity {
   getTitle: () => string;
   getLink: () => string;
   getDate: () => string;
-  getAvatarLink: () => string;
+  getAvatarLink: () => string | undefined;
   getStatus: () => "READ" | "SENT";
   getTaskOwner: () => {
     fullName?: string;
@@ -20,7 +18,7 @@ export class Notification implements NotificationEntity {
   private readonly title: string;
   private readonly link: string;
   private readonly date: string;
-  private readonly avatarLink: string;
+  private readonly avatarLink: string | undefined;
   private readonly status: "READ" | "SENT";
   private readonly taskOwner: {
     fullName?: string;
@@ -32,7 +30,7 @@ export class Notification implements NotificationEntity {
     title: string;
     link: string;
     date: string;
-    avatarLink: string;
+    avatarLink?: string;
     taskOwner: {
       fullName?: string;
       staffId: string;
@@ -84,8 +82,7 @@ export class Notification implements NotificationEntity {
     return this.date;
   }
 
-  getAvatarLink() {
-    const baseUrl = appInstanceService.getBaseUrl();
-    return `${baseUrl}/uploads/images/${this.avatarLink}`;
+  getAvatarLink(): string | undefined {
+    return `/uploads/images/${this.avatarLink}`;
   }
 }

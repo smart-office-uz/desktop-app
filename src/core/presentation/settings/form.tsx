@@ -9,7 +9,9 @@ import {
 } from "@/app/components/form";
 import { Input } from "@/app/components/input";
 import { Textarea } from "@/app/components/textarea";
-import { useFields } from "./useFields";
+import { useLoadAppInstanceContext } from "@/core/use-cases/app-instance/use-load-app-instance-ctx";
+import { Loader2 } from "lucide-react";
+import { type Fields, useFields } from "./useFields";
 import { useUpdateSettingsMutation } from "./useMutation";
 
 interface Props {
@@ -17,10 +19,33 @@ interface Props {
 }
 
 export function SettingsForm(props: Props) {
-  const { form } = useFields();
+  const appInstanceCtx = useLoadAppInstanceContext();
+
+  if (appInstanceCtx === undefined) return;
+
+  return (
+    <FormComponent
+      defaultValues={{
+        instanceUrl: appInstanceCtx.baseUrl,
+        notificationServiceToken: appInstanceCtx.centrifugeToken,
+      }}
+      onUpdate={props.onUpdate}
+    />
+  );
+}
+
+interface FormComponentProps {
+  defaultValues: Partial<Fields>;
+  onUpdate(): void;
+}
+
+function FormComponent({ defaultValues, onUpdate }: FormComponentProps) {
+  const { form } = useFields({
+    defaultValues,
+  });
 
   const mutation = useUpdateSettingsMutation({
-    onSuccess: props.onUpdate,
+    onSuccess: onUpdate,
   });
   const isSubmitButtonDisabled = !form.formState.isValid || mutation.isPending;
 
@@ -68,6 +93,7 @@ export function SettingsForm(props: Props) {
           />
         </div>
         <Button className="w-full" disabled={isSubmitButtonDisabled}>
+          {mutation.isPending && <Loader2 className="w-5 h-5 mr-2" />}
           Saqlash
         </Button>
       </form>

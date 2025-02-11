@@ -6,7 +6,7 @@ export function useUpdateSettingsMutation(props: { onSuccess: () => void }) {
   return useMutation({
     mutationKey: ["updateSettings"],
     mutationFn: async function (settings: Fields) {
-      useSetAppInstanceContext({
+      return await useSetAppInstanceContext({
         notificationServiceToken: settings.notificationServiceToken,
         url: settings.instanceUrl,
       });

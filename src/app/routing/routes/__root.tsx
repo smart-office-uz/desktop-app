@@ -10,7 +10,6 @@ import { crashReporter } from "@/core/services/crash-reposter.service";
 import NotificationService from "@/core/services/notification.service";
 import SessionService from "@/core/services/session.service";
 import TauriService from "@/core/services/tauri.service";
-import UserService from "@/core/services/user.service";
 import { useWebSocket } from "@/lib/hooks/useWebSocket";
 
 export const Route = createRootRoute({
@@ -18,12 +17,8 @@ export const Route = createRootRoute({
     const notificationService = new NotificationService();
     const tauriService = new TauriService();
     const sessionService = new SessionService();
-    const userService = new UserService();
 
     useWebSocket();
-    // useOldWebSocket({
-    //   getUserStaffId: userService.getUserStaffId,
-    // });
     useLogoutEvent({
       notificationService,
       sessionService,

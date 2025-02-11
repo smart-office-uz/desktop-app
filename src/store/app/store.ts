@@ -14,11 +14,13 @@ export default class AppStore implements StoreDef {
     return value as string;
   }
 
-  async set(key: string, value: string): Promise<void> {
-    await this.tauriService.invoke("set_store_value", {
+  async set(key: string, value: string): Promise<unknown> {
+    const result = await this.tauriService.invoke("set_store_value", {
       key,
       value,
     });
+
+    return result;
   }
 
   async clear(): Promise<void> {

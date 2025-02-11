@@ -1,6 +1,5 @@
 import { appInstanceService } from "@/core/services/app-instance.service";
 import { getCurrentUserStaffId } from "@/core/use-cases/current-user/get-staff-id";
-import { useListenToNewChatMessages } from "@/core/use-cases/notifications/listen-to-new-chat-messages";
 import { listenToNewNotificationsUseCase } from "@/core/use-cases/notifications/listen-to-new-notifications";
 import {
   Centrifuge,
@@ -26,7 +25,10 @@ interface Ctx {
 }
 
 function setupWebSocketConnection({ baseUrl, token, subscriptions }: Ctx) {
-  const path = `wss://${baseUrl.replace("https://", "")}/centrifugo/connection/websocket`;
+  const path = `wss://${baseUrl.replace(
+    "https://",
+    ""
+  )}/centrifugo/connection/websocket`;
 
   const centrifuge = new Centrifuge(path, { token });
 
@@ -48,11 +50,6 @@ function setupWebSocketConnection({ baseUrl, token, subscriptions }: Ctx) {
     newSubscription.subscribe();
   });
 
-  centrifuge.on("connected", () => console.log("Centrifuge connected"));
-  centrifuge.on("disconnected", (ctx) =>
-    console.log("Centrifuge disconnected", ctx)
-  );
-
   centrifuge.connect();
 }
 
@@ -63,7 +60,6 @@ interface UseWebSocketSubscriptionsCtx {
 }
 
 function useConnectToWebSocketSubscription() {
-  const { mutateAsync } = useListenToNewChatMessages();
 
   function connect(ctx: UseWebSocketSubscriptionsCtx) {
     const { accessToken, baseUrl, userStaffId } = ctx;
@@ -84,18 +80,18 @@ function useConnectToWebSocketSubscription() {
           },
         ],
       },
-      {
-        channelName: `smart-office-chat_${userStaffId}`,
-        options: {},
-        listeners: [
-          {
-            event: "publication",
-            async listener(ctx: PublicationContext) {
-              mutateAsync(ctx);
-            },
-          },
-        ],
-      },
+      // {
+      //   channelName: `smart-office-chat_${userStaffId}`,
+      //   options: {},
+      //   listeners: [
+      //     {
+      //       event: "publication",
+      //       async listener(ctx: PublicationContext) {
+      //         mutateAsync(ctx);
+      //       },
+      //     },
+      //   ],
+      // },
     ];
 
     setupWebSocketConnection({
@@ -114,8 +110,8 @@ export function useWebSocket() {
   const { connect } = useConnectToWebSocketSubscription();
 
   async function handleConnect() {
-    const accessToken = appInstanceService.getNotificationToken();
-    const baseUrl = appInstanceService.getBaseUrl();
+    const accessToken = await appInstanceService.getNotificationToken();
+    const baseUrl = await appInstanceService.getBaseUrl();
     const staffId = await getCurrentUserStaffId();
 
     if (!accessToken || !baseUrl || !staffId) {

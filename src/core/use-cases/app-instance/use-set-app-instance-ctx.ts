@@ -5,11 +5,18 @@ interface Context {
   notificationServiceToken: string;
 }
 
-export function useSetAppInstanceContext(ctx: Context) {
+export async function useSetAppInstanceContext(
+  ctx: Context
+): Promise<true | Error> {
   const { url, notificationServiceToken } = ctx;
 
-  appInstanceService.setBaseUrl(url);
-  appInstanceService.setNotificationToken(notificationServiceToken);
+  try {
+    await appInstanceService.setBaseUrl(url);
+    await appInstanceService.setNotificationToken(notificationServiceToken);
+  } catch (error) {
+    if (error instanceof Error) return error;
+    return new Error("Xatolik yuz berdi!");
+  }
 
-  return null;
+  return true;
 }

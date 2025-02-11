@@ -1,4 +1,3 @@
-import { appInstanceService } from "@/core/services/app-instance.service";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -13,14 +12,14 @@ export interface Fields {
   notificationServiceToken: string;
 }
 
-export function useFields() {
+interface Props {
+  defaultValues?: Partial<Fields>;
+}
+
+export function useFields({ defaultValues }: Props) {
   const form = useForm<Fields>({
     resolver: zodResolver(schema),
-    defaultValues: {
-      instanceUrl: appInstanceService.getBaseUrl() ?? undefined,
-      notificationServiceToken:
-        appInstanceService.getNotificationToken() ?? undefined,
-    },
+    defaultValues,
   });
 
   return {

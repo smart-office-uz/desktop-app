@@ -10,8 +10,9 @@ interface Ctx {
 
 export async function listenToNewNotificationsUseCase({ baseUrl, ctx }: Ctx) {
   const notificationData = ctx.data as {
-    text: string;
-    redirect?: string;
+    text?: string;
+    link?: string;
+    host_name?: string;
   };
   const notificationService = new NotificationService();
   const notifications = await notificationService.getLatestNotificationsCount();
@@ -19,9 +20,29 @@ export async function listenToNewNotificationsUseCase({ baseUrl, ctx }: Ctx) {
 
   await updateAppIcon(notifications);
 
+  let redirectUrl = "";
+
+  if (notificationData?.link && notificationData?.host_name) {
+    redirectUrl = `${notificationData.host_name}/${notificationData.link}`;
+  } else {
+    if (
+      notificationData?.link &&
+      notificationData.link.startsWith("https://")
+    ) {
+      redirectUrl = notificationData.link;
+    } else {
+      redirectUrl = `${baseUrl}/${notificationData.link}`;
+    }
+  }
+
+  console.log({
+    redirectUrl,
+  });
+
   displayNotificationUseCase({
-    content: `Sizda ${notifications} ta yangi xabar bor!`,
+    content:
+      notificationData?.text ?? `Sizda ${notifications} ta yangi xabar bor!`,
     baseUrl,
-    redirectUrl: notificationData.redirect,
+    redirectUrl,
   });
 }

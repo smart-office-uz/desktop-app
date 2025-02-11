@@ -6,6 +6,7 @@ import TauriService from "../services/tauri.service";
 
 // entities
 import { Notification } from "../entities/notification.entity";
+import { appInstanceService } from "../services/app-instance.service";
 
 export default class NotificationRepository {
   private readonly tauriService = new TauriService();
@@ -14,11 +15,9 @@ export default class NotificationRepository {
     const { accessToken } = useSessionStore.getState();
     const { invoke } = this.tauriService;
 
-    if (
-      accessToken === null ||
-      accessToken === "" ||
-      accessToken === undefined
-    ) {
+    const baseUrl = await appInstanceService.getBaseUrl();
+
+    if (!accessToken) {
       console.error("Access token is null or undefined");
       return [];
     }
@@ -48,7 +47,10 @@ export default class NotificationRepository {
         title: notification.title,
         link: notification.link,
         date: notification.created_at,
-        avatarLink: notification.image_url,
+        avatarLink:
+          baseUrl && notification.image_url
+            ? baseUrl + notification.image_url
+            : undefined,
         taskOwner: {
           staffId: notification.staff_id,
           fullName: "",
@@ -65,11 +67,7 @@ export default class NotificationRepository {
     const { accessToken } = useSessionStore.getState();
     const { invoke } = this.tauriService;
 
-    if (
-      accessToken === null ||
-      accessToken === "" ||
-      accessToken === undefined
-    ) {
+    if (!accessToken) {
       console.error("Access token is null or undefined");
       return {
         notifications: [],
@@ -104,12 +102,12 @@ export default class NotificationRepository {
         if (notification.status === "SEND") {
           notificationStatus = "SENT";
         }
+
         return new Notification({
           id: notification.id,
           title: notification.task_text,
           link: notification.link,
           date: notification.date,
-          avatarLink: "",
           taskOwner: {
             staffId: notification.id,
             fullName: notification.full_name,
