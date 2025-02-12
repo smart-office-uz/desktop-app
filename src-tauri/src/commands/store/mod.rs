@@ -2,11 +2,18 @@ use tauri_plugin_store::StoreExt;
 
 #[tauri::command]
 pub async fn get_store_value(app_handle: tauri::AppHandle, key: String) -> Result<String, String> {
-    if let Ok(store) = app_handle.store("store.json") {
-        let value = store.get(key).unwrap().as_str().unwrap().to_owned();
+    let store = app_handle
+        .store("store.json")
+        .map_err(|error| error.to_string())?;
+
+    if let Some(value) = store.get(key.clone()) {
+        let value = value.as_str().unwrap().to_owned();
         Ok(value)
     } else {
-        Err("Failed to load the app store!".to_owned())
+        Err(format!(
+            "Failed to find a value for the key: {}",
+            key.clone()
+        ))
     }
 }
 
