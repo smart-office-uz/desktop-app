@@ -3,7 +3,7 @@ import AppStore from "@/store/app/store";
 export interface IAppInstanceService {
   // baseUrl
   getBaseUrl(): Promise<string | undefined>;
-  setBaseUrl(value: string | null): Promise<void>;
+  setBaseUrl(value: string | null): Promise<unknown>;
   removeBaseUrl(): Promise<void>;
 
   // centrifugeToken

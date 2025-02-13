@@ -30,7 +30,6 @@ class UserService {
       accessToken === "" ||
       accessToken === undefined
     ) {
-      console.error("Access token is null or undefined");
       return "";
     }
     const response = (await invoke("get_user_staff_id", {

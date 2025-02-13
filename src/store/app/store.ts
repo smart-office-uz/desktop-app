@@ -11,7 +11,9 @@ export default class AppStore implements StoreDef {
       key,
     });
 
-    return value as string;
+    if (value instanceof Error) return undefined;
+
+    return value;
   }
 
   async set(key: string, value: string): Promise<unknown> {

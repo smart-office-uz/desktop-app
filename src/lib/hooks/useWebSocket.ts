@@ -27,14 +27,14 @@ interface Ctx {
 function setupWebSocketConnection({ baseUrl, token, subscriptions }: Ctx) {
   const path = `wss://${baseUrl.replace(
     "https://",
-    ""
+    "",
   )}/centrifugo/connection/websocket`;
 
   const centrifuge = new Centrifuge(path, { token });
 
   subscriptions.forEach((subscription) => {
     const newSubscription = centrifuge.newSubscription(
-      subscription.channelName
+      subscription.channelName,
     );
 
     subscription.listeners.forEach((listener) => {
@@ -60,7 +60,6 @@ interface UseWebSocketSubscriptionsCtx {
 }
 
 function useConnectToWebSocketSubscription() {
-
   function connect(ctx: UseWebSocketSubscriptionsCtx) {
     const { accessToken, baseUrl, userStaffId } = ctx;
 
@@ -112,9 +111,14 @@ export function useWebSocket() {
   async function handleConnect() {
     const accessToken = await appInstanceService.getNotificationToken();
     const baseUrl = await appInstanceService.getBaseUrl();
+
+    if (!accessToken || !baseUrl) {
+      return;
+    }
+
     const staffId = await getCurrentUserStaffId();
 
-    if (!accessToken || !baseUrl || !staffId) {
+    if (!staffId) {
       return;
     }
 

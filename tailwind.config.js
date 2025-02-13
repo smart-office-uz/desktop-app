@@ -72,6 +72,9 @@ export default {
       width: {
         chatSidebar: "300px",
       },
+      container: {
+        padding: "20px",
+      },
     },
   },
   plugins: [twAnimatePlugin],

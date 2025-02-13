@@ -18,7 +18,6 @@ export default class NotificationRepository {
     const baseUrl = await appInstanceService.getBaseUrl();
 
     if (!accessToken) {
-      console.error("Access token is null or undefined");
       return [];
     }
 
@@ -68,7 +67,6 @@ export default class NotificationRepository {
     const { invoke } = this.tauriService;
 
     if (!accessToken) {
-      console.error("Access token is null or undefined");
       return {
         notifications: [],
         totalNumberOfNotifications: 0,
@@ -127,7 +125,6 @@ export default class NotificationRepository {
       accessToken === "" ||
       accessToken === undefined
     ) {
-      console.error("Access token is null or undefined");
       return 0;
     }
     const response = (await invoke("get_latest_notifications_count", {

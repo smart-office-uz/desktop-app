@@ -1,4 +1,5 @@
 import { invoke as invokeTauri } from "@tauri-apps/api/core";
+import { crashReporter } from "./crash-reposter.service";
 
 type TauriCommandArgs = {
   authenticate: {
@@ -99,14 +100,25 @@ type TauriCommand = keyof TauriCommandArgs;
 export interface ITauriService {
   invoke: <T extends TauriCommand>(
     command: T,
-    args: TauriCommandArgs[T]
-  ) => unknown;
+    args: TauriCommandArgs[T],
+  ) => Promise<string | Error>;
 }
 
 export default class TauriService implements ITauriService {
   async invoke<T extends TauriCommand>(command: T, args: TauriCommandArgs[T]) {
-    return await invokeTauri(command as string, {
-      ...args,
-    });
+    try {
+      const result = (await invokeTauri(command as string, {
+        ...args,
+      })) as string;
+      return result;
+    } catch (error) {
+      let failure;
+      if (error instanceof Error) failure = error;
+      else failure = new Error(`Failed to invoke ${command}: ${error}`);
+
+      crashReporter.captureException(failure);
+
+      return failure;
+    }
   }
 }
