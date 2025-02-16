@@ -10,10 +10,8 @@ export default class ChatOrganizationService
   implements IChatOrganizationService
 {
   private readonly repository = new ChatOrganizationRepository();
-  #storage = useSessionStore;
 
-  constructor() {
-  }
+  constructor() {}
 
   async getAll(): Promise<IChatOrganization[]> {
     let token = useSessionStore.getState().accessToken;

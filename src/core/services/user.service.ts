@@ -32,9 +32,9 @@ class UserService {
     ) {
       return "";
     }
-    const response = (await invoke("get_user_staff_id", {
+    const response = await invoke("get_user_staff_id", {
       token: accessToken,
-    })) as string;
+    });
 
     const json = JSON.parse(response) as {
       data: {

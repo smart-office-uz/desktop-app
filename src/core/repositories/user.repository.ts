@@ -7,23 +7,22 @@ class UserRepository {
   async signIn(payload: { username: string; password: string }) {
     const { password, username } = payload;
     const { invoke } = this.tauriService;
-    try {
-      let response = (await invoke("authenticate", {
-        username,
-        password,
-      })) as string;
-      let out = JSON.parse(response) as {
-        access_token: string;
-        refresh_token: string;
-      };
 
-      return {
-        accessToken: out.access_token,
-        refreshToken: out.refresh_token,
-      };
-    } catch (error) {
-      throw new Error(error as string);
+    let response = await invoke("authenticate", {
+      username,
+      password,
+    });
+
+    if (response.isErr()) {
+      return response.error;
     }
+
+    let out = response.value;
+
+    return {
+      accessToken: out.access_token,
+      refreshToken: out.refresh_token,
+    };
   }
 }
 

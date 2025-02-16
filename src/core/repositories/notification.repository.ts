@@ -7,40 +7,33 @@ import TauriService from "../services/tauri.service";
 // entities
 import { Notification } from "../entities/notification.entity";
 import { appInstanceService } from "../services/app-instance.service";
+import { crashReporter } from "../services/crash-reposter.service";
 
 export default class NotificationRepository {
   private readonly tauriService = new TauriService();
 
-  async getLatest(): Promise<Notification[]> {
+  async getLatest() {
     const { accessToken } = useSessionStore.getState();
     const { invoke } = this.tauriService;
 
     const baseUrl = await appInstanceService.getBaseUrl();
 
     if (!accessToken) {
-      return [];
+      const error = new Error("No access token found");
+      crashReporter.captureException(error);
+      return error;
     }
 
-    const response = (await invoke("get_latest_notifications", {
+    const result = await invoke("get_latest_notifications", {
       token: accessToken,
-    })) as string;
+    });
 
-    const notifications = JSON.parse(response) as {
-      data: {
-        notify: {
-          created_at: string;
-          id: string;
-          image_url: string;
-          link: string;
-          staff_id: string;
-          title: string;
-          type: string;
-          fullname?: string;
-        }[];
-      };
-    };
+    if (result.isErr()) {
+      crashReporter.captureException(result.error);
+      return result.error;
+    }
 
-    return notifications?.data?.notify?.map((notification) => {
+    return result.value.data.notify.map((notification) => {
       return new Notification({
         id: notification.id,
         title: notification.title,
@@ -59,42 +52,34 @@ export default class NotificationRepository {
     });
   }
 
-  async getAll({ page = 1 }: { page: number }): Promise<{
-    notifications: Notification[];
-    totalNumberOfNotifications: number;
-  }> {
+  async getAll({ page = 1 }: { page: number }): Promise<
+    | {
+        notifications: Notification[];
+        totalNumberOfNotifications: number;
+      }
+    | Error
+  > {
     const { accessToken } = useSessionStore.getState();
     const { invoke } = this.tauriService;
 
     if (!accessToken) {
-      return {
-        notifications: [],
-        totalNumberOfNotifications: 0,
-      };
+      const error = new Error("No access token found");
+      crashReporter.captureException(error);
+      throw error;
     }
 
-    const response = (await invoke("get_all_notifications", {
+    const result = await invoke("get_all_notifications", {
       token: accessToken,
       page,
-    })) as string;
+    });
 
-    const notifications = JSON.parse(response) as {
-      data: {
-        results: {
-          date: string;
-          id: string;
-          link: string;
-          status: "READ" | "SEND";
-          task_text: string;
-          full_name: string;
-          staff_id: string;
-        }[];
-        total: number;
-      };
-    };
+    if (result.isErr()) {
+      crashReporter.captureException(result.error);
+      return result.error;
+    }
 
     return {
-      notifications: notifications?.data?.results?.map((notification) => {
+      notifications: result.value.data.results.map((notification) => {
         let notificationStatus: "READ" | "SENT" = "READ";
 
         if (notification.status === "SEND") {
@@ -113,32 +98,29 @@ export default class NotificationRepository {
           status: notificationStatus,
         });
       }),
-      totalNumberOfNotifications: notifications?.data?.total,
+      totalNumberOfNotifications: result.value?.data?.total,
     };
   }
 
-  async getLatestNotificationsCount(): Promise<number> {
+  async getLatestNotificationsCount() {
     const { accessToken } = useSessionStore.getState();
     const { invoke } = this.tauriService;
-    if (
-      accessToken === null ||
-      accessToken === "" ||
-      accessToken === undefined
-    ) {
-      return 0;
+
+    if (!accessToken) {
+      const error = new Error("No access token found");
+      crashReporter.captureException(error);
+      return error;
     }
-    const response = (await invoke("get_latest_notifications_count", {
+
+    const result = await invoke("get_latest_notifications_count", {
       token: accessToken,
-    })) as string;
+    });
 
-    const count = JSON.parse(response) as {
-      data: {
-        notify_count: {
-          notify_count: number;
-        };
-      };
-    };
+    if (result.isErr()) {
+      crashReporter.captureException(result.error);
+      return result.error;
+    }
 
-    return count.data.notify_count.notify_count;
+    return result.value.data.notify_count.notify_count;
   }
 }
